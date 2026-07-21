@@ -2,13 +2,11 @@
 import EventDetail from "@/components/features/indel-money-cares/EventDetail";
 import RecentEvents from "@/components/features/indel-money-cares/RecentEvents";
 import { notFound } from "next/navigation";
-import { getServerLocale } from "@/lib/locale/getServerLocale";
-import { buildLocalizedUrl } from "@/lib/locale/localizedUrl";
 
 // Fetch blog data for a specific post
-async function fetchEventData(slug, locale) {
+async function fetchEventData(slug) {
   try {
-    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/indel-cares/${slug}`, locale), {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/indel-cares/${slug}`, {
       //   next: { revalidate: 60 },
       cache: "force-cache",
       next: { revalidate: 600 },
@@ -68,9 +66,9 @@ const defaultMetadata = (slug = "indel-money-cares") => ({
   },
 });
 
-async function getMetaData(slug, locale) {
+async function getMetaData(slug) {
   try {
-    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta-slug?page=csrItem&slug=${slug}`, locale));
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta-slug?page=csrItem&slug=${slug}`);
     const result = await response.json();
     const meta = result.data;
 
@@ -95,8 +93,7 @@ async function getMetaData(slug, locale) {
 // Generate dynamic metadata
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const locale = await getServerLocale();
-  const { meta, error } = await getMetaData(slug, locale);
+  const { meta, error } = await getMetaData(slug);
 
   if (!meta || error) {
     return defaultMetadata(slug);
@@ -133,8 +130,7 @@ export async function generateMetadata({ params }) {
 
 export default async function IndelEvent({ params }) {
   const { slug } = await params;
-  const locale = await getServerLocale();
-  const { data: eventData, recentEvents, title, error: eventError } = await fetchEventData(slug, locale);
+  const { data: eventData, recentEvents, title, error: eventError } = await fetchEventData(slug);
 
   // Handle error state for blog data
   if (eventError || !eventData) {

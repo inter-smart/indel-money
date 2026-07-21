@@ -14,7 +14,6 @@ import {
 } from "../../ui/dropdown-menu";
 import { useEffect, useState } from "react";
 import NavMenu from "./NavMenu";
-import TranslatorDropdown from "./TranslatorDropdown";
 
 function ContactBox({ href, src, title, alt }) {
   return (
@@ -27,7 +26,7 @@ function ContactBox({ href, src, title, alt }) {
   );
 }
 
-export default function DeskHeader({ headerData, locale }) {
+export default function DeskHeader({ headerData }) {
   const header = headerData?.content;
   const common = headerData?.footerContent;
   const modes = headerData?.modes;
@@ -88,9 +87,6 @@ export default function DeskHeader({ headerData, locale }) {
                     title={common?.branch_locator ? common?.branch_locator : "Branch Locator"}
                     alt="location"
                   />
-                </div>
-                <div className="hidden lg:block">
-                  <TranslatorDropdown ssrLocale={locale} />
                 </div>
                 {/* <div>
                   <ContactBox

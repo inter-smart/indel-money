@@ -3,18 +3,16 @@ import { headers } from "next/headers";
 import Script from "next/script";
 import HomeClient from "../pages/HomeClient";
 import { defaultMeta } from "@/constants/constants";
-import { getServerLocale } from "../lib/locale/getServerLocale";
-import { buildLocalizedUrl } from "../lib/locale/localizedUrl";
 
 function isMobileDevice(userAgent) {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
 }
 
-async function fetchHomeData(locale) {
+async function fetchHomeData() {
   try {
-    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/home`, locale), {
-      // cache: "force-cache",
-      // next: { revalidate: 600 },
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/home`, {
+      cache: "force-cache",
+      next: { revalidate: 600 },
       credentials: "include", // Ensures session cookie is sent
       headers: {
         "Content-Type": "application/json",
@@ -32,9 +30,9 @@ async function fetchHomeData(locale) {
   }
 }
 
-async function fetchGoldRate(locale) {
+async function fetchGoldRate() {
   try {
-    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/gold-rate`, locale), {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/gold-rate`, {
       cache: "force-cache",
       next: { revalidate: 600 },
       headers: {
@@ -54,11 +52,11 @@ async function fetchGoldRate(locale) {
   }
 }
 
-async function getMetaData(locale) {
+async function getMetaData() {
   try {
-    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=home`, locale), {
-      // cache: "force-cache",
-      // next: { revalidate: 600 },
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=home`, {
+      cache: "force-cache",
+      next: { revalidate: 600 },
     });
     const result = await response.json();
     const meta = result.data;
@@ -134,8 +132,7 @@ async function getMetaData(locale) {
 }
 
 export async function generateMetadata() {
-  const locale = await getServerLocale();
-  const { title, description, keywords, twitter, openGraph, alternates } = await getMetaData(locale);
+  const { title, description, keywords, twitter, openGraph, alternates } = await getMetaData();
   return {
     title,
     description,
@@ -147,9 +144,8 @@ export async function generateMetadata() {
 }
 
 export default async function HomePage() {
-  const locale = await getServerLocale();
-  const { data, error } = await fetchHomeData(locale);
-  const { data: goldRateData, error: goldRateError } = await fetchGoldRate(locale);
+  const { data, error } = await fetchHomeData();
+  const { data: goldRateData, error: goldRateError } = await fetchGoldRate();
 
   const headersList = await headers(); // ✅ await here
   const userAgent = headersList.get("user-agent") || "";

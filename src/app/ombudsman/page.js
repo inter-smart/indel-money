@@ -1,12 +1,10 @@
 //export const dynamic = "force-dynamic";
 import Ombudsman from "@/components/features/ombudsman/Ombudsman";
 import NoContents from "@/components/NoContents";
-import { getServerLocale } from "@/lib/locale/getServerLocale";
-import { buildLocalizedUrl } from "@/lib/locale/localizedUrl";
 
-async function fetchData(locale) {
+async function fetchData() {
   try {
-    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/ombudsman`, locale), {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/ombudsman`, {
       // cache: "no-store",
       cache: "force-cache",
       next: { revalidate: 600 },
@@ -34,8 +32,7 @@ async function fetchData(locale) {
 }
 
 export default async function Ombudsmans() {
-  const locale = await getServerLocale();
-  const { data: files, error } = await fetchData(locale); // ← Fixed destructuring
+  const { data: files, error } = await fetchData(); // ← Fixed destructuring
   // Handle not found case
   if (!files || files.length === 0) {
     <NoContents />;

@@ -2,12 +2,10 @@
 //export const dynamic = "force-dynamic";
 import GalleryDetail from "@/components/features/gallery/GalleryDetail";
 import GallerySlider from "../../../components/features/gallery/GallerySlider";
-import { getServerLocale } from "@/lib/locale/getServerLocale";
-import { buildLocalizedUrl } from "@/lib/locale/localizedUrl";
 
-async function fetchMoreGalleryItems(slug, locale) {
+async function fetchMoreGalleryItems(slug) {
   try {
-    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/more-events?slug=${slug}`, locale), {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/more-events?slug=${slug}`, {
       // cache: "no-store", // Ensure fresh data
       cache: "force-cache",
       next: { revalidate: 600 },
@@ -40,8 +38,7 @@ async function fetchMoreGalleryItems(slug, locale) {
 
 export default async function GalleryDetailPage({ params, searchParams }) {
   const { slug } = await params;
-  const locale = await getServerLocale();
-  const { galleryItems, description, error: moreError } = await fetchMoreGalleryItems(slug, locale);
+  const { galleryItems, description, error: moreError } = await fetchMoreGalleryItems(slug);
 
   return (
     <>

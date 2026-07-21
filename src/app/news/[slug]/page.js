@@ -2,13 +2,11 @@
 import BlogDetail from "@/components/features/blog/BlogDetail";
 import RecentBlog from "@/components/features/blog/RecentBlog";
 import { notFound } from "next/navigation";
-import { getServerLocale } from "@/lib/locale/getServerLocale";
-import { buildLocalizedUrl } from "@/lib/locale/localizedUrl";
 
 // Fetch news data for a specific post
-async function fetchBlogData(slug, locale) {
+async function fetchBlogData(slug) {
   try {
-    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/news/${slug}`, locale), {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/news/${slug}`, {
       cache: "force-cache",
       next: { revalidate: 600 },
     });
@@ -67,9 +65,9 @@ const defaultMetadata = (slug = "") => ({
   },
 });
 
-async function getMetaData(slug, locale) {
+async function getMetaData(slug) {
   try {
-    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta-slug?page=newsItem&slug=${slug}`, locale));
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta-slug?page=newsItem&slug=${slug}`);
     const result = await response.json();
     const meta = result.data;
 
@@ -94,8 +92,7 @@ async function getMetaData(slug, locale) {
 // Generate dynamic metadata
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const locale = await getServerLocale();
-  const { meta, error } = await getMetaData(slug, locale);
+  const { meta, error } = await getMetaData(slug);
 
   if (!meta || error) {
     return defaultMetadata(slug);
@@ -132,9 +129,8 @@ export async function generateMetadata({ params }) {
 
 export default async function News({ params }) {
   const { slug } = params;
-  const locale = await getServerLocale();
 
-  const { data: newsData, recentNews, title, error } = await fetchBlogData(slug, locale);
+  const { data: newsData, recentNews, title, error } = await fetchBlogData(slug);
 
   // Handle error state for news data
   if (error || !newsData) {

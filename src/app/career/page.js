@@ -8,12 +8,10 @@ import MakeYourMove from "@/components/features/career/MakeYourMove";
 import BenefitsEmployee from "@/components/features/career/BenefitsEmployee";
 import MobBenefitsEmployee from "@/components/features/career/MobBenefitsEmployee";
 import { defaultMeta } from "@/constants/constants";
-import { getServerLocale } from "@/lib/locale/getServerLocale";
-import { buildLocalizedUrl } from "@/lib/locale/localizedUrl";
 
-async function fetchData(locale) {
+async function fetchData() {
   try {
-    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/career`, locale), {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/career`, {
       cache: "no-store", // Ensure fresh data
       // cache: "force-cache",
       // next: { revalidate: 600 },
@@ -65,9 +63,9 @@ async function fetchData(locale) {
   }
 }
 
-async function getMetaData(locale) {
+async function getMetaData() {
   try {
-    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=career`, locale), {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=career`, {
       cache: "force-cache",
       next: { revalidate: 600 },
     });
@@ -145,8 +143,7 @@ async function getMetaData(locale) {
 }
 
 export async function generateMetadata() {
-  const locale = await getServerLocale();
-  const { title, description, keywords, twitter, openGraph, alternates } = await getMetaData(locale);
+  const { title, description, keywords, twitter, openGraph, alternates } = await getMetaData();
   return {
     title,
     description,
@@ -158,8 +155,7 @@ export async function generateMetadata() {
 }
 
 export default async function Career() {
-  const locale = await getServerLocale();
-  const { contents, banners, benefits, awards, gallery, testimonials, states, jobs, error } = await fetchData(locale);
+  const { contents, banners, benefits, awards, gallery, testimonials, states, jobs, error } = await fetchData();
 
   if (error) {
     return <div>{error}</div>;

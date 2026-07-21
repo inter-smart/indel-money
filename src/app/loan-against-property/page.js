@@ -2,15 +2,13 @@
 import { headers } from "next/headers";
 import LAPClient from "../../pages/LAPClient";
 import { defaultMeta } from "@/constants/constants";
-import { getServerLocale } from "../../lib/locale/getServerLocale";
-import { buildLocalizedUrl } from "../../lib/locale/localizedUrl";
 
 function isMobileDevice(userAgent) {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
 }
-async function fetchData(locale) {
+async function fetchData() {
   try {
-    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/loan-against-property`, locale), {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/loan-against-property`, {
       cache: "force-cache",
       next: { revalidate: 600 },
     });
@@ -33,9 +31,9 @@ async function fetchData(locale) {
   }
 }
 
-async function getMetaData(locale) {
+async function getMetaData() {
   try {
-    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=lap`, locale), {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=lap`, {
       // cache: "force-cache",
       // next: { revalidate: 600 },
     });
@@ -113,8 +111,7 @@ async function getMetaData(locale) {
 }
 
 export async function generateMetadata() {
-  const locale = await getServerLocale();
-  const { title, description, keywords, twitter, openGraph, alternates } = await getMetaData(locale);
+  const { title, description, keywords, twitter, openGraph, alternates } = await getMetaData();
   return {
     title,
     description,
@@ -126,8 +123,7 @@ export async function generateMetadata() {
 }
 
 export default async function Services() {
-  const locale = await getServerLocale();
-  const { contents, benfits, products, faqs, error } = await fetchData(locale);
+  const { contents, benfits, products, faqs, error } = await fetchData();
 
   const headersList = await headers(); // ✅ await here
   const userAgent = headersList.get("user-agent") || "";

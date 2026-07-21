@@ -8,12 +8,10 @@ import {
 } from "@/components/ui/pagination";
 import MobLatestUpdates from "../../components/features/home/MobLatestUpdates";
 import LatestUpdates from "../../components/features/home/LatestUpdates";
-import { getServerLocale } from "../../lib/locale/getServerLocale";
-import { buildLocalizedUrl } from "../../lib/locale/localizedUrl";
 
-async function fetchCsrData(page = 1, limit = 10, locale) {
+async function fetchCsrData(page = 1, limit = 10) {
   try {
-    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/csr?page=${page}&limit=${limit}`, locale), {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/csr?page=${page}&limit=${limit}`, {
       // cache: "no-store", // Ensure fresh data
       cache: "force-cache",
       next: { revalidate: 600 },
@@ -50,8 +48,7 @@ async function fetchCsrData(page = 1, limit = 10, locale) {
 
 export async function generateMetadata({ params }) {
   const page = parseInt(params?.page) || 1;
-  const locale = await getServerLocale();
-  const { content, error } = await fetchCsrData(page, 10, locale);
+  const { content, error } = await fetchCsrData(page, 10);
   // ... metadata logic (same as original)
 }
 
@@ -62,8 +59,7 @@ const PaginationItems = memo(({ currentPage, totalPages }) => {
 export default async function CSR({ searchParams }) {
   const page = (await parseInt(searchParams?.page)) || 1;
   const limit = 10;
-  const locale = await getServerLocale();
-  const { content, csr, sliderData, pagination, error } = await fetchCsrData(page, limit, locale);
+  const { content, csr, sliderData, pagination, error } = await fetchCsrData(page, limit);
   // if (error) {
   //   return (
   //     <div className="container py-10">

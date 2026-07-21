@@ -1,12 +1,10 @@
 //export const dynamic = "force-dynamic";
 import BranchLocator from "../../components/features/home/BranchLocator";
 import { defaultMeta } from "@/constants/constants";
-import { getServerLocale } from "@/lib/locale/getServerLocale";
-import { buildLocalizedUrl } from "@/lib/locale/localizedUrl";
 
-async function fetchData(locale) {
+async function fetchData() {
   try {
-    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/branch-locator`, locale), {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/branch-locator`, {
       // cache: "no-store", // Ensure fresh data
       cache: "force-cache",
       next: { revalidate: 600 },
@@ -32,9 +30,9 @@ async function fetchData(locale) {
   }
 }
 
-async function getMetaData(locale) {
+async function getMetaData() {
   try {
-    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=branchlocator`, locale));
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=branchlocator`);
     const result = await response.json();
     const meta = result.data;
 
@@ -109,8 +107,7 @@ async function getMetaData(locale) {
 }
 
 export async function generateMetadata() {
-  const locale = await getServerLocale();
-  const { title, description, keywords, twitter, openGraph, alternates } = await getMetaData(locale);
+  const { title, description, keywords, twitter, openGraph, alternates } = await getMetaData();
   return {
     title,
     description,
@@ -122,8 +119,7 @@ export async function generateMetadata() {
 }
 
 export default async function Branch() {
-  const locale = await getServerLocale();
-  const { branchData, error } = await fetchData(locale);
+  const { branchData, error } = await fetchData();
 
   if (!branchData || error) {
     return <div>{"No data"}</div>;

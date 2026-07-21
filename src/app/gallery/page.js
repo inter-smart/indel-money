@@ -3,12 +3,10 @@ import Gallery from "@/components/features/gallery/Gallery";
 import MobGallery from "@/components/features/gallery/MobGallery";
 import NoContents from "@/components/NoContents";
 import { defaultMeta } from "@/constants/constants";
-import { getServerLocale } from "@/lib/locale/getServerLocale";
-import { buildLocalizedUrl } from "@/lib/locale/localizedUrl";
 
-async function fetchData(page = 1, type = "all", limit = 6, locale) {
+async function fetchData(page = 1, type = "all", limit = 6) {
   try {
-    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/event-gallery?page=${page}&limit=${limit}&type=${type}`, locale), {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/event-gallery?page=${page}&limit=${limit}&type=${type}`, {
       // cache: "no-store", // Ensure fresh data
       cache: "force-cache",
       next: { revalidate: 600 },
@@ -45,9 +43,9 @@ async function fetchData(page = 1, type = "all", limit = 6, locale) {
   }
 }
 
-async function getMetaData(locale) {
+async function getMetaData() {
   try {
-    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=gallery`, locale), {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=gallery`, {
       cache: "force-cache",
       next: { revalidate: 600 },
     });
@@ -125,8 +123,7 @@ async function getMetaData(locale) {
 }
 
 export async function generateMetadata() {
-  const locale = await getServerLocale();
-  const { title, description, keywords, twitter, openGraph, alternates } = await getMetaData(locale);
+  const { title, description, keywords, twitter, openGraph, alternates } = await getMetaData();
   return {
     title,
     description,
@@ -142,9 +139,8 @@ export default async function GalleryPage({ searchParams }) {
 
   const page = resolvedSearchParams?.page || 1;
   const type = resolvedSearchParams?.type || "all";
-  const locale = await getServerLocale();
 
-  const { contents, medias, sliderItems, pagination, error } = await fetchData(page, type, undefined, locale);
+  const { contents, medias, sliderItems, pagination, error } = await fetchData(page, type);
 
   if (!contents || !medias || !sliderItems) {
     return <NoContents />;

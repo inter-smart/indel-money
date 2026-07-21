@@ -1,12 +1,10 @@
 import MobHeader from "./MobHeader";
 import DeskHeader from "./DeskHeader";
 import "./Header.css";
-import { getServerLocale } from "../../../lib/locale/getServerLocale";
-import { buildLocalizedUrl } from "../../../lib/locale/localizedUrl";
 
-async function fetchData(locale) {
+async function fetchData() {
   try {
-    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/header`, locale), {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/header`, {
       cache: "no-store", // Ensure fresh data
     });
     const result = await response.json();
@@ -26,8 +24,7 @@ async function fetchData(locale) {
 }
 
 export default async function Header() {
-  const locale = await getServerLocale();
-  const { contents: headerData, socialLinks, links, error } = await fetchData(locale);
+  const { contents: headerData, socialLinks, links, error } = await fetchData();
 
   if (error) {
     return <div>{error}</div>;
@@ -36,7 +33,7 @@ export default async function Header() {
   return (
     <>
       <div className="hidden lg:block">
-        <DeskHeader headerData={headerData} locale={locale} />
+        <DeskHeader headerData={headerData} />
       </div>
       <div className="block lg:hidden">
         <MobHeader
@@ -45,7 +42,6 @@ export default async function Header() {
           links={links}
           title={headerData?.content?.button_1_text}
           modes={headerData?.modes}
-          locale={locale}
         />
       </div>
     </>

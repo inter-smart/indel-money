@@ -4,12 +4,10 @@ import DifferentShadesIndelSlide from "@/components/features/about/DifferentShad
 
 import MobDifferentShadesIndelSlide from "@/components/features/about/MobDifferentShadesIndelSlide";
 import { defaultMeta } from "@/constants/constants";
-import { getServerLocale } from "@/lib/locale/getServerLocale";
-import { buildLocalizedUrl } from "@/lib/locale/localizedUrl";
 
-async function fetchData(locale) {
+async function fetchData() {
   try {
-    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/shades-of-indel`, locale), {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/shades-of-indel`, {
       // cache: "no-store", // Ensure fresh data
       cache: "force-cache",
       next: { revalidate: 600 },
@@ -26,9 +24,9 @@ async function fetchData(locale) {
   }
 }
 
-async function getMetaData(locale) {
+async function getMetaData() {
   try {
-    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=shades`, locale), {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=shades`, {
       cache: "force-cache",
       next: { revalidate: 600 },
     });
@@ -106,8 +104,7 @@ async function getMetaData(locale) {
 }
 
 export async function generateMetadata() {
-  const locale = await getServerLocale();
-  const { title, description, keywords, twitter, openGraph, alternates } = await getMetaData(locale);
+  const { title, description, keywords, twitter, openGraph, alternates } = await getMetaData();
   return {
     title,
     description,
@@ -119,8 +116,7 @@ export async function generateMetadata() {
 }
 
 export default async function DifferentShadesIndel() {
-  const locale = await getServerLocale();
-  const { contents, values, error } = await fetchData(locale);
+  const { contents, values, error } = await fetchData();
 
   if (!contents || !values) {
     return <div>Failed to fetch Different Shades of Indel data</div>;

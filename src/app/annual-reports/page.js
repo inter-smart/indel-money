@@ -3,12 +3,10 @@ import React from "react";
 import Report from "../../components/features/investors/Report";
 
 import api from "../../lib/api/axios";
-import { getServerLocale } from "../../lib/locale/getServerLocale";
-import { buildLocalizedUrl } from "../../lib/locale/localizedUrl";
 
-async function fetchReportData(locale) {
+async function fetchReportData() {
   try {
-    const response = await api.get(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/investors/report`, locale), {
+    const response = await api.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/investors/report`, {
       // cache: "no-store", // Ensure fresh data
       cache: "force-cache",
       next: { revalidate: 600 },
@@ -40,8 +38,7 @@ async function fetchReportData(locale) {
 }
 
 export default async function report() {
-  const locale = await getServerLocale();
-  const { content, reports, returns, error } = await fetchReportData(locale);
+  const { content, reports, returns, error } = await fetchReportData();
 
   if (!reports && !returns) {
     return <div>Failed to fetch report data</div>;

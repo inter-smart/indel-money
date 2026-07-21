@@ -2,10 +2,8 @@
 import Script from "next/script";
 import LatestBlogs from "@/pages/LatestBlogs";
 import AllBlogsPage from "@/pages/AllBlogs";
-import { getServerLocale } from "@/lib/locale/getServerLocale";
-import { buildLocalizedUrl } from "@/lib/locale/localizedUrl";
 
-async function getMetaData(locale) {
+async function getMetaData() {
   const defaultMeta = {
     title: "Blogs | My Website",
     description: "Explore insights, stories, and updates from Indel.",
@@ -13,7 +11,7 @@ async function getMetaData(locale) {
   };
 
   try {
-    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=blog`, locale), {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=blog`, {
       cache: "force-cache",
       next: { revalidate: 600 },
     });
@@ -42,8 +40,7 @@ async function getMetaData(locale) {
 }
 
 export async function generateMetadata() {
-  const locale = await getServerLocale();
-  const { title, description, keywords } = await getMetaData(locale);
+  const { title, description, keywords } = await getMetaData();
 
   return {
     title,

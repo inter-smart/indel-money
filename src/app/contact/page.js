@@ -5,12 +5,10 @@ import WriteIntel from "@/components/features/contact/WriteIntel";
 import ContactFaq from "@/components/features/contact/ContactFaq";
 import { defaultMeta } from "@/constants/constants";
 import BranchLocator from "../../components/features/home/BranchLocator";
-import { getServerLocale } from "@/lib/locale/getServerLocale";
-import { buildLocalizedUrl } from "@/lib/locale/localizedUrl";
 
-async function fetchContactsData(locale) {
+async function fetchContactsData() {
   try {
-    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/contacts`, locale), {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/contacts`, {
       // cache: "no-store", // Ensure fresh data
       cache: "force-cache",
       next: { revalidate: 600 },
@@ -38,9 +36,9 @@ async function fetchContactsData(locale) {
   }
 }
 
-async function getMetaData(locale) {
+async function getMetaData() {
   try {
-    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=contact`, locale));
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=contact`);
     const result = await response.json();
     const meta = result.data;
 
@@ -115,8 +113,7 @@ async function getMetaData(locale) {
 }
 
 export async function generateMetadata() {
-  const locale = await getServerLocale();
-  const { title, description, keywords, twitter, openGraph, alternates } = await getMetaData(locale);
+  const { title, description, keywords, twitter, openGraph, alternates } = await getMetaData();
   return {
     title,
     description,
@@ -128,8 +125,7 @@ export async function generateMetadata() {
 }
 
 export default async function Contact() {
-  const locale = await getServerLocale();
-  const { contents, faqs, officeContacts, branchLocatorData, error } = await fetchContactsData(locale);
+  const { contents, faqs, officeContacts, branchLocatorData, error } = await fetchContactsData();
 
   if (!contents || !faqs || !officeContacts) {
     return <div>Failed to fetch contact data</div>;

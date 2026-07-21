@@ -1,11 +1,9 @@
 //export const dynamic = "force-dynamic";
 import GoverenanceInfo from "../../components/features/investors/GoverenanceInfo";
-import { getServerLocale } from "../../lib/locale/getServerLocale";
-import { buildLocalizedUrl } from "../../lib/locale/localizedUrl";
 
-async function fetchCorporateGoverneceData(locale) {
+async function fetchCorporateGoverneceData() {
   try {
-    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/investors/corporate-governance`, locale), {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/investors/corporate-governance`, {
       // cache: 'no-store', // or 'force-cache' depending on your needs
       cache: "force-cache",
       next: { revalidate: 600 },
@@ -32,8 +30,7 @@ async function fetchCorporateGoverneceData(locale) {
 }
 
 export default async function Goverenance() {
-  const locale = await getServerLocale();
-  const { contents, pdfItems } = await fetchCorporateGoverneceData(locale);
+  const { contents, pdfItems } = await fetchCorporateGoverneceData();
 
   if (!contents && !pdfItems) {
     return <div>Failed to fetch report data</div>;
