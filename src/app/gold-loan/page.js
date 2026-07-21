@@ -3,14 +3,16 @@ import Script from "next/script";
 import { defaultMeta } from "@/constants/constants";
 import GoldLoanClient from "../../pages/GoldLoanClient";
 import { headers } from "next/headers";
+import { getServerLocale } from "../../lib/locale/getServerLocale";
+import { buildLocalizedUrl } from "../../lib/locale/localizedUrl";
 
 function isMobileDevice(userAgent) {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
 }
 
-async function fetchGoldLoanData() {
+async function fetchGoldLoanData(locale) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/gold-loan`, {
+    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/gold-loan`, locale), {
       cache: "no-store",
       credentials: "include", // Ensures session cookie is sent
       headers: {
@@ -59,9 +61,9 @@ async function fetchGoldLoanData() {
   }
 }
 
-async function fetchGoldRate() {
+async function fetchGoldRate(locale) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/gold-rate`, {
+    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/gold-rate`, locale), {
       cache: "force-cache",
       next: { revalidate: 600 },
       headers: {
@@ -81,9 +83,9 @@ async function fetchGoldRate() {
   }
 }
 
-async function getMetaData() {
+async function getMetaData(locale) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=goldloan`);
+    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=goldloan`, locale));
     const result = await response.json();
     const meta = result.data;
 
@@ -158,7 +160,8 @@ async function getMetaData() {
 }
 
 export async function generateMetadata() {
-  const { title, description, keywords, twitter, openGraph, alternates } = await getMetaData();
+  const locale = await getServerLocale();
+  const { title, description, keywords, twitter, openGraph, alternates } = await getMetaData(locale);
   return {
     title,
     description,
@@ -170,9 +173,10 @@ export async function generateMetadata() {
 }
 
 export default async function GoldLoan() {
-  const { steps, contents, bannerIcons, schemes, faqs, features, GoldloanBenefits, announcement } = await fetchGoldLoanData();
+  const locale = await getServerLocale();
+  const { steps, contents, bannerIcons, schemes, faqs, features, GoldloanBenefits, announcement } = await fetchGoldLoanData(locale);
   const flattenedFeatures = features?.flat()?.filter((item) => !item.is_center);
-  const { data: goldRateData, error: goldRateError } = await fetchGoldRate();
+  const { data: goldRateData, error: goldRateError } = await fetchGoldRate(locale);
 
   console.log("Faqs:", faqs);
 

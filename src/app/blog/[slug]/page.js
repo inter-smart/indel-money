@@ -2,11 +2,13 @@
 import BlogDetail from "@/components/features/blog/BlogDetail";
 import RecentBlog from "@/components/features/blog/RecentBlog";
 import { notFound } from "next/navigation";
+import { getServerLocale } from "@/lib/locale/getServerLocale";
+import { buildLocalizedUrl } from "@/lib/locale/localizedUrl";
 
 // Fetch blog data for a specific post
-async function fetchBlogData(slug) {
+async function fetchBlogData(slug, locale) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/blogs/${slug}`, {
+    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/blogs/${slug}`, locale), {
       // next: { revalidate: 60 },
       cache: "force-cache",
       next: { revalidate: 600 },
@@ -66,9 +68,9 @@ const defaultMetadata = (slug = "") => ({
   },
 });
 
-async function getMetaData(slug) {
+async function getMetaData(slug, locale) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta-slug?page=blogItem&slug=${slug}`);
+    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta-slug?page=blogItem&slug=${slug}`, locale));
     const result = await response.json();
     const meta = result.data;
 
@@ -93,7 +95,8 @@ async function getMetaData(slug) {
 // Generate dynamic metadata
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const { meta, error } = await getMetaData(slug);
+  const locale = await getServerLocale();
+  const { meta, error } = await getMetaData(slug, locale);
 
   if (!meta || error) {
     return defaultMetadata(slug);
@@ -130,7 +133,8 @@ export async function generateMetadata({ params }) {
 
 export default async function Blog({ params }) {
   const { slug } = await params;
-  const { data: blogData, recentBlogs, title, error: blogError } = await fetchBlogData(slug);
+  const locale = await getServerLocale();
+  const { data: blogData, recentBlogs, title, error: blogError } = await fetchBlogData(slug, locale);
 
   // Handle error state for blog data
   if (blogError || !blogData) {

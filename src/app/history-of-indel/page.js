@@ -3,10 +3,12 @@ import IndelHistory from "../../components/features/history/IndelHistory";
 import YearsInception from "../../components/features/history/YearsInception";
 import MobYearsInception from "../../components/features/history/MobYearsInception";
 import { defaultMeta } from "@/constants/constants";
+import { getServerLocale } from "../../lib/locale/getServerLocale";
+import { buildLocalizedUrl } from "../../lib/locale/localizedUrl";
 
-async function fetchHistoryData() {
+async function fetchHistoryData(locale) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/history`, {
+    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/history`, locale), {
       // cache: "no-store", // Ensure fresh data
       cache: "force-cache",
       next: { revalidate: 600 },
@@ -22,9 +24,9 @@ async function fetchHistoryData() {
   }
 }
 
-async function getMetaData() {
+async function getMetaData(locale) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=history`, {
+    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=history`, locale), {
       cache: "force-cache",
       next: { revalidate: 600 },
     });
@@ -102,7 +104,8 @@ async function getMetaData() {
 }
 
 export async function generateMetadata() {
-  const { title, description, keywords, twitter, openGraph, alternates } = await getMetaData();
+  const locale = await getServerLocale();
+  const { title, description, keywords, twitter, openGraph, alternates } = await getMetaData(locale);
   return {
     title,
     description,
@@ -114,7 +117,8 @@ export async function generateMetadata() {
 }
 
 export default async function History() {
-  const { contents, images, inceptions, error } = await fetchHistoryData();
+  const locale = await getServerLocale();
+  const { contents, images, inceptions, error } = await fetchHistoryData(locale);
 
   if (!contents || !images || !inceptions) {
     return <div>Failed to fetch history data</div>;

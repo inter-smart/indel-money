@@ -1,9 +1,11 @@
 //export const dynamic = "force-dynamic";
 import PartnersSection from "@/components/partners/Partners";
+import { getServerLocale } from "@/lib/locale/getServerLocale";
+import { buildLocalizedUrl } from "@/lib/locale/localizedUrl";
 
-async function fetchPartnersData() {
+async function fetchPartnersData(locale) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/partners`, {
+    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/partners`, locale), {
       // cache: "no-store", // Ensure fresh data
       cache: "force-cache",
       next: { revalidate: 600 },
@@ -19,9 +21,9 @@ async function fetchPartnersData() {
   }
 }
 
-async function getMetaData() {
+async function getMetaData(locale) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=partners`, {
+    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=partners`, locale), {
       cache: "force-cache",
       next: { revalidate: 600 },
     });
@@ -53,7 +55,8 @@ async function getMetaData() {
 }
 
 export async function generateMetadata() {
-  const { title, description, keywords } = await getMetaData();
+  const locale = await getServerLocale();
+  const { title, description, keywords } = await getMetaData(locale);
 
   return {
     title,
@@ -63,7 +66,8 @@ export async function generateMetadata() {
 }
 
 export default async function Partners() {
-  const { data, partners, error } = await fetchPartnersData();
+  const locale = await getServerLocale();
+  const { data, partners, error } = await fetchPartnersData(locale);
 
   if (!data && !partners) {
     return <div>Failed to fetch partners data</div>;

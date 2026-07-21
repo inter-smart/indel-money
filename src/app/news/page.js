@@ -2,10 +2,12 @@
 import LatestNews from "@/pages/LatestNews";
 import AllNewsPage from "@/pages/AllNews";
 import { defaultMeta } from "@/constants/constants";
+import { getServerLocale } from "@/lib/locale/getServerLocale";
+import { buildLocalizedUrl } from "@/lib/locale/localizedUrl";
 
-async function getMetaData() {
+async function getMetaData(locale) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=news`, {
+    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=news`, locale), {
       cache: "force-cache",
       next: { revalidate: 600 },
     });
@@ -83,7 +85,8 @@ async function getMetaData() {
 }
 
 export async function generateMetadata() {
-  const { title, description, keywords, twitter, openGraph, alternates } = await getMetaData();
+  const locale = await getServerLocale();
+  const { title, description, keywords, twitter, openGraph, alternates } = await getMetaData(locale);
   return {
     title,
     description,

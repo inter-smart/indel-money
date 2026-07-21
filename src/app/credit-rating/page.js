@@ -2,10 +2,12 @@
 import React from "react";
 import CreditRatings from "../../components/features/investors/CreditRatings";
 import { notFound } from "next/navigation";
+import { getServerLocale } from "../../lib/locale/getServerLocale";
+import { buildLocalizedUrl } from "../../lib/locale/localizedUrl";
 
-async function fetchCreditRatingsData() {
+async function fetchCreditRatingsData(locale) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/investors/credit-ratings`, {
+    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/investors/credit-ratings`, locale), {
       // cache: "no-store", // Ensure fresh data
       cache: "force-cache",
       next: { revalidate: 600 },
@@ -22,7 +24,8 @@ async function fetchCreditRatingsData() {
 }
 
 export default async function QuarterlyReports() {
-  const { content, reports, error } = await fetchCreditRatingsData();
+  const locale = await getServerLocale();
+  const { content, reports, error } = await fetchCreditRatingsData(locale);
 
   if (!reports) {
     notFound();

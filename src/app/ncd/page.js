@@ -1,10 +1,12 @@
 //export const dynamic = "force-dynamic";
 import React from "react";
 import NcdReports from "@/components/features/investors/NcdReports";
+import { getServerLocale } from "@/lib/locale/getServerLocale";
+import { buildLocalizedUrl } from "@/lib/locale/localizedUrl";
 
-async function fetchNcdData() {
+async function fetchNcdData(locale) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/investors/ncd-reports`, {
+    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/investors/ncd-reports`, locale), {
       // cache: 'no-store', // or 'force-cache' depending on your needs
       cache: "force-cache",
       next: { revalidate: 600 },
@@ -33,7 +35,8 @@ async function fetchNcdData() {
 }
 
 export default async function report() {
-  const { contents, currentReports, pastReports, error } = await fetchNcdData();
+  const locale = await getServerLocale();
+  const { contents, currentReports, pastReports, error } = await fetchNcdData(locale);
 
   if (!contents && currentReports.length === 0 && pastReports.length === 0) {
     return <div>Failed to fetch report data</div>;

@@ -2,13 +2,15 @@
 import Script from "next/script";
 import MsmeLoanClient from "@/pages/MsmeClient";
 import { headers } from "next/headers";
+import { getServerLocale } from "@/lib/locale/getServerLocale";
+import { buildLocalizedUrl } from "@/lib/locale/localizedUrl";
 
 function isMobileDevice(userAgent) {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
 }
-async function fetchData() {
+async function fetchData(locale) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/msme`, {
+    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/msme`, locale), {
       // cache: "no-store", // Ensure fresh data
       cache: "force-cache",
       next: { revalidate: 600 },
@@ -48,9 +50,9 @@ async function fetchData() {
     };
   }
 }
-async function getMetaData() {
+async function getMetaData(locale) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=msme`);
+    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=msme`, locale));
     const result = await response.json();
     const meta = result.data;
 
@@ -79,7 +81,8 @@ async function getMetaData() {
 }
 
 export async function generateMetadata() {
-  const { title, description, keywords } = await getMetaData();
+  const locale = await getServerLocale();
+  const { title, description, keywords } = await getMetaData(locale);
 
   return {
     title,
@@ -89,7 +92,8 @@ export async function generateMetadata() {
 }
 
 export default async function MsmeLoan() {
-  const { contents, offerings, faqs, loanTypes, industries, audience, error } = await fetchData();
+  const locale = await getServerLocale();
+  const { contents, offerings, faqs, loanTypes, industries, audience, error } = await fetchData(locale);
 
   const headersList = await headers();
   const userAgent = headersList.get("user-agent") || "";

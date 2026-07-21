@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import MobNavMenu from "./MobNavMenu";
+import TranslatorDropdown from "./TranslatorDropdown";
 import { serverMediaPath } from "@/constants/constants";
 
 const socialmedias = [
@@ -57,7 +58,7 @@ const quickactions = [
   },
 ];
 
-export default function MobHeader({ socialLinks, links, logo, title, modes }) {
+export default function MobHeader({ socialLinks, links, logo, title, modes, locale }) {
   const [isVisible, setIsVisible] = useState(true);
   const [prevScrollPos, setPrevScrollPos] = useState(0);
 
@@ -161,6 +162,9 @@ export default function MobHeader({ socialLinks, links, logo, title, modes }) {
                   >
                     Apply for NCD
                   </a> */}
+                  <div className="block">
+                    <TranslatorDropdown ssrLocale={locale} />
+                  </div>
                   <div>
                     <MobNavMenu logo={logo} serverMediaPath={serverMediaPath} title={title} modes={modes} />
                   </div>

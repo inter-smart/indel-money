@@ -3,10 +3,19 @@
 @import url('~leaflet.markercluster/dist/MarkerCluster.Default.css');
 
 
-@theme {
+/* Font tokens must live in `@theme inline`, not `@theme`. They reference the
+   next/font variables, which are declared on <body>. A plain @theme token
+   substitutes its var()s at :root, where those variables don't exist - that
+   makes the whole token invalid, so font-family falls back to preflight's
+   system sans and --font-noto-tamil is never referenced by anything (rendering
+   Tamil as tofu). `inline` inlines the value into the utility instead, so the
+   var()s resolve on <body> where they're defined. */
+@theme inline {
   --font-amino: "Amino", sans-serif;
-  --font-montserrat: "Montserrat", sans-serif;
+  --font-montserrat: var(--font-montserrat-base), var(--font-noto-tamil), sans-serif;
+}
 
+@theme {
   --color-base1: #17479e;
   --color-base2: #ee3824;
   --color-base3: #b7d0ff;

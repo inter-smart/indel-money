@@ -1,10 +1,12 @@
 //export const dynamic = "force-dynamic";
 import PrivacyPolicy from "@/components/features/privacy/PrivacyPolicy";
 import { notFound } from "next/navigation";
+import { getServerLocale } from "@/lib/locale/getServerLocale";
+import { buildLocalizedUrl } from "@/lib/locale/localizedUrl";
 
-async function fetchData(type) {
+async function fetchData(type, locale) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/policies?type=${type}`, {
+    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/policies?type=${type}`, locale), {
       cache: "no-store", // Ensure fresh data
       // cache: "force-cache",
       // next: { revalidate: 60 },
@@ -37,7 +39,8 @@ async function fetchData(type) {
 
 export default async function PolicyPage({ params }) {
   const { slug } = await params;
-  const { content, error } = await fetchData(slug);
+  const locale = await getServerLocale();
+  const { content, error } = await fetchData(slug, locale);
 
   if (error || !content) {
     notFound();

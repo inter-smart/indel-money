@@ -4,10 +4,12 @@ import OtherGoldLoan from "@/components/features/services/OtherGoldLoan";
 import SmartMoneyDeal from "@/components/features/services/SmartMoneyDeal";
 import IndelRemit from "@/components/features/services/IndelRemit";
 import { defaultMeta } from "@/constants/constants";
+import { getServerLocale } from "@/lib/locale/getServerLocale";
+import { buildLocalizedUrl } from "@/lib/locale/localizedUrl";
 
-async function fetchManagementData() {
+async function fetchManagementData(locale) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/our-services`, {
+    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/our-services`, locale), {
       // cache: "no-store", // Ensure fresh data
       cache: "force-cache",
       next: { revalidate: 600 },
@@ -30,9 +32,9 @@ async function fetchManagementData() {
   }
 }
 
-async function getMetaData() {
+async function getMetaData(locale) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=services`);
+    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=services`, locale));
     const result = await response.json();
     const meta = result.data;
 
@@ -107,7 +109,8 @@ async function getMetaData() {
 }
 
 export async function generateMetadata() {
-  const { title, description, keywords, twitter, openGraph, alternates } = await getMetaData();
+  const locale = await getServerLocale();
+  const { title, description, keywords, twitter, openGraph, alternates } = await getMetaData(locale);
   return {
     title,
     description,
@@ -119,7 +122,8 @@ export async function generateMetadata() {
 }
 
 export default async function Services() {
-  const { serviceContent, services, serviceBenefit, error } = await fetchManagementData();
+  const locale = await getServerLocale();
+  const { serviceContent, services, serviceBenefit, error } = await fetchManagementData(locale);
 
   if ((!serviceContent && !services && !serviceBenefit) || error) {
     return <div>Failed to fetch service data</div>;

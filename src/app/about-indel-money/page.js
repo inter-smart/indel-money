@@ -17,10 +17,12 @@ import MobAccolades from "../../components/features/about/MobAccolades";
 import MobIndelValuesInfo from "../../components/features/about/MobIndelValuesInfo";
 import MobInvestors from "../../components/features/about/MobInvestorsInfo";
 import MobLifeIndel from "../../components/features/about/MobLifeIndelInfo";
+import { getServerLocale } from "../../lib/locale/getServerLocale";
+import { buildLocalizedUrl } from "../../lib/locale/localizedUrl";
 
-async function fetchAboutData() {
+async function fetchAboutData(locale) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/about`, {
+    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/about`, locale), {
       // cache: "no-store",
       cache: "force-cache",
       next: { revalidate: 600 },
@@ -36,9 +38,9 @@ async function fetchAboutData() {
   }
 }
 
-async function getMetaData() {
+async function getMetaData(locale) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=about`);
+    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=about`, locale));
     const result = await response.json();
     const meta = result.data;
 
@@ -113,7 +115,8 @@ async function getMetaData() {
 }
 
 export async function generateMetadata() {
-  const { title, description, keywords, twitter, openGraph, alternates } = await getMetaData();
+  const locale = await getServerLocale();
+  const { title, description, keywords, twitter, openGraph, alternates } = await getMetaData(locale);
   return {
     title,
     description,
@@ -125,7 +128,8 @@ export async function generateMetadata() {
 }
 
 export default async function About() {
-  const { data, error } = await fetchAboutData();
+  const locale = await getServerLocale();
+  const { data, error } = await fetchAboutData(locale);
 
   if (!data) {
     return <div>Failed to fetch about data</div>;

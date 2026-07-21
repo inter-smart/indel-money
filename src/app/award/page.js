@@ -2,10 +2,12 @@
 import AwardClient from "@/pages/AwardClient";
 import NoContents from "@/components/NoContents";
 import { defaultMeta } from "@/constants/constants";
+import { getServerLocale } from "@/lib/locale/getServerLocale";
+import { buildLocalizedUrl } from "@/lib/locale/localizedUrl";
 
-async function fetchData() {
+async function fetchData(locale) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/awards`, {
+    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/awards`, locale), {
       // cache: "no-store", // Ensure fresh data
       cache: "force-cache",
       next: { revalidate: 600 },
@@ -27,9 +29,9 @@ async function fetchData() {
   }
 }
 
-async function getMetaData() {
+async function getMetaData(locale) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=award`);
+    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=award`, locale));
     const result = await response.json();
     const meta = result.data;
 
@@ -104,7 +106,8 @@ async function getMetaData() {
 }
 
 export async function generateMetadata() {
-  const { title, description, keywords, twitter, openGraph, alternates } = await getMetaData();
+  const locale = await getServerLocale();
+  const { title, description, keywords, twitter, openGraph, alternates } = await getMetaData(locale);
   return {
     title,
     description,
@@ -116,7 +119,8 @@ export async function generateMetadata() {
 }
 
 export default async function Award() {
-  const { contents, awards, sliderItems, error } = await fetchData();
+  const locale = await getServerLocale();
+  const { contents, awards, sliderItems, error } = await fetchData(locale);
 
   if (!contents) {
     return <NoContents />;

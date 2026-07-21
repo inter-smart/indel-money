@@ -1,11 +1,13 @@
 //export const dynamic = "force-dynamic";
 import Testimonial from "@/pages/Testimonials";
 import { defaultMeta } from "@/constants/constants";
+import { getServerLocale } from "@/lib/locale/getServerLocale";
+import { buildLocalizedUrl } from "@/lib/locale/localizedUrl";
 
-async function fetchData(page = 1, limit = 10, type = "all") {
+async function fetchData(page = 1, limit = 10, type = "all", locale) {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/testimonials?page=${page}&limit=${limit}&type=${type}`,
+      buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/testimonials?page=${page}&limit=${limit}&type=${type}`, locale),
       {
         // cache: "no-store", // Ensure fresh data
         cache: "force-cache",
@@ -41,9 +43,9 @@ async function fetchData(page = 1, limit = 10, type = "all") {
   }
 }
 
-async function getMetaData() {
+async function getMetaData(locale) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=testimonials`, {
+    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=testimonials`, locale), {
       cache: "force-cache",
       next: { revalidate: 600 },
     });
@@ -121,7 +123,8 @@ async function getMetaData() {
 }
 
 export async function generateMetadata() {
-  const { title, description, keywords, twitter, openGraph, alternates } = await getMetaData();
+  const locale = await getServerLocale();
+  const { title, description, keywords, twitter, openGraph, alternates } = await getMetaData(locale);
   return {
     title,
     description,
@@ -135,8 +138,9 @@ export async function generateMetadata() {
 export default async function EmployeeTestimonial({ searchParams }) {
   const page = (await searchParams?.page) || 1;
   const type = (await searchParams?.type) || "all";
+  const locale = await getServerLocale();
 
-  const { testimonials, pagination, contents, error } = await fetchData(page, 2, type);
+  const { testimonials, pagination, contents, error } = await fetchData(page, 2, type, locale);
 
   if (error) {
     return <div>{error}</div>;

@@ -1,10 +1,12 @@
 //export const dynamic = "force-dynamic";
 import ManagementTeam from "@/components/features/management-team/ManagementTeam";
 import { defaultMeta } from "@/constants/constants";
+import { getServerLocale } from "@/lib/locale/getServerLocale";
+import { buildLocalizedUrl } from "@/lib/locale/localizedUrl";
 
-async function fetchManagementData() {
+async function fetchManagementData(locale) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/management`, {
+    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/management`, locale), {
       // cache: "no-store", // Ensure fresh data
       cache: "force-cache",
       next: { revalidate: 600 },
@@ -20,9 +22,9 @@ async function fetchManagementData() {
   }
 }
 
-async function getMetaData() {
+async function getMetaData(locale) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=management`, {
+    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=management`, locale), {
       cache: "force-cache",
       next: { revalidate: 600 },
     });
@@ -100,7 +102,8 @@ async function getMetaData() {
 }
 
 export async function generateMetadata() {
-  const { title, description, keywords, twitter, openGraph, alternates } = await getMetaData();
+  const locale = await getServerLocale();
+  const { title, description, keywords, twitter, openGraph, alternates } = await getMetaData(locale);
   return {
     title,
     description,
@@ -112,7 +115,8 @@ export async function generateMetadata() {
 }
 
 export default async function ManagementTeamPage() {
-  const { data, error } = await fetchManagementData();
+  const locale = await getServerLocale();
+  const { data, error } = await fetchManagementData(locale);
 
   if (!data) {
     return <div>Failed to fetch management data</div>;

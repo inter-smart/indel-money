@@ -4,10 +4,12 @@ import MobIndelValueBanner from "@/components/features/about/MobIndelValueBanner
 import OurValues from "@/components/features/about/OurValues";
 import OurApproach from "@/components/features/about/OurApproach";
 import { defaultMeta } from "@/constants/constants";
+import { getServerLocale } from "@/lib/locale/getServerLocale";
+import { buildLocalizedUrl } from "@/lib/locale/localizedUrl";
 
-async function fetchData() {
+async function fetchData(locale) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/indel-values`, {
+    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/indel-values`, locale), {
       // cache: "no-store", // Ensure fresh data
       cache: "force-cache",
       next: { revalidate: 600 },
@@ -30,9 +32,9 @@ async function fetchData() {
   }
 }
 
-async function getMetaData() {
+async function getMetaData(locale) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=indelValues`, {
+    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=indelValues`, locale), {
       cache: "force-cache",
       next: { revalidate: 600 },
     });
@@ -110,7 +112,8 @@ async function getMetaData() {
 }
 
 export async function generateMetadata() {
-  const { title, description, keywords, twitter, openGraph, alternates } = await getMetaData();
+  const locale = await getServerLocale();
+  const { title, description, keywords, twitter, openGraph, alternates } = await getMetaData(locale);
   return {
     title,
     description,
@@ -122,7 +125,8 @@ export async function generateMetadata() {
 }
 
 export default async function IndelValues() {
-  const { contents, values, propositions, mobileBanners, error } = await fetchData();
+  const locale = await getServerLocale();
+  const { contents, values, propositions, mobileBanners, error } = await fetchData(locale);
 
   if (!contents || !values || !propositions) {
     return <div>Failed to fetch Indel Values data</div>;

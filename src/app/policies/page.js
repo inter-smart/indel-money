@@ -1,11 +1,13 @@
 //export const dynamic = "force-dynamic";
 import React from "react";
 import Policies from "../../components/features/investors/Policies";
+import { getServerLocale } from "../../lib/locale/getServerLocale";
+import { buildLocalizedUrl } from "../../lib/locale/localizedUrl";
 
-async function fetchPolicyData(page = 1, limit = 10) {
+async function fetchPolicyData(page = 1, limit = 10, locale) {
   try {
     const catResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/investors/policy_categories`,
+      buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/investors/policy_categories`, locale),
       {
         // cache: "no-store", // or 'force-cache' depending on your needs
         cache: "force-cache",
@@ -22,7 +24,7 @@ async function fetchPolicyData(page = 1, limit = 10) {
     }
 
     const response = await fetch(
-      url,
+      buildLocalizedUrl(url, locale),
       {
         // cache: "no-store", // or 'force-cache' depending on your needs
         cache: "force-cache",
@@ -69,8 +71,9 @@ async function fetchPolicyData(page = 1, limit = 10) {
 
 export default async function Policy({ searchParams }) {
   const page = (await searchParams?.page) || 1;
+  const locale = await getServerLocale();
 
-  const { content, policies, categories, totalPages, currentPage, limit, error } = await fetchPolicyData(page);
+  const { content, policies, categories, totalPages, currentPage, limit, error } = await fetchPolicyData(page, undefined, locale);
 
   if (!content && !policies && !totalPages && !currentPage && !limit) {
     return <div>Failed to fetch policy data</div>;

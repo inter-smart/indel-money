@@ -2,6 +2,8 @@ import dynamic from "next/dynamic";
 import CsrDetail from "@/components/features/csr/BlogDetail";
 import RecentCsr from "@/components/features/csr/RecentCSR";
 import { notFound } from "next/navigation";
+import { getServerLocale } from "@/lib/locale/getServerLocale";
+import { buildLocalizedUrl } from "@/lib/locale/localizedUrl";
 
 const LatestUpdates = dynamic(() => import("@/components/features/home/LatestUpdates"), {
   loading: () => <div>Loading slider...</div>,
@@ -11,9 +13,9 @@ const MobLatestUpdates = dynamic(() => import("@/components/features/csr/MobLate
 });
 
 // Fetch single CSR data
-async function fetchCsrData(slug) {
+async function fetchCsrData(slug, locale) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/csr/${slug}`, {
+    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/csr/${slug}`, locale), {
       // next: { revalidate: 60 },
       cache: "force-cache",
       next: { revalidate: 600 },
@@ -40,9 +42,9 @@ async function fetchCsrData(slug) {
 }
 
 // Fetch recent CSR posts
-async function fetchRecentCsrs(slug) {
+async function fetchRecentCsrs(slug, locale) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/csr?limit=3`, {});
+    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/csr?limit=3`, locale), {});
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
@@ -60,7 +62,8 @@ async function fetchRecentCsrs(slug) {
 // Generate metadata for CSR
 export async function generateMetadata({ params }) {
   const { slug } = params;
-  const { content: data, error } = await fetchCsrData(slug);
+  const locale = await getServerLocale();
+  const { content: data, error } = await fetchCsrData(slug, locale);
 
   if (error || !data) {
     return {
@@ -127,8 +130,9 @@ export async function generateMetadata({ params }) {
 // Main component for CSR detail page
 export default async function CSRDetailPage({ params }) {
   const { slug } = params;
-  const { content: csrData, error: csrError } = await fetchCsrData(slug);
-  const { data: recentCsrs, error: recentError } = await fetchRecentCsrs(slug);
+  const locale = await getServerLocale();
+  const { content: csrData, error: csrError } = await fetchCsrData(slug, locale);
+  const { data: recentCsrs, error: recentError } = await fetchRecentCsrs(slug, locale);
 
   if (csrError || !csrData) {
     notFound();

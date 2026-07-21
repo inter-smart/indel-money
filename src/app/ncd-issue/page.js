@@ -1,10 +1,12 @@
 import NcdInfo from "@/components/features/ncd-issues/NcdInfo";
 import NoContents from "@/components/NoContents";
 import { defaultMeta } from "@/constants/constants";
+import { getServerLocale } from "@/lib/locale/getServerLocale";
+import { buildLocalizedUrl } from "@/lib/locale/localizedUrl";
 
-async function fetchNcdData() {
+async function fetchNcdData(locale) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/ncd-forms`, {
+    const res = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/ncd-forms`, locale), {
       cache: "force-cache",
       next: { revalidate: 600 }, // revalidate cache every 10 minutes
     });
@@ -23,9 +25,9 @@ async function fetchNcdData() {
   }
 }
 
-async function getMetaData() {
+async function getMetaData(locale) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=ncd`);
+    const res = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=ncd`, locale));
     const result = await res.json();
 
     if (result.status === "success") {
@@ -100,12 +102,14 @@ async function getMetaData() {
 
 // Generate metadata for SEO
 export async function generateMetadata() {
-  const meta = await getMetaData();
+  const locale = await getServerLocale();
+  const meta = await getMetaData(locale);
   return meta;
 }
 
 export default async function NcdPage() {
-  const { data, error } = await fetchNcdData();
+  const locale = await getServerLocale();
+  const { data, error } = await fetchNcdData(locale);
 
   if (!data) {
     return <NoContents />;

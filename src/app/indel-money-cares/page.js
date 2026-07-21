@@ -1,10 +1,12 @@
 //export const dynamic = "force-dynamic";
 import IndelCares from "@/pages/IndelCares";
 import { defaultMeta } from "@/constants/constants";
+import { getServerLocale } from "@/lib/locale/getServerLocale";
+import { buildLocalizedUrl } from "@/lib/locale/localizedUrl";
 
-async function fetchData(page = 1, limit = 3) {
+async function fetchData(page = 1, limit = 3, locale) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/indel-cares?page=${page}&limit=${limit}`, {
+    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/indel-cares?page=${page}&limit=${limit}`, locale), {
       // cache: "no-store", // Ensure fresh data
       cache: "force-cache",
       next: { revalidate: 600 },
@@ -46,9 +48,9 @@ async function fetchData(page = 1, limit = 3) {
   }
 }
 
-async function getMetaData() {
+async function getMetaData(locale) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=indelcares`, {
+    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=indelcares`, locale), {
       cache: "force-cache",
       next: { revalidate: 600 },
     });
@@ -126,7 +128,8 @@ async function getMetaData() {
 }
 
 export async function generateMetadata() {
-  const { title, description, keywords, twitter, openGraph, alternates } = await getMetaData();
+  const locale = await getServerLocale();
+  const { title, description, keywords, twitter, openGraph, alternates } = await getMetaData(locale);
   return {
     title,
     description,
@@ -139,7 +142,8 @@ export async function generateMetadata() {
 
 export default async function Partners({ searchParams }) {
   const { page } = (await searchParams) || 1;
-  const { content, slideItems, nonSlideItems, totalPages, currentPage, limit, error } = await fetchData(page);
+  const locale = await getServerLocale();
+  const { content, slideItems, nonSlideItems, totalPages, currentPage, limit, error } = await fetchData(page, undefined, locale);
 
   if (!content && !slideItems && !nonSlideItems) {
     return <div>Failed to fetch indel data</div>;

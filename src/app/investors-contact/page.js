@@ -1,10 +1,12 @@
 //export const dynamic = "force-dynamic";
 import React from "react";
 import Contact from "../../components/features/investors/Contact";
+import { getServerLocale } from "../../lib/locale/getServerLocale";
+import { buildLocalizedUrl } from "../../lib/locale/localizedUrl";
 
-async function fetchContactData() {
+async function fetchContactData(locale) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/investors/contact`, {
+    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/investors/contact`, locale), {
       // cache: "no-store", // Ensure fresh data
       cache: "force-cache",
       next: { revalidate: 600 },
@@ -36,7 +38,8 @@ async function fetchContactData() {
 }
 
 export default async function contact() {
-  const { content, pdf_contacts, text_contacts, error } = await fetchContactData();
+  const locale = await getServerLocale();
+  const { content, pdf_contacts, text_contacts, error } = await fetchContactData(locale);
 
   const contacts = text_contacts;
 
