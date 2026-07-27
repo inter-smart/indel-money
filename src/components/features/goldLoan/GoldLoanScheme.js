@@ -8,7 +8,6 @@ import { useState } from "react";
 
 export default function Scheme({ goldLoanSchemes, scheme_title }) {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
-  const [activeIndex, setActiveIndex] = useState(0);
 
   const schemes = goldLoanSchemes?.goldLoanSchemes || [];
   const schemeDetails = goldLoanSchemes?.goldLoanSchemeDetails || [];
@@ -25,15 +24,26 @@ export default function Scheme({ goldLoanSchemes, scheme_title }) {
           />
 
           {/* Thumbnail Slider */}
-          <div className="w-full xl:w-[700px] 2xl:w-[950px] 3xl:w-[1020px]">
+          <div className="w-full xl:w-[700px] 2xl:w-[950px] 3xl:w-[1020px] flex items-center gap-[8px]">
+            <button
+              aria-label="Previous scheme"
+              className="goldSchemeThumbPrev shrink-0 w-[26px] h-[26px] 2xl:w-[30px] 2xl:h-[30px] flex items-center justify-center rounded-full bg-white shadow-[0_0_6px_rgba(0,0,0,0.25)] cursor-pointer transition-opacity duration-300"
+            >
+              <svg width="8" height="14" viewBox="0 0 8 14" fill="none">
+                <path d="M7 1L1 7L7 13" stroke="#08388E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
             <Swiper
               onSwiper={setThumbsSwiper}
               spaceBetween={10}
               watchSlidesProgress
-              slidesPerView={1}
-              slideToClickedSlide={true}
-              modules={[Thumbs]}
-              className="w-full"
+              slidesPerView="auto"
+              modules={[Thumbs, Navigation]}
+              navigation={{
+                nextEl: ".goldSchemeThumbNext",
+                prevEl: ".goldSchemeThumbPrev",
+              }}
+              className="w-full min-w-0 flex-1"
               breakpoints={{
                 320: { spaceBetween: 5 },
                 480: { spaceBetween: 8 },
@@ -43,20 +53,24 @@ export default function Scheme({ goldLoanSchemes, scheme_title }) {
               }}
             >
               {schemes?.map((type, index) => (
-                <SwiperSlide key={index} className="!w-auto">
+                <SwiperSlide key={index} className="!w-auto group">
                   <h4
-                    onClick={() => {
-                      setActiveIndex(index);
-                      thumbsSwiper?.slideTo(index);
-                    }}
-                    className={`w-fit h-[40px] 2xl:h-[50px] 3xl:h-[60px] text-[12px] 2xl:text-[16px] 3xl:text-[18px] px-[10px] font-bold flex items-center justify-center rounded-[100px] cursor-pointer transition-all duration-300 whitespace-nowrap
-                                        ${activeIndex === index ? "bg-base1 text-white thumbActive" : "bg-[#CFDFFE] text-black"}`}
+                    className="w-fit h-[40px] 2xl:h-[50px] 3xl:h-[60px] text-[12px] 2xl:text-[16px] 3xl:text-[18px] px-[10px] font-bold flex items-center justify-center rounded-[100px] cursor-pointer transition-all duration-300 whitespace-nowrap
+                                        bg-[#CFDFFE] text-black group-[.swiper-slide-thumb-active]:bg-base1 group-[.swiper-slide-thumb-active]:text-white"
                   >
                     {type}
                   </h4>
                 </SwiperSlide>
               ))}
             </Swiper>
+            <button
+              aria-label="Next scheme"
+              className="goldSchemeThumbNext shrink-0 w-[26px] h-[26px] 2xl:w-[30px] 2xl:h-[30px] flex items-center justify-center rounded-full bg-white shadow-[0_0_6px_rgba(0,0,0,0.25)] cursor-pointer transition-opacity duration-300"
+            >
+              <svg width="8" height="14" viewBox="0 0 8 14" fill="none">
+                <path d="M1 1L7 7L1 13" stroke="#08388E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
           </div>
         </div>
 
@@ -66,7 +80,7 @@ export default function Scheme({ goldLoanSchemes, scheme_title }) {
             loop={true}
             spaceBetween={10}
             thumbs={{ swiper: thumbsSwiper }}
-            onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
+            onSlideChange={(swiper) => thumbsSwiper?.slideTo(swiper.realIndex)}
             modules={[Navigation, Thumbs]}
             className="w-full"
           >

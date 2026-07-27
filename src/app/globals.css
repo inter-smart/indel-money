@@ -489,6 +489,13 @@
     pointer-events: none;
   }
 
+  .goldSchemeThumbPrev.swiper-button-disabled,
+  .goldSchemeThumbNext.swiper-button-disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
   .scrollbar-custom::-webkit-scrollbar {
     width: 1.5px;
   }
