@@ -71,6 +71,10 @@ async function fetchGoldRate(locale) {
       },
     });
 
+    if (!response.ok) {
+      return { data: null, error: `Gold rate API responded with ${response.status}` };
+    }
+
     const result = await response.json();
 
     if (result?.success && result?.goldRate) {

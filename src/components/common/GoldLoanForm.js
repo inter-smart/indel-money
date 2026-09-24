@@ -203,7 +203,7 @@ export default function GoldLoanForm({ goldCaratTypes, goldTypes, goldRate }) {
                     />
                   </div>
                   <FormDescription className="text-[10px] lg:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-normal text-[#3c3c3c]">
-                    Rate Calculated @ {goldRate} / Gm
+                    Rate Calculated @ {goldRate ?? "--"} / Gm
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

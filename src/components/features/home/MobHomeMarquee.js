@@ -15,7 +15,9 @@ export default function MobHomeMarquee({ announcementText, goldRateLabel, goldRa
           />
           {/* Gold rate */}
           {goldRateLabel}
-          <span className="font-medium text-black p-[6px_10px] bg-[#e8c002] rounded-[20px]">&#8377; {goldRate}</span>
+          {goldRate ? (
+            <span className="font-medium text-black p-[6px_10px] bg-[#e8c002] rounded-[20px]">&#8377; {goldRate}</span>
+          ) : null}
         </h2>
       </div>
       <div className="w-full h-[var(--marquee-y)] bg-base1 flex items-center">

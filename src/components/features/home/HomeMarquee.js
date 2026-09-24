@@ -18,7 +18,7 @@ export default function HomeMarquee({
           className="w-5 h-5 3xl:w-6 3xl:h-6 mr-2 3xl:mr-3 object-contain"
           priority={true}
         />
-        {goldRateLabel} - {goldRate} Rs /-
+        {goldRate ? `${goldRateLabel} - ${goldRate} Rs /-` : goldRateLabel}
       </h2>
       <div className="w-[calc(100%-240px)] lg:w-[calc(100%-220px)] 2xl:w-[calc(100%-300px)] 3xl:w-[calc(100%-340px)]">
         <Marquee speed={80} pauseOnHover={true} className="text-sm1">
