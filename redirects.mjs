@@ -3389,4 +3389,99 @@ export default [
     destination: "https://backend.indelmoney.com/uploads/file-share/1772193097386-752112299.pdf",
     permanent: true,
   },
+  {
+    source: "/uploads/ncd-reports/1751280549969.pdf",
+    destination: "/",
+    permanent: true,
+  },
+  {
+    source: "/uploads/ncd-reports/1751518138063.pdf",
+    destination: "/",
+    permanent: true,
+  },
+  {
+    source: "/uploads/ncd-reports/1751280700833.pdf",
+    destination: "/",
+    permanent: true,
+  },
+  {
+    source: "/uploads/ncd-reports/1751518220185.pdf",
+    destination: "/",
+    permanent: true,
+  },
+  {
+    source: "/uploads/quarterly-reports/1751285333781.pdf",
+    destination: "/",
+    permanent: true,
+  },
+  {
+    source: "/uploads/ncd-reports/1759329643629-993770945.pdf",
+    destination: "/",
+    permanent: true,
+  },
+  {
+    source: "/uploads/ncd-reports/1751280644108.pdf",
+    destination: "/",
+    permanent: true,
+  },
+  {
+    source: "/team/mary-lou-burke/different-shades-of-indelmoney/",
+    destination: "/",
+    permanent: true,
+  },
+  {
+    source: "/wp-content/uploads/2025/03/INDEL MONEY LIMITED - NCD IV PROSPECTUS.pdf",
+    destination: "/",
+    permanent: true,
+  },
+  {
+    source: "/wp-content/uploads/2024/11/ICAAP Policy.pdf",
+    destination: "/",
+    permanent: true,
+  },
+  {
+    source: "/_next/static/css/app/stock-exchange-filings/page.css",
+    destination: "/",
+    permanent: true,
+  },
+  {
+    source: "/web/footer",
+    destination: "/",
+    permanent: true,
+  },
+  {
+    source: "/wp-content/uploads/2025/02/9.-Q3-Quarterly-",
+    destination: "/",
+    permanent: true,
+  },
+  {
+    source: "/_next/static/css/app/layout.css",
+    destination: "/",
+    permanent: true,
+  },
+  {
+    source: "/uploads/investors/policies/1751283633119.pdf",
+    destination: "/",
+    permanent: true,
+  },
+  {
+    source: "/wp-content/uploads/2024/10/Indel Money-Limited-Prospectus-8102024- Signed.pdf",
+    destination: "/",
+    permanent: true,
+  },
+  {
+    source: "/wp-content/uploads/2024/09/Annual Report 2023-2024.pdf",
+    destination: "/",
+    permanent: true,
+  },
+  {
+    source: "/wp-content/uploads/2024/11/Customer Grievance Redressal Policy.pdf",
+    destination: "/",
+    permanent: true,
+  },
+  {
+    source: "/wp-content/uploads/2024/11/Compliance Policy.pdf",
+    destination: "/",
+    permanent: true,
+  },
 ];
