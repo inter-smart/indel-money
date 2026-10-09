@@ -110,8 +110,8 @@ export default async function MsmeLoan() {
         "@type": "FinancialService",
         "name": "Indel Money Limited",
         "url": "https://indelmoney.com/msme-loan",
-        "logo": "https://indelmoney.com/_next/image?url=https%3A%2F%2Fbackend.indelmoney.com%2Fuploads%2Fbanner%2F1763029961331-201441951.jpg&w=1920&q=75",
-        "description": "Indel Money offers MSME loans designed to support Micro, Small and Medium Enterprises with quick approval, minimal documentation and flexible funding.",
+        "logo": "https://indelmoney.com/_next/image?url=https%3A%2F%2Fbackend.indelmoney.com%2Fuploads%2Fheader-contents%2F1751028562747.svg&w=256&q=75",
+        "description": "Apply for MSME Loan Online in India with Indel Money. Get loans for micro, small, and medium enterprises at minimal interest rates today!",
         "telephone": "1800 4253 990",
         "email": "care@indelmoney.com",
         "address": {
@@ -143,7 +143,7 @@ export default async function MsmeLoan() {
         "offers": {
           "@type": "Offer",
           "name": "MSME Loan",
-          "description": "MSME business loans with fast approval, minimal documentation and flexible funding options.",
+          "description": "Apply for MSME Loan Online in India with Indel Money. Get loans for micro, small, and medium enterprises at minimal interest rates today!",
           "url": "https://indelmoney.com/msme-loan"
         },
         "hasOfferCatalog": {
@@ -190,7 +190,7 @@ export default async function MsmeLoan() {
         "@type": "WebPage",
         "name": "MSME Loan - Indel Money",
         "url": "https://indelmoney.com/msme-loan",
-        "description": "Apply for an MSME loan from Indel Money with quick approval, minimal documentation, and flexible loan solutions for Micro, Small, and Medium Enterprises."
+        "description": "Apply for MSME Loan Online in India with Indel Money. Get loans for micro, small, and medium enterprises at minimal interest rates today!"
       },
       {
         "@type": "BreadcrumbList",

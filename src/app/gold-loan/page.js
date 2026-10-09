@@ -198,8 +198,8 @@ export default async function GoldLoan() {
         "@type": "FinancialService",
         name: "Indel Money Limited",
         url: "https://indelmoney.com/gold-loan",
-        logo: "https://indelmoney.com/_next/image?url=https%3A%2F%2Fbackend.indelmoney.com%2Fuploads%2Fbanner%2F1763029961331-201441951.jpg&w=1920&q=75",
-        description: "Indel Money offers instant and secure gold loans with high LTV, easy approval, flexible repayment and safe storage.",
+        logo: "https://indelmoney.com/_next/image?url=https%3A%2F%2Fbackend.indelmoney.com%2Fuploads%2Fheader-contents%2F1751028562747.svg&w=256&q=75",
+        description: "Apply for Gold Loan Online in India with Indel money. Get instant approval, low-interest rates, secure your gold for hassle-free funds today!",
         telephone: "1800 4253 990",
         email: "care@indelmoney.com",
         address: {
@@ -231,7 +231,7 @@ export default async function GoldLoan() {
         offers: {
           "@type": "Offer",
           name: "Gold Loan",
-          description: "Quick and secure gold loans with high LTV, transparent interest rates, and instant disbursal.",
+          description: "Apply for Gold Loan Online in India with Indel money. Get instant approval, low-interest rates, secure your gold for hassle-free funds today!",
           url: "https://indelmoney.com/gold-loan",
         },
         hasOfferCatalog: {
@@ -299,7 +299,7 @@ export default async function GoldLoan() {
             name: "What is a gold loan?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "A loan obtained by securing your gold jewelry with the lender is called a gold loan. You will receive instant funds on pledging your gold ornaments, thus it can also be called a loan against gold. This way your gold ornaments are mobilized to generate funds instead of lying idle.",
+              text: "A loan obtained by securing your gold jewelry with the lender is called a gold loan. You will receive instant funds on pledging your gold ornaments, thus it can also be called a loan against gold. This way the gold ornaments and jewelry that were secured in the lockers are now mobilized to generate funds.",
             },
           },
           {
@@ -307,7 +307,7 @@ export default async function GoldLoan() {
             name: "How does a gold loan work?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "Walk into any Indel Money branch with your gold ornaments and documents. After evaluation and verification, the loan amount is sanctioned instantly.",
+              text: "Quite like other secured loans, you can opt for a gold loan easily. The entire process of a gold loan is quite similar to other secured loans. Simply walk in any of our branches with your gold ornaments, fill in and submit the required documents. After evaluating the documents and the gold articles, our officer will sanction the Loan amount.",
             },
           },
           {
@@ -315,7 +315,7 @@ export default async function GoldLoan() {
             name: "What is the benefit of getting a gold loan from Indel Money?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "Indel Money offers low interest rates, minimal documentation, flexible repayment options, in-house gold valuation and secure storage, ensuring complete peace of mind.",
+              text: "You can get various benefits by getting gold loans from Indel Money. You can avail gold loan at low-interest rates with us. We have a simple and hassle-free documentation process with various options of repayment and also have an in-house evaluation. We further ensure the security of your gold with our safe gold storage. Also Indel Money values a long standing relationship with you, once you opt in for our services.",
             },
           },
           {
@@ -323,7 +323,7 @@ export default async function GoldLoan() {
             name: "What is the gold loan interest rate?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "Gold loan interest rates typically range from 12% to 30% annually depending on the scheme.",
+              text: "Generally, a gold loan interest rate varies from 12% to 30% per year. You can repay the amount of gold loan within 1 day to 2 years (depending upon the scheme terms and conditions) in EMI or any other available options to repay the interest along with the principal.",
             },
           },
           {
@@ -331,31 +331,127 @@ export default async function GoldLoan() {
             name: "Am I a good candidate for a gold loan?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "Any Indian citizen who owns gold ornaments can apply for a gold loan from Indel Money.",
+              text: "Any Indian Citizen who is either a salaried professional, or businessman, or housewife, and who owns gold ornaments is a good candidate for gold loan.",
             },
           },
           {
             "@type": "Question",
-            name: "Is my gold secure with Indel Money?",
+            name: "Is my gold secure when opting for a gold loan from Indel Money?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "Yes. All branches have CCTV-monitored secure vaults ensuring 24x7 safety of your pledged gold.",
+              text: "Yes, it is. Indel Money has special safe rooms to secure your gold. These rooms have CCTV camera surveillance installed to get 24X7 safety in each of our 191 branches across Tamil Nadu, Kerala, Karnataka, Telangana, Andhra Pradesh & Puducherry.",
             },
           },
           {
             "@type": "Question",
-            name: "Why choose a gold loan over a personal loan?",
+            name: "Why choose gold loan instead of a personal loan?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "Gold loans have lower interest, no prepayment charges, higher loan limits and more flexible repayment options compared to personal loans.",
+              text: "Unlike a personal loan, the gold loan does not involve processing fees or pre-payment charges. Plus, it offers a higher loan limit than the personal loan with a lower interest rate. Also, Gold Loans have flexible repayment options, unlike most of the personal loan schemes.",
             },
           },
           {
             "@type": "Question",
-            name: "How fast is gold loan processing?",
+            name: "How is a gold loan calculated at Indel Money?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "With correct documents, gold loans at Indel Money are processed and disbursed in 10–15 minutes.",
+              text: "The loan amount is determined after evaluating the eligible gold's purity and value, along with the applicable loan scheme and lending criteria.",
+            },
+          },
+          {
+            "@type": "Question",
+            name: "Can NBFCs like Indel Money lend money against gold?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "Yes. Eligible non-banking financial companies can provide gold loans subject to applicable regulatory requirements and lending conditions.",
+            },
+          },
+          {
+            "@type": "Question",
+            name: "What type of gold can I pledge to get a gold loan from Indel Money?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "Eligible gold jewellery, such as necklaces, rings and bracelets, may be accepted subject to the lender's valuation process and applicable terms.",
+            },
+          },
+          {
+            "@type": "Question",
+            name: "What are the documents required for a gold loan?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "Required documents depend on the lender's policies and applicable requirements. Identity and address proof may be requested. Contact Indel Money to confirm the currently accepted documents before applying.",
+            },
+          },
+          {
+            "@type": "Question",
+            name: "What happens if the gold loan is not repaid?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "Failure to repay a gold loan may result in additional charges and other actions permitted under the loan agreement and applicable regulations, potentially including auction of the pledged gold after the required process.",
+            },
+          },
+          {
+            "@type": "Question",
+            name: "What are my different options for repayment of my gold loan?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "Repayment options depend on the gold loan scheme. Contact your nearest Indel Money branch to confirm the available options, payment schedule and applicable charges.",
+            },
+          },
+          {
+            "@type": "Question",
+            name: "What is the best way to apply for an Indel Money gold loan?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "You can contact Indel Money on 1800 4253 990 or visit a branch to enquire about applying for a gold loan. Check the official website for current online application options.",
+            },
+          },
+          {
+            "@type": "Question",
+            name: "What is the location and timing of the Indel Money branch closest to me?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "You can enquire about branch locations through the official Indel Money website or by calling 1800 4253 990. Branch timings may vary, so confirm the hours with the relevant branch before visiting.",
+            },
+          },
+          {
+            "@type": "Question",
+            name: "What is the minimum and maximum amount of gold loan that I can get?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "The amount available depends on the eligible gold's valuation, the selected loan scheme and the lender's eligibility criteria. Contact Indel Money for the current minimum and maximum loan amounts.",
+            },
+          },
+          {
+            "@type": "Question",
+            name: "What is the tenure for which I can avail a gold loan?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "Gold loan tenure depends on the selected scheme and its terms and conditions. Confirm the available repayment periods with Indel Money before applying.",
+            },
+          },
+          {
+            "@type": "Question",
+            name: "Can I get a gold loan by pledging gold coins?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "Whether gold coins are accepted depends on applicable regulations and the lender's policies. Contact Indel Money to confirm which forms of gold collateral are eligible.",
+            },
+          },
+          {
+            "@type": "Question",
+            name: "Is it mandatory to have a co-applicant when applying for an Indel Money gold loan?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "A co-applicant requirement depends on the lender's eligibility criteria and the circumstances of the application. Contact Indel Money to confirm whether one is required.",
+            },
+          },
+          {
+            "@type": "Question",
+            name: "How fast will my gold loan application be processed?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "Processing time depends on document verification, gold valuation, eligibility and the applicable loan process. Carry the required documents and eligible gold when visiting a branch.",
             },
           },
         ],

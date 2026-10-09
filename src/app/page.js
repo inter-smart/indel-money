@@ -166,8 +166,8 @@ export default async function HomePage() {
         "@type": "FinancialService",
         "name": "Indel Money Limited",
         "url": "https://indelmoney.com/",
-        "logo": "https://indelmoney.com/_next/image?url=https%3A%2F%2Fbackend.indelmoney.com%2Fuploads%2Fbanner%2F1763029961331-201441951.jpg&w=1920&q=75",
-        "description": "Indel Money offers gold loans and MSME loans in India.",
+        "logo": "https://indelmoney.com/_next/image?url=https%3A%2F%2Fbackend.indelmoney.com%2Fuploads%2Fheader-contents%2F1751028562747.svg&w=256&q=75",
+        "description": "Indel Money is a leading NBFC with 400+ branches across India, offering instant, hassle-free gold loans with flexible repayment. Apply now!",
         "telephone": "1800 4253 990",
         "email": "care@indelmoney.com",
         "address": {
