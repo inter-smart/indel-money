@@ -277,6 +277,95 @@
     overflow-x: auto;
   }
 
+  .cmnContent .policyBody p:empty {
+    min-height: 1.4em;
+  }
+
+  .cmnContent .policyBody h1,
+  .cmnContent .policyBody h2,
+  .cmnContent .policyBody h3,
+  .cmnContent .policyBody h4,
+  .cmnContent .policyBody h5,
+  .cmnContent .policyBody h6 {
+    font-weight: 700;
+  }
+
+  .cmnContent .policyBody h1 {
+    font-size: 22px;
+  }
+
+  .cmnContent .policyBody h2 {
+    font-size: 20px;
+  }
+
+  .cmnContent .policyBody h3 {
+    font-size: 18px;
+  }
+
+  .cmnContent .policyBody h4 {
+    font-size: 16px;
+  }
+
+  .cmnContent .policyBody h5 {
+    font-size: 14px;
+  }
+
+  .cmnContent .policyBody h6 {
+    font-size: 13px;
+  }
+
+  @media (min-width: 1024px) {
+    .cmnContent .policyBody h1 {
+      font-size: 28px;
+    }
+
+    .cmnContent .policyBody h2 {
+      font-size: 24px;
+    }
+
+    .cmnContent .policyBody h3 {
+      font-size: 20px;
+    }
+
+    .cmnContent .policyBody h4 {
+      font-size: 18px;
+    }
+
+    .cmnContent .policyBody h5 {
+      font-size: 16px;
+    }
+
+    .cmnContent .policyBody h6 {
+      font-size: 14px;
+    }
+  }
+
+  @media (min-width: 1536px) {
+    .cmnContent .policyBody h1 {
+      font-size: 34px;
+    }
+
+    .cmnContent .policyBody h2 {
+      font-size: 28px;
+    }
+
+    .cmnContent .policyBody h3 {
+      font-size: 24px;
+    }
+
+    .cmnContent .policyBody h4 {
+      font-size: 20px;
+    }
+
+    .cmnContent .policyBody h5 {
+      font-size: 18px;
+    }
+
+    .cmnContent .policyBody h6 {
+      font-size: 16px;
+    }
+  }
+
   @media (min-width: 640px) {
 
     /* sm */

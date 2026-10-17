@@ -18,6 +18,7 @@ async function fetchData(type, locale) {
     if (result.status === "success") {
       return {
         content: PolicyData?.content,
+        title: PolicyData?.title,
         error: null,
       };
     } else {
@@ -40,7 +41,7 @@ async function fetchData(type, locale) {
 export default async function PolicyPage({ params }) {
   const { slug } = await params;
   const locale = await getServerLocale();
-  const { content, error } = await fetchData(slug, locale);
+  const { content, title, error } = await fetchData(slug, locale);
 
   if (error || !content) {
     notFound();
@@ -48,7 +49,7 @@ export default async function PolicyPage({ params }) {
 
   return (
     <>
-      <PrivacyPolicy content={content} type={slug} />
+      <PrivacyPolicy content={content} type={slug} title={title} />
     </>
   );
 }
