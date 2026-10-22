@@ -116,6 +116,7 @@ export default function HomeSlider({ heroBanner }) {
                 muted
                 playsInline
                 controls={false}
+                poster={item?.thumbnail ? `${process.env.NEXT_PUBLIC_BACKEND_URL}${item.thumbnail}` : undefined}
                 className="w-full h-full object-cover"
                 preload="metadata"
                 onLoadedMetadata={() => handleVideoLoadedMetadata(index, swiperRef.current)}

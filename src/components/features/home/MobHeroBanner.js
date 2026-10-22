@@ -118,6 +118,7 @@ export default function MobHeroBanner({ heroBanner, initialData, announcement, g
                   autoPlay
                   muted
                   playsInline
+                  poster={item?.thumbnail ? `${process.env.NEXT_PUBLIC_BACKEND_URL}${item.thumbnail}` : undefined}
                   preload={index === 0 ? "auto" : "metadata"}
                   onLoadedMetadata={() => handleVideoLoadedMetadata(index, swiperRef.current)}
                   className="absolute inset-0 w-full h-full -z-2 object-cover"
