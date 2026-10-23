@@ -13,8 +13,8 @@ function isMobileDevice(userAgent) {
 async function fetchHomeData(locale) {
   try {
     const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/home`, locale), {
-      // cache: "force-cache",
-      // next: { revalidate: 600 },
+      cache: "force-cache",
+      next: { revalidate: 600 },
       credentials: "include", // Ensures session cookie is sent
       headers: {
         "Content-Type": "application/json",
@@ -37,6 +37,7 @@ async function fetchGoldRate(locale) {
     const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/gold-rate`, locale), {
       cache: "force-cache",
       next: { revalidate: 600 },
+      signal: AbortSignal.timeout(3000), // upstream rate feed can hang; don't block SSR on it
       headers: {
         "Content-Type": "application/json",
       },
@@ -152,8 +153,10 @@ export async function generateMetadata() {
 
 export default async function HomePage() {
   const locale = await getServerLocale();
-  const { data, error } = await fetchHomeData(locale);
-  const { data: goldRateData, error: goldRateError } = await fetchGoldRate(locale);
+  const [{ data, error }, { data: goldRateData, error: goldRateError }] = await Promise.all([
+    fetchHomeData(locale),
+    fetchGoldRate(locale),
+  ]);
 
   const headersList = await headers(); // ✅ await here
   const userAgent = headersList.get("user-agent") || "";

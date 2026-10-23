@@ -15,8 +15,8 @@ async function fetchData(locale) {
   try {
     const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/career`, locale), {
       cache: "no-store", // Ensure fresh data
-      // cache: "force-cache",
-      // next: { revalidate: 600 },
+      cache: "force-cache",
+      next: { revalidate: 600 },
     });
 
     const result = await response.json();

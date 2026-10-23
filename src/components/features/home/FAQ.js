@@ -6,13 +6,16 @@ import { motion } from "framer-motion";
 import api from "../../../lib/api/axios";
 import parse from "html-react-parser";
 
-export default function FAQ({ pageContents, type = "home" }) {
+export default function FAQ({ pageContents, type = "home", faqs: initialFaqs }) {
   const [openIndex, setOpenIndex] = useState(null);
-  const [faqs, setFaqs] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // `initialFaqs` is the same HomeFaq query already returned by /web/home, so skip the extra round trip + loading flash.
+  const hasInitialFaqs = Array.isArray(initialFaqs) && initialFaqs.length > 0;
+  const [faqs, setFaqs] = useState(hasInitialFaqs ? initialFaqs : []);
+  const [loading, setLoading] = useState(!hasInitialFaqs);
 
   // Fetch FAQs based on type
   useEffect(() => {
+    if (hasInitialFaqs) return;
     const fetchFaqs = async () => {
       try {
         setLoading(true);
