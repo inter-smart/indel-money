@@ -13,8 +13,8 @@ function isMobileDevice(userAgent) {
 async function fetchHomeData(locale) {
   try {
     const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/home`, locale), {
-      // cache: "force-cache",
-      // next: { revalidate: 600 },
+      cache: "force-cache",
+      next: { revalidate: 600 },
       credentials: "include", // Ensures session cookie is sent
       headers: {
         "Content-Type": "application/json",

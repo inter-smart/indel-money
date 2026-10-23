@@ -9,7 +9,9 @@ const StepGoldLoanCalculator = dynamic(() => import("../components/features/home
 const LifeAtIndel = dynamic(() => import("../components/features/home/LifeAtIndel"), { ssr: false });
 const LatestUpdates = dynamic(() => import("../components/features/home/LatestUpdates"), { ssr: false });
 const BranchLocator = dynamic(() => import("../components/features/home/BranchLocator"), { ssr: false });
-const Innovations = dynamic(() => import("../components/features/home/Innovations"), { ssr: false });
+// Innovations section is hidden; app download buttons now live in AppDownloadStrip
+// const Innovations = dynamic(() => import("../components/features/home/Innovations"), { ssr: false });
+const AppDownloadStrip = dynamic(() => import("../components/features/home/AppDownloadStrip"), { ssr: false });
 const FAQ = dynamic(() => import("../components/features/home/FAQ"), { ssr: false });
 const WelcomeModal = dynamic(() => import("../components/common/WelcomeModal"), { ssr: false });
 
@@ -21,7 +23,7 @@ const MobStepGoldLoanCalculator = dynamic(() => import("../components/features/h
 const MobBranchLocator = dynamic(() => import("../components/features/home/MobBranchLocator"), { ssr: false });
 const MobJoinTeam = dynamic(() => import("../components/features/home/MobJoinTeam"), { ssr: false });
 const MobLatestUpdates = dynamic(() => import("../components/features/home/MobLatestUpdates"), { ssr: false });
-const MobInnovations = dynamic(() => import("../components/features/home/MobInnovations"), { ssr: false });
+// const MobInnovations = dynamic(() => import("../components/features/home/MobInnovations"), { ssr: false });
 const MobWelcomeModal = dynamic(() => import("../components/common/MobWelcomeModal"), { ssr: false });
 // import MobWelcomeModal from "../components/common/MobWelcomeModal";
 
@@ -107,12 +109,17 @@ export default function Home({ initialData, serviceBanner, banner, branchLocator
         <LatestUpdates sliderItems={initialData?.blogs} sliderTitle={initialData?.pageContent?.updates_section_title} type="indel-money-cares" />
       )}
 
+      {/* Innovations section hidden
       {isMobile ? <MobInnovations pageContent={initialData?.pageContent} /> : <Innovations pageContent={initialData?.pageContent} />}
+      */}
 
       {/* faq contents */}
       <div className="hidden sm:block">
         <FAQ faqs={initialData?.faqs} pageContents={initialData?.pageContent} type={"home"} />
       </div>
+
+      {/* app download buttons, just above the footer */}
+      <AppDownloadStrip pageContent={initialData?.pageContent} />
     </>
   );
 }
