@@ -470,6 +470,7 @@
 
   .LoanSlider .swiper-slide {
     height: auto !important;
+    display: flex;
   }
 
   .LoanSlider .swiper-pagination {
