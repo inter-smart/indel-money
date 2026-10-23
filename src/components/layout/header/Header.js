@@ -9,7 +9,7 @@ async function fetchData(locale) {
     const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/header`, locale), {
       cache: "no-store", // Ensure fresh data
     });
-    const result = await response.json();a
+    const result = await response.json();
 
     if (result.status === "success") {
       return {
