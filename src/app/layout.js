@@ -9,6 +9,7 @@ import { GoogleTagManager } from "@next/third-parties/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { getServerLocale } from "../lib/locale/getServerLocale";
 import { buildLocalizedUrl } from "../lib/locale/localizedUrl";
+import TopNavigation from "@/components/layout/floatButtons/topNavigation";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -41,7 +42,10 @@ export default async function RootLayout({ children }) {
   let footerIcons = [];
 
   try {
-    const res = await api.get(buildLocalizedUrl("/web/footer", locale), { cache: "no-store", next: { revalidate: 600 } });
+    const res = await api.get(buildLocalizedUrl("/web/footer", locale), {
+      cache: "no-store",
+      next: { revalidate: 600 },
+    });
     if (res.data.status === "success") {
       footerContent = res.data.data.content || "";
       footerIcons = res.data.data.icons || [];
@@ -53,13 +57,15 @@ export default async function RootLayout({ children }) {
   return (
     <html lang={locale}>
       <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID} />
-      <body className={`${montserrat.variable} ${notoSansTamil.variable} font-montserrat min-h-screen flex flex-col antialiased`}>
+      <body
+        className={`${montserrat.variable} ${notoSansTamil.variable} font-montserrat min-h-screen flex flex-col antialiased`}
+      >
         <Header />
         <main className="flex-grow mt-[var(--header-y)]">{children}</main>
         <Footer content={footerContent} icons={footerIcons} />
         {/* <FloatingButton /> */}
         <Toaster position="top-right" />
-
+        <TopNavigation />
         <noscript>
           <iframe
             src={`https://www.googletagmanager.com/ns.html?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID}`}
