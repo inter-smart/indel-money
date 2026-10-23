@@ -7,7 +7,7 @@ import { buildLocalizedUrl } from "../../../lib/locale/localizedUrl";
 async function fetchData(locale) {
   try {
     const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/header`, locale), {
-      cache: "no-store", // Ensure fresh data
+      next: { revalidate: 600 },
     });
     const result = await response.json();
 

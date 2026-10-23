@@ -52,7 +52,11 @@ export default function MobHeroBanner({ heroBanner, initialData, announcement, g
 
         // Restart video from beginning
         videoElement.currentTime = 0;
-        videoElement.play();
+        videoElement.play()?.catch(() => {});
+      } else if (videoElement) {
+        // Non-first videos don't autoplay (to keep ~10 MB off the initial load), so
+        // metadata may not be there yet; start playback and let onLoadedMetadata set the delay.
+        videoElement.play()?.catch(() => {});
       }
     } else {
       // Set autoplay delay to default image delay
@@ -115,7 +119,7 @@ export default function MobHeroBanner({ heroBanner, initialData, announcement, g
               >
                 <video
                   ref={(el) => (videoRefs.current[index] = el)}
-                  autoPlay
+                  autoPlay={index === 0}
                   muted
                   playsInline
                   poster={item?.thumbnail ? `${process.env.NEXT_PUBLIC_BACKEND_URL}${item.thumbnail}` : undefined}

@@ -4,7 +4,6 @@ import Header from "../components/layout/header/Header";
 import Footer from "../components/layout/footer/Footer";
 // import FloatingButton from "../components/common/FloatingButton";
 import { Toaster } from "react-hot-toast";
-import api from "../lib/api/axios";
 import { GoogleTagManager } from "@next/third-parties/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { getServerLocale } from "../lib/locale/getServerLocale";
@@ -27,6 +26,7 @@ const notoSansTamil = Noto_Sans_Tamil({
   subsets: ["tamil"],
   variable: "--font-noto-tamil",
   display: "swap",
+  preload: false, // only fetched when Tamil glyphs are actually rendered
 });
 
 export const metadata = {
@@ -42,13 +42,15 @@ export default async function RootLayout({ children }) {
   let footerIcons = [];
 
   try {
-    const res = await api.get(buildLocalizedUrl("/web/footer", locale), {
-      cache: "no-store",
-      next: { revalidate: 600 },
-    });
-    if (res.data.status === "success") {
-      footerContent = res.data.data.content || "";
-      footerIcons = res.data.data.icons || [];
+    // Plain fetch (not axios) so Next's data cache honours `revalidate`.
+    const res = await fetch(
+      buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/footer`, locale),
+      { next: { revalidate: 600 } },
+    );
+    const result = await res.json();
+    if (result.status === "success") {
+      footerContent = result.data.content || "";
+      footerIcons = result.data.icons || [];
     }
   } catch (error) {
     console.error("Failed to fetch footer data", error);
@@ -75,7 +77,7 @@ export default async function RootLayout({ children }) {
           />
         </noscript>
       </body>
-      <GoogleAnalytics gaId={process.env.GA_TRACKING_ID} />
+      {process.env.GA_TRACKING_ID && <GoogleAnalytics gaId={process.env.GA_TRACKING_ID} />}
     </html>
   );
 }
