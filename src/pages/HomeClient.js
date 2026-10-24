@@ -109,7 +109,8 @@ export default function Home({ initialData, serviceBanner, banner, branchLocator
       {isMobile ? (
         <MobWelcomeModal banner={banner} serviceBanner={serviceBanner} key={1} />
       ) : (
-        <WelcomeModal banner={banner} serviceBanner={serviceBanner} key={2} />
+        // <WelcomeModal banner={banner} serviceBanner={serviceBanner} key={2} />
+        <></>
       )}
 
       {/* hero banner - eager, above the fold, intentionally not lazy */}
@@ -121,12 +122,13 @@ export default function Home({ initialData, serviceBanner, banner, branchLocator
           goldRate={goldRate}
         />
       ) : (
-        <HeroBanner
-          heroBanner={initialData?.heroBanner || []}
-          initialData={initialData}
-          announcement={initialData?.pageContent?.announcement_text}
-          goldRate={goldRate}
-        />
+        // <HeroBanner
+        //   heroBanner={initialData?.heroBanner || []}
+        //   initialData={initialData}
+        //   announcement={initialData?.pageContent?.announcement_text}
+        //   goldRate={goldRate}
+        // />
+        <></>
       )}
 
       <LazySection placeholderClassName={HEIGHT.deals}>
