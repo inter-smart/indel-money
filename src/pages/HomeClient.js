@@ -120,20 +120,18 @@ export default function Home({
       {/* welcome contents*/}
 
       {isMobile ? (
-        // <MobWelcomeModal banner={banner} serviceBanner={serviceBanner} key={1} />
-        <></>
+        <MobWelcomeModal banner={banner} serviceBanner={serviceBanner} key={1} />
       ) : (
         <WelcomeModal banner={banner} serviceBanner={serviceBanner} key={2} />
       )}
 
       {isMobile ? (
-        // <MobHeroBanner
-        //   heroBanner={initialData?.heroBanner || []}
-        //   initialData={initialData}
-        //   announcement={initialData?.pageContent?.announcement_text}
-        //   goldRate={goldRate}
-        // />
-        <></>
+        <MobHeroBanner
+          heroBanner={initialData?.heroBanner || []}
+          initialData={initialData}
+          announcement={initialData?.pageContent?.announcement_text}
+          goldRate={goldRate}
+        />
       ) : (
         <HeroBanner
           heroBanner={initialData?.heroBanner || []}
@@ -182,7 +180,8 @@ export default function Home({
 
       <LazySection placeholderClassName={SECTION_HEIGHT.branchLocator}>
         {isMobile ? (
-          <MobBranchLocator pageContent={branchLocatorData} />
+          // <MobBranchLocator pageContent={branchLocatorData} />
+          <></>
         ) : (
           <BranchLocator
             pageContent={branchLocatorData}
