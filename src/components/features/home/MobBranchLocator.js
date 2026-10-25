@@ -19,9 +19,9 @@ export default function MobBranchLocator({ pageContent }) {
 
   const fetchStates = async () => {
     try {
-      const { data } = await api.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/career/states`);
+      const { data } = await api.get("/career/jobs/dropdowns");
       if (data.success) {
-        setStates(data.data);
+        setStates(data.data.states || []);
       } else {
         console.error("Failed to fetch states:", data.message);
       }
