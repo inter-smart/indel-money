@@ -180,8 +180,7 @@ export default function Home({
 
       <LazySection placeholderClassName={SECTION_HEIGHT.branchLocator}>
         {isMobile ? (
-          // <MobBranchLocator pageContent={branchLocatorData} />
-          <></>
+          <MobBranchLocator pageContent={branchLocatorData} />
         ) : (
           <BranchLocator
             pageContent={branchLocatorData}
