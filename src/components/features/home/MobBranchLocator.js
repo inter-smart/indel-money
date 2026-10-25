@@ -136,7 +136,6 @@ export default function MobBranchLocator({ pageContent }) {
       setUserLocation(null);
       setDistricts([]);
       setLocations([]);
-      fetchBranchLocations();
     }
   };
 
@@ -144,7 +143,6 @@ export default function MobBranchLocator({ pageContent }) {
     fetchStates();
     fetchDistricts();
     fetchLocations();
-    fetchBranchLocations();
   }, []);
 
   useEffect(() => {
