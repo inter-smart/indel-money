@@ -6,13 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { z } from "zod";
 import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { SearchableSelect } from "@/components/ui/searchable-select";
 import { Button } from "@/components/ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
 import api from "@/lib/api/axios";
@@ -217,24 +211,15 @@ export default function FindJobForm({
             name="state"
             render={({ field }) => (
               <FormItem>
-                <Select
+                <SearchableSelect
                   onValueChange={(value) => handleFormChange("state", value)}
                   value={field.value || ""}
-                >
-                  <SelectTrigger className="w-full max-w-full max-sm:h-[40px] bg-white border-white rounded-[12px] lg:rounded-[12px] 2xl:rounded-[16px]">
-                    <SelectValue placeholder="-- Select state --" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white border-white">
-                    {states.map((state) => (
-                      <SelectItem
-                        key={String(state?.value)}
-                        value={String(state?.value)}
-                      >
-                        {toSentenceCase(state?.label) || "-"}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  options={states.map((state) => ({ value: String(state?.value), label: toSentenceCase(state?.label) || "-" }))}
+                  placeholder="-- Select state --"
+                  emptyText="No state found"
+                  className="w-full max-w-full max-sm:h-[40px] bg-white border-white rounded-[12px] lg:rounded-[12px] 2xl:rounded-[16px]"
+                  contentClassName="bg-white border-white"
+                />
                 <FormMessage />
               </FormItem>
             )}
@@ -247,25 +232,16 @@ export default function FindJobForm({
             name="district"
             render={({ field }) => (
               <FormItem>
-                <Select
+                <SearchableSelect
                   onValueChange={(value) => handleFormChange("district", value)}
                   value={field.value || ""}
                   disabled={!form.watch("state")}
-                >
-                  <SelectTrigger className="w-full max-w-full max-sm:h-[40px] bg-white border-white rounded-[12px] lg:rounded-[12px] 2xl:rounded-[16px]">
-                    <SelectValue placeholder="-- Select district --" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white border-white">
-                    {districts?.map((district) => (
-                      <SelectItem
-                        key={String(district?.district_name)}
-                        value={String(district?.id)}
-                      >
-                        {toSentenceCase(district?.district_name) || "-"}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  options={(districts || []).map((district) => ({ value: String(district?.id), label: toSentenceCase(district?.district_name) || "-" }))}
+                  placeholder="-- Select district --"
+                  emptyText="No district found"
+                  className="w-full max-w-full max-sm:h-[40px] bg-white border-white rounded-[12px] lg:rounded-[12px] 2xl:rounded-[16px]"
+                  contentClassName="bg-white border-white"
+                />
                 <FormMessage />
               </FormItem>
             )}
@@ -278,25 +254,16 @@ export default function FindJobForm({
             name="location"
             render={({ field }) => (
               <FormItem>
-                <Select
+                <SearchableSelect
                   onValueChange={(value) => handleFormChange("location", value)}
                   value={field.value || ""}
                   disabled={!form.watch("district")}
-                >
-                  <SelectTrigger className="text-ellipsis w-full max-w-full sm:h-full max-sm:h-[40px] bg-white border-white rounded-[11px]">
-                    <SelectValue placeholder="-- Select location --" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white">
-                    {locations.map((location) => (
-                      <SelectItem
-                        key={String(location?.location_name)}
-                        value={String(location?.id)}
-                      >
-                        {toSentenceCase(location?.location_name) || "-"}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  options={locations.map((location) => ({ value: String(location?.id), label: toSentenceCase(location?.location_name) || "-" }))}
+                  placeholder="-- Select location --"
+                  emptyText="No location found"
+                  className="text-ellipsis w-full max-w-full sm:h-full max-sm:h-[40px] bg-white border-white rounded-[11px]"
+                  contentClassName="bg-white border-white"
+                />
                 <FormMessage />
               </FormItem>
             )}
@@ -309,21 +276,15 @@ export default function FindJobForm({
             name="role"
             render={({ field }) => (
               <FormItem>
-                <Select
+                <SearchableSelect
                   onValueChange={(value) => handleFormChange("role", value)}
                   value={field.value || ""}
-                >
-                  <SelectTrigger className="w-full max-w-full max-sm:h-[40px] bg-white border-white rounded-[12px] lg:rounded-[12px] 2xl:rounded-[16px]">
-                    <SelectValue placeholder="-- Select dept. --" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white border-white">
-                    {roles?.map((role) => (
-                      <SelectItem key={String(role?.value)} value={String(role?.value)}>
-                        {role?.label || "-"}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  options={(roles || []).map((role) => ({ value: String(role?.value), label: role?.label || "-" }))}
+                  placeholder="-- Select dept. --"
+                  emptyText="No department found"
+                  className="w-full max-w-full max-sm:h-[40px] bg-white border-white rounded-[12px] lg:rounded-[12px] 2xl:rounded-[16px]"
+                  contentClassName="bg-white border-white"
+                />
                 <FormMessage />
               </FormItem>
             )}

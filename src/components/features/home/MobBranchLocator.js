@@ -9,8 +9,6 @@ export default function MobBranchLocator({ pageContent }) {
   const [states, setStates] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [locations, setLocations] = useState([]);
-  const [branchLocationsAPI, setBranchLocationsAPI] = useState([]);
-  const [selectedBranch, setSelectedBranch] = useState(null);
   const [selectedState, setSelectedState] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedLocation, setSelectedLocation] = useState("");
@@ -69,42 +67,8 @@ export default function MobBranchLocator({ pageContent }) {
     }
   };
 
-  const fetchBranchLocations = async () => {
-    try {
-      const { data } = await api.get("/branch/branches/active");
-      if (data?.success) {
-        setBranchLocationsAPI(data?.data || []);
-        setSelectedBranch(data?.data?.[0] || null);
-      } else {
-        console.error("Failed to fetch branch locations:", data?.message);
-      }
-    } catch (error) {
-      console.error("Error fetching branch locations:", error);
-    }
-  };
-
-  const fetchBranchLocationsFiltered = async () => {
-    try {
-      const queryParams = {
-        state: selectedState || undefined,
-        district: selectedDistrict || undefined,
-        location: selectedLocation || undefined,
-        distance: selectedDistance || undefined,
-        lat: (selectedDistance && userLocation?.latitude) || undefined,
-        long: (selectedDistance && userLocation?.longitude) || undefined,
-      };
-      const { data } = await api.get("/branch/branches/filtered_branches", { params: queryParams });
-      if (data?.success) {
-        setBranchLocationsAPI(data?.data || []);
-        setSelectedBranch(data?.data?.[0] || null);
-      } else {
-        console.error("Failed to fetch filtered branch locations:", data?.message);
-      }
-    } catch (error) {
-      console.error("Error fetching filtered branch locations:", error);
-    }
-  };
-
+  // The mobile section only renders <BranchForm>, which navigates to /branch-locator on submit,
+  // so the branch list itself (~250 KB) is not fetched here.
   const handleDistanceOpen = () => {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
@@ -149,14 +113,6 @@ export default function MobBranchLocator({ pageContent }) {
   useEffect(() => {
     fetchStates();
   }, []);
-
-  useEffect(() => {
-    if (selectedState || selectedDistrict || selectedLocation || selectedDistance) {
-      fetchBranchLocationsFiltered();
-    } else {
-      fetchBranchLocations();
-    }
-  }, [selectedState, selectedDistrict, selectedLocation, selectedDistance]);
 
   return (
     <section className="w-full py-[30px_15px] mb-[30px] bg-white shadow-[0_0_150px_0_rgba(0,0,0,0.25)] rounded-[10px_10px_0_0]">

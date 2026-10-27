@@ -24,6 +24,17 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/custom-alert-dialog";
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ALLOWED_FILE_TYPES = {
+  pdf: { label: "PDF", mimes: ["application/pdf"] },
+  doc: { label: "DOC", mimes: ["application/msword"] },
+  docx: { label: "DOCX", mimes: ["application/vnd.openxmlformats-officedocument.wordprocessingml.document"] },
+};
+const FILE_ACCEPT = [".pdf", ".doc", ".docx", ...Object.values(ALLOWED_FILE_TYPES).flatMap((type) => type.mimes)].join(",");
+const FILE_HINT = "PDF/DOC/DOCX, max 5MB";
+
+const getFileExtension = (name) => (name?.includes(".") ? name.split(".").pop().toLowerCase() : "");
+
 const noticePeriod = ["Less than 15 days", "15 to 30 days", "30 days", "60 to 90 days", "More than 90 days"];
 
 // Schema Validation
@@ -116,25 +127,8 @@ function CareerFormInner({ jobId, isGeneral }) {
 
   // File type display helper
   const getFileTypeDisplay = (file, fileName) => {
-    if (file) {
-      const typeMap = {
-        "application/pdf": "PDF",
-        "image/jpeg": "JPEG",
-        "image/png": "PNG",
-      };
-      return typeMap[file.type] || file.type.split("/")[1]?.toUpperCase() || "";
-    }
-    if (fileName) {
-      const extension = fileName.split(".").pop()?.toLowerCase();
-      const extensionMap = {
-        pdf: "PDF",
-        jpg: "JPEG",
-        jpeg: "JPEG",
-        png: "PNG",
-      };
-      return extensionMap[extension] || extension?.toUpperCase() || "";
-    }
-    return "";
+    const extension = getFileExtension(file ? file.name : fileName);
+    return ALLOWED_FILE_TYPES[extension]?.label || extension.toUpperCase();
   };
 
   const formSchema = useMemo(() => {
@@ -588,7 +582,6 @@ function CareerFormInner({ jobId, isGeneral }) {
 
     if (!recaptchaToken) {
       toast.error("Failed to get reCAPTCHA token. Please try again.");
-      setIsSubmitting(false);
       return;
     }
 
@@ -672,21 +665,41 @@ function CareerFormInner({ jobId, isGeneral }) {
       toast.success(response.data.message);
     } catch (err) {
       console.error("Error submitting form:", err);
-      toast.error(err.response.data.error.message || "Failed to submit application.");
+      const status = err?.response?.status;
+      const data = err?.response?.data;
+      const message =
+        data?.error?.message ||
+        data?.message ||
+        (status === 413
+          ? "The uploaded file is too large."
+          : err?.request && !err?.response
+            ? "Network error. Please check your connection and try again."
+            : err?.message) ||
+        "Failed to submit application.";
+      toast.error(message);
     } finally {
       setLoading(false);
     }
   };
 
+  const rejectFile = (message) => {
+    toast.error(message);
+    form.setError("file", { type: "manual", message });
+    return false;
+  };
+
   const validateAndSetFile = (file) => {
     if (file) {
-      if (file.size > 1 * 1024 * 1024) {
-        toast.error("File size should be less than 1MB");
-        return false;
+      const allowedType = ALLOWED_FILE_TYPES[getFileExtension(file.name)];
+      // Some browsers/OSes send an empty or generic type for Word files, so the extension is the primary check
+      if (!allowedType || (file.type && file.type !== "application/octet-stream" && !allowedType.mimes.includes(file.type))) {
+        return rejectFile("Please upload a PDF, DOC or DOCX file");
       }
-      if (!["application/pdf"].includes(file.type)) {
-        toast.error("Please upload a PDF file");
-        return false;
+      if (file.size === 0) {
+        return rejectFile("The selected file is empty");
+      }
+      if (file.size > MAX_FILE_SIZE) {
+        return rejectFile("File size should be less than 5MB");
       }
       setSelectedFile(file);
       setSelectedFileName(file.name);
@@ -700,6 +713,8 @@ function CareerFormInner({ jobId, isGeneral }) {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     validateAndSetFile(file);
+    // Allow re-selecting the same file after a rejection
+    event.target.value = "";
   };
 
   const handleDrop = (event, isDesktop) => {
@@ -776,7 +791,7 @@ function CareerFormInner({ jobId, isGeneral }) {
                   <Form {...otpForm} key="otp-form">
                     <form onSubmit={otpForm.handleSubmit(handleOtpSubmit)} className="space-y-4">
                       <div className="text-sm text-gray-600 mb-4">
-                        We've sent a 6-digit verification code to <strong>{email}</strong>
+                        We\'ve sent a 6-digit verification code to <strong>{email}</strong>
                       </div>
                       <FormField
                         control={otpForm.control}
@@ -870,7 +885,7 @@ function CareerFormInner({ jobId, isGeneral }) {
                           <input
                             type="file"
                             name="file"
-                            accept=".pdf"
+                            accept={FILE_ACCEPT}
                             className="hidden"
                             onChange={handleFileChange}
                             // disabled={!isOtpVerified}
@@ -882,7 +897,7 @@ function CareerFormInner({ jobId, isGeneral }) {
                           ? `${selectedFile.name} (${getFileTypeDisplay(selectedFile, null)})`
                           : selectedFileName
                             ? `${selectedFileName.replace("uploads/job-applications/", "")} (${getFileTypeDisplay(null, selectedFileName)})`
-                            : "No file chosen"}
+                            : `No file chosen (${FILE_HINT})`}
                       </div>
                     </div>
                   </FormControl>
@@ -1525,7 +1540,7 @@ function CareerFormInner({ jobId, isGeneral }) {
                           <span className="font-medium ml-1 lg:ml-1.5">Upload Resume*</span>
                           <input
                             type="file"
-                            accept=".pdf"
+                            accept={FILE_ACCEPT}
                             className="hidden"
                             onChange={handleFileChange}
                             // disabled={!isOtpVerified}
@@ -1539,7 +1554,7 @@ function CareerFormInner({ jobId, isGeneral }) {
                                   null,
                                   selectedFileName,
                                 )})`
-                              : "No file chosen"}
+                              : `No file chosen (${FILE_HINT})`}
                         </span>
                       </div>
                     </FormControl>
