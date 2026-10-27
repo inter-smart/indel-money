@@ -17,14 +17,9 @@ export default function MobBranchLocator({ pageContent }) {
 
   const fetchStates = async () => {
     try {
-      const { data } = await api.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/career/states`);
+      const { data } = await api.get("/career/jobs/dropdowns");
       if (data.success) {
-        // BranchForm expects { value, label }; /career/states returns raw { id, state_name } rows.
-        setStates(
-          (data.data || [])
-            .map((state) => ({ value: state.id, label: state.state_name }))
-            .sort((a, b) => a.label.localeCompare(b.label)),
-        );
+        setStates(data.data.states || []);
       } else {
         console.error("Failed to fetch states:", data.message);
       }
@@ -34,9 +29,14 @@ export default function MobBranchLocator({ pageContent }) {
   };
 
   const fetchDistricts = async (state_id) => {
+    if (!state_id) {
+      setDistricts([]);
+      return;
+    }
     try {
-      const url = state_id ? `/api/career/districts/by_state/${state_id}` : `/api/career/districts`;
-      const { data } = await api.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}${url}`);
+      const { data } = await api.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/career/districts/by_state/${state_id}`,
+      );
       if (data.success) {
         setDistricts(data.data);
       } else {
@@ -48,13 +48,15 @@ export default function MobBranchLocator({ pageContent }) {
   };
 
   const fetchLocations = async (state_id, district_id) => {
+    if (!state_id || !district_id) {
+      setLocations([]);
+      return;
+    }
     try {
-      const url =
-        state_id && district_id
-          ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/career/locations/by_district_state`
-          : `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/career/locations`;
-      const params = state_id && district_id ? { state_id, district_id } : {};
-      const { data } = await api.get(url, { params });
+      const { data } = await api.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/career/locations/by_district_state`,
+        { params: { state_id, district_id } },
+      );
       if (data.success) {
         setLocations(data.data);
       } else {
@@ -110,8 +112,6 @@ export default function MobBranchLocator({ pageContent }) {
 
   useEffect(() => {
     fetchStates();
-    fetchDistricts();
-    fetchLocations();
   }, []);
 
   return (

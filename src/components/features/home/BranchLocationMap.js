@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect, memo, useCallback } from "react";
+import React, { useState, useRef, useEffect, memo, useCallback, useMemo } from "react";
 import { toSentenceCase } from "@/lib/utils/toSentenceCase";
 import dynamic from "next/dynamic";
 import { useMap } from "react-leaflet";
@@ -129,7 +129,13 @@ const MapController = memo(
   }) => {
     const map = useMap();
     const markerRefs = useRef({});
+    const markerCallbacksRef = useRef({});
     const [isMounted, setIsMounted] = useState(false);
+
+    const selectedBranchRef = useRef(selectedBranch);
+    useEffect(() => {
+      selectedBranchRef.current = selectedBranch;
+    }, [selectedBranch]);
 
     useEffect(() => {
       setIsMounted(true);
@@ -138,7 +144,38 @@ const MapController = memo(
     // Clear marker refs when allBranchLocations changes (due to filtering)
     useEffect(() => {
       markerRefs.current = {};
+      markerCallbacksRef.current = {};
     }, [allBranchLocations]);
+
+    // Cached per branch id so the ref/eventHandlers passed to each <Marker>
+    // keep a stable identity across re-renders (e.g. every time selectedBranch
+    // changes) instead of being recreated inline on every render - a fresh
+    // identity makes react-leaflet detach and reattach every marker's
+    // listeners on every render, which visibly stalls the UI once there are
+    // more than a handful of branches.
+    const getMarkerCallbacks = useCallback((branchId) => {
+      if (!markerCallbacksRef.current[branchId]) {
+        markerCallbacksRef.current[branchId] = {
+          ref: (ref) => {
+            if (ref) markerRefs.current[branchId] = ref;
+          },
+          eventHandlers: {
+            add: () => {
+              setTimeout(() => {
+                if (selectedBranchRef.current?.id === branchId) {
+                  const marker = markerRefs.current[branchId];
+                  if (marker) {
+                    map.closePopup();
+                    marker.openPopup();
+                  }
+                }
+              }, 50);
+            },
+          },
+        };
+      }
+      return markerCallbacksRef.current[branchId];
+    }, [map]);
 
     useEffect(() => {
       if (!isMounted || !map) return;
@@ -244,13 +281,17 @@ const MapController = memo(
       };
     }, [isMounted]);
 
-    if (!isMounted || !L) return null;
+    const mapPinIcon = useMemo(
+      () =>
+        L.icon({
+          iconUrl: "/images/map-pin.png",
+          iconSize: [27, 36],
+          iconAnchor: [13, 36],
+        }),
+      [],
+    );
 
-    const mapPinIcon = L.icon({
-      iconUrl: "/images/map-pin.png",
-      iconSize: [27, 36],
-      iconAnchor: [13, 36],
-    });
+    if (!isMounted || !L) return null;
 
     return (
       <>
@@ -272,36 +313,22 @@ const MapController = memo(
           removeOutsideVisibleBounds={true}
           maxClusterRadius={50}
         >
-          {allBranchLocations?.map((branch) => (
-            <Marker
-              key={`marker-${branch.id}`} // More unique key to force re-render
-              position={[branch.latitude, branch.longitude]}
-              icon={mapPinIcon}
-              ref={(ref) => {
-                if (ref) {
-                  markerRefs.current[branch.id] = ref;
-                }
-              }}
-              eventHandlers={{
-                add: () => {
-                  // Ensure ref is set when marker is added to map
-                  setTimeout(() => {
-                    if (selectedBranch?.id === branch.id) {
-                      const marker = markerRefs.current[branch.id];
-                      if (marker) {
-                        map.closePopup();
-                        marker.openPopup();
-                      }
-                    }
-                  }, 50);
-                },
-              }}
-            >
-              <Popup closeButton={false}>
-                <CustomPopup  branch={branch} />
-              </Popup>
-            </Marker>
-          ))}
+          {allBranchLocations?.map((branch) => {
+            const { ref, eventHandlers } = getMarkerCallbacks(branch.id);
+            return (
+              <Marker
+                key={`marker-${branch.id}`}
+                position={[branch.latitude, branch.longitude]}
+                icon={mapPinIcon}
+                ref={ref}
+                eventHandlers={eventHandlers}
+              >
+                <Popup closeButton={false}>
+                  <CustomPopup branch={branch} />
+                </Popup>
+              </Marker>
+            );
+          })}
         </MarkerClusterGroup>
       </>
     );
