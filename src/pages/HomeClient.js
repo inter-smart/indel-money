@@ -16,6 +16,7 @@ const SECTION_HEIGHT = {
   latestUpdates: "min-h-[420px] lg:min-h-[530px] xl:min-h-[586px] 2xl:min-h-[700px]",
   innovations: "min-h-[220px] lg:min-h-[320px]",
   faq: "min-h-[480px] lg:min-h-[600px]",
+  appDownload: "min-h-[140px] lg:min-h-[140px]",
 };
 
 // DESKTOP COMPONENTS
@@ -47,14 +48,18 @@ const BranchLocator = dynamic(
   () => import("../components/features/home/BranchLocator"),
   { ssr: false, loading: sectionLoading(SECTION_HEIGHT.branchLocator) },
 );
-const Innovations = dynamic(
-  () => import("../components/features/home/Innovations"),
-  { ssr: false, loading: sectionLoading(SECTION_HEIGHT.innovations) },
-);
+// const Innovations = dynamic(
+//   () => import("../components/features/home/Innovations"),
+//   { ssr: false, loading: sectionLoading(SECTION_HEIGHT.innovations) },
+// );
 const FAQ = dynamic(() => import("../components/features/home/FAQ"), {
   ssr: false,
   loading: sectionLoading(SECTION_HEIGHT.faq),
 });
+const AppDownloadStrip = dynamic(
+  () => import("../components/features/home/AppDownloadStrip"),
+  { ssr: false, loading: sectionLoading(SECTION_HEIGHT.appDownload) },
+);
 const WelcomeModal = dynamic(
   () => import("../components/common/WelcomeModal"),
   { ssr: false },
@@ -89,10 +94,10 @@ const MobLatestUpdates = dynamic(
   () => import("../components/features/home/MobLatestUpdates"),
   { ssr: false, loading: sectionLoading(SECTION_HEIGHT.latestUpdates) },
 );
-const MobInnovations = dynamic(
-  () => import("../components/features/home/MobInnovations"),
-  { ssr: false, loading: sectionLoading(SECTION_HEIGHT.innovations) },
-);
+// const MobInnovations = dynamic(
+//   () => import("../components/features/home/MobInnovations"),
+//   { ssr: false, loading: sectionLoading(SECTION_HEIGHT.innovations) },
+// );
 const MobWelcomeModal = dynamic(
   () => import("../components/common/MobWelcomeModal"),
   { ssr: false },
@@ -226,6 +231,7 @@ export default function Home({
         )}
       </LazySection>
 
+      {/* Innovations section hidden for now
       <LazySection placeholderClassName={SECTION_HEIGHT.innovations}>
         {isMobile ? (
           <MobInnovations pageContent={initialData?.pageContent} />
@@ -233,12 +239,17 @@ export default function Home({
           <Innovations pageContent={initialData?.pageContent} />
         )}
       </LazySection>
+      */}
 
       {!isMobile && (
         <LazySection placeholderClassName={SECTION_HEIGHT.faq}>
           <FAQ faqs={initialData?.faqs} pageContents={initialData?.pageContent} type="home" />
         </LazySection>
       )}
+
+      <LazySection placeholderClassName={SECTION_HEIGHT.appDownload}>
+        <AppDownloadStrip pageContent={initialData?.pageContent} />
+      </LazySection>
     </>
   );
 }
