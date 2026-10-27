@@ -120,11 +120,6 @@ function CareerFormInner({ jobId, isGeneral }) {
   const [verifiedEmail, setVerifiedEmail] = useState(""); // Store the verified email
   const [currentEmailInForm, setCurrentEmailInForm] = useState(""); // Track current email in form
 
-  const truncateFilename = (filename, maxLength = 8) => {
-    if (!filename || filename.length <= maxLength) return filename;
-    return filename.substring(0, maxLength) + "....";
-  };
-
   // File type display helper
   const getFileTypeDisplay = (file, fileName) => {
     const extension = getFileExtension(file ? file.name : fileName);
@@ -872,7 +867,7 @@ function CareerFormInner({ jobId, isGeneral }) {
                       onDragLeave={(e) => handleDragLeave(e, false)}
                       onDrop={(e) => handleDrop(e, false)}
                     >
-                      <div className="w-20 lg:w-28">
+                      <div className="w-20 lg:w-28 shrink-0">
                         <label className="text-xs lg:text-sm leading-none font-normal w-20 lg:w-28 h-10 flex items-center p-2.5 lg:p-3.5 bg-base1 rounded-2.5 cursor-pointer hover:bg-[#c8e1ff] transition-colors duration-300">
                           <Image
                             src="/images/icon-upload.svg"
@@ -892,12 +887,12 @@ function CareerFormInner({ jobId, isGeneral }) {
                           />
                         </label>
                       </div>
-                      <div className="text-xs leading-normal font-normal pl-[10px] lg:pl-[14px] text-gray-700 truncate">
+                      <div className="text-xs leading-normal font-normal pl-[10px] lg:pl-[14px] text-gray-700 break-all min-w-0 flex-1">
                         {selectedFile
                           ? `${selectedFile.name} (${getFileTypeDisplay(selectedFile, null)})`
                           : selectedFileName
                             ? `${selectedFileName.replace("uploads/job-applications/", "")} (${getFileTypeDisplay(null, selectedFileName)})`
-                            : `No file chosen (${FILE_HINT})`}
+                            : `(${FILE_HINT})`}
                       </div>
                     </div>
                   </FormControl>
@@ -1521,7 +1516,7 @@ function CareerFormInner({ jobId, isGeneral }) {
             </div>
 
             <div
-              className={`max-sm:hidden w-full md:w-[calc(100%-100px)] lg:w-[calc(100%-120px)] xl:w-[calc(100%-140px)] 2xl:w-[calc(100%-180px)] 3xl:w-[calc(100%-200px)] px-[4px] lg:px-[6px] 2xl:px-[10px] mb-[10px] lg:mb-0 ${
+              className={`max-sm:hidden w-full px-[4px] lg:px-[6px] 2xl:px-[10px] mb-[10px] lg:mb-0 ${
                 isDraggingDesktop ? "border-2 border-blue-500 rounded-lg" : ""
               }`}
               onDragOver={(e) => handleDragOver(e, true)}
@@ -1535,7 +1530,7 @@ function CareerFormInner({ jobId, isGeneral }) {
                   <FormItem className="mb-2 xl:mb-3 2xl:mb-4">
                     <FormControl>
                       <div className="flex items-center">
-                        <label className="text-[12px] lg:text-[12px] 2xl:text-[16px] 3xl:text-[18px] leading-none font-normal text-[#373737] w-[100px] lg:w-[110px] 2xl:w-[120px] 3xl:w-[145px] h-[30px] lg:h-[35px] xl:h-[40px] 2xl:h-[45px] 3xl:h-[50px] flex items-center p-[4px_10px] lg:p-[10px_15px] 3xl:p-[10px_25px] bg-[#b3d5ff] rounded-full cursor-pointer hover:bg-[#c8e1ff] transition-background duration-300">
+                        <label className="shrink-0 text-[12px] lg:text-[12px] 2xl:text-[16px] 3xl:text-[18px] leading-none font-normal text-[#373737] w-[100px] lg:w-[110px] 2xl:w-[120px] 3xl:w-[145px] h-[30px] lg:h-[35px] xl:h-[40px] 2xl:h-[45px] 3xl:h-[50px] flex items-center p-[4px_10px] lg:p-[10px_15px] 3xl:p-[10px_25px] bg-[#b3d5ff] rounded-full cursor-pointer hover:bg-[#c8e1ff] transition-background duration-300">
                           <Image src="/images/icon-upload.svg" alt="icon-upload" width={26} height={21} />
                           <span className="font-medium ml-1 lg:ml-1.5">Upload Resume*</span>
                           <input
@@ -1546,15 +1541,12 @@ function CareerFormInner({ jobId, isGeneral }) {
                             // disabled={!isOtpVerified}
                           />
                         </label>
-                        <span className="text-xs lg:text-xs 2xl:text-base leading-none font-normal text-gray-700 whitespace-nowrap overflow-hidden text-ellipsis flex-1 ml-1 lg:ml-1.5">
+                        <span className="text-xs lg:text-xs 2xl:text-base leading-snug font-normal text-gray-700 break-all min-w-0 flex-1 ml-1 lg:ml-1.5">
                           {selectedFile
-                            ? `${truncateFilename(selectedFile.name)} (${getFileTypeDisplay(selectedFile, null)})`
+                            ? `${selectedFile.name} (${getFileTypeDisplay(selectedFile, null)})`
                             : selectedFileName
-                              ? `${truncateFilename(selectedFileName.replace("uploads/job-applications/", ""))} (${getFileTypeDisplay(
-                                  null,
-                                  selectedFileName,
-                                )})`
-                              : `No file chosen (${FILE_HINT})`}
+                              ? `${selectedFileName.replace("uploads/job-applications/", "")} (${getFileTypeDisplay(null, selectedFileName)})`
+                              : `(${FILE_HINT})`}
                         </span>
                       </div>
                     </FormControl>
@@ -1564,7 +1556,7 @@ function CareerFormInner({ jobId, isGeneral }) {
               />
             </div>
 
-            <div className="w-full md:w-[100px] lg:w-[120px] xl:w-[140px] 2xl:w-[180px] 3xl:w-[200px] px-[4px] lg:px-[6px] 2xl:px-[10px]">
+            <div className="w-full flex justify-end px-[4px] lg:px-[6px] 2xl:px-[10px]">
               <Button
                 className="text-[12px] lg:text-[12px] xl:text-[14px] 2xl:text-[16px] 3xl:text-[18px] leading-[1] font-bold text-white w-full max-w-[140px] lg:max-w-[160px] 2xl:max-w-[180px] 3xl:max-w-[200px] h-[30px] lg:h-[35px] xl:h-[40px] 2xl:h-[50px] 3xl:h-[55px] flex items-center justify-between bg-base2 rounded-[20px] lg:rounded-[30px] 2xl:rounded-[40px] 3xl:rounded-[60px] p-[4px] lg:p-[6px] 2xl:p-[8px] transition-color duration-300 hover:bg-base2/80 hover:[&>*-translate-x-[5px]]"
                 type="submit"
