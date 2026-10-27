@@ -76,8 +76,8 @@ export default function AwardHighlightBox({
           return (
             <SwiperSlide key={index}>
               <div className="w-full flex flex-col-reverse sm:flex-row sm:items-start">
-                {/* Text – 40% */}
-                <div className="w-full sm:w-2/5 sm:pr-[20px] md:pr-[20px] xl:pr-[40px] 2xl:pr-[60px]">
+                {/* Text – 50% */}
+                <div className="w-full sm:w-1/2 sm:pr-[20px] md:pr-[20px] xl:pr-[40px] 2xl:pr-[60px] sm:my-auto">
                   {variant === "employeeTestimonials" && (
                     <div className="text-title1 font-bold leading-none mb-[5px] lg:mb-[10px] text-[#f30000]">
                       Awards
@@ -92,9 +92,9 @@ export default function AwardHighlightBox({
                   </div>
                 </div>
 
-                {/* Image – 60%, fixed height, shown whole (no cropping) */}
-                <div className="w-full sm:w-3/5 shrink-0 mb-[15px] sm:mb-0">
-                  <div className="flex items-end justify-center sm:justify-end w-full h-[260px] sm:h-[300px] lg:h-[360px] xl:h-[420px] 2xl:h-[500px]">
+                {/* Image – 50%, fixed aspect ratio so every slide is the same size */}
+                <div className="w-full sm:w-1/2 shrink-0 mb-[15px] sm:mb-0">
+                  <div className="relative w-full max-w-[320px] mx-auto sm:max-w-none aspect-[8/9] overflow-hidden rounded-[24px]">
                     <Image
                       src={
                         item.image
@@ -102,10 +102,9 @@ export default function AwardHighlightBox({
                           : "/images/blog/1.jpg"
                       }
                       alt={item.image_alt ? item.image_alt : item?.alt}
-                      width={900}
-                      height={700}
-                      sizes="(min-width: 640px) 60vw, 100vw"
-                      className="w-auto h-auto max-w-full max-h-full rounded-[24px]"
+                      fill
+                      sizes="(min-width: 640px) 50vw, 100vw"
+                      className="object-cover"
                     />
                   </div>
                 </div>
