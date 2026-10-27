@@ -402,6 +402,7 @@ export default function BranchLocationMap({
   userLocation,
   selectedDistance,
   hasActiveFilters,
+  loadingBranches = false,
 }) {
   const [mapCenter, setMapCenter] = useState([13.0827, 80.2707]); // Default: Chennai
   const [isMounted, setIsMounted] = useState(false);
@@ -432,8 +433,8 @@ export default function BranchLocationMap({
 
 
   return (
-    <div className="w-full h-[376px] sm:h-[510px] 2xl:h-[670px] relative z-1 flex flex-wrap rounded-[10px] sm:rounded-[16px] overflow-hidden">
-      <div className="w-full sm:w-[calc(100%-220px)] lg:w-[calc(100%-260px)] xl:w-[calc(100%-320px)] 2xl:w-[calc(100%-420px)] max-sm:h-[620px] h-full relative z-0">
+    <div className="w-full sm:h-[510px] 2xl:h-[670px] relative z-1 flex flex-wrap rounded-[10px] sm:rounded-[16px] overflow-hidden">
+      <div className="w-full sm:w-[calc(100%-220px)] lg:w-[calc(100%-260px)] xl:w-[calc(100%-320px)] 2xl:w-[calc(100%-420px)] max-sm:h-[376px] h-full relative z-0">
         <MapContainer
           center={mapCenter}
           zoom={12}
@@ -454,11 +455,26 @@ export default function BranchLocationMap({
       </div>
       <div className="w-full sm:w-[220px] lg:w-[260px] xl:w-[320px] 2xl:w-[420px] sm:h-full bg-base1 relative z-0 max-sm:shadow-[0_0_25px_0_rgba(238,56,36,0.20)] before:absolute before:inset-0 before:top-auto before:z-2 before:block before:bg-gradient-to-t before:to-transparent before:from-base1 before:w-full before:h-[20px] lg:before:h-[30px] before:pointer-events-none">
         <h3 className="text-[16px] lg:text-[18px] 2xl:text-[22px] text-white font-bold p-[20px] sm:p-[5px_10px] lg:p-[10px_15px] 2xl:p-[15px_30px] border-b-[1px] border-solid border-white/80">
-          {nearbyBranchLocations?.length}{" "}
-          {hasActiveFilters ? "Branches" : "Branches Near You"}
+          {loadingBranches ? (
+            "Loading..."
+          ) : (
+            <>
+              {nearbyBranchLocations?.length}{" "}
+              {hasActiveFilters ? "Branches" : "Branches Near You"}
+            </>
+          )}
         </h3>
         <div className="max-sm:p-[20px] overflow-y-auto max-h-[280px] sm:max-h-[calc(100%-49px)] lg:max-h-[calc(100%-49px)] 2xl:max-h-[calc(100%-65px)]">
-          {nearbyBranchLocations?.map((branch) => (
+          {loadingBranches && (
+            <div className="flex items-center justify-center gap-2 py-[30px] text-white text-[13px] 2xl:text-[16px]">
+              <svg className="animate-spin size-5 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8h8a8 8 0 01-16 0z" />
+              </svg>
+              <span>Loading branches...</span>
+            </div>
+          )}
+          {!loadingBranches && nearbyBranchLocations?.map((branch) => (
             <div
               key={branch.id}
               className={`max-sm:bg-[#7E94BC]/50 max-sm:rounded-[10px] max-sm:mb-[12px] last:mb-0 p-[15px_10px] sm:p-[10px_10px] lg:p-[20px_15px] 2xl:p-[20px_30px] cursor-pointer sm:border-b-[1px] border-solid border-white/10 loclist ${

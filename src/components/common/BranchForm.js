@@ -17,6 +17,9 @@ export default function BranchForm({
   onOpenChange,
   isMobile,
   useQueryParams = true,
+  loadingStates = false,
+  loadingDistricts = false,
+  loadingLocations = false,
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -105,6 +108,7 @@ export default function BranchForm({
           options={stateOptions}
           placeholder="Select State"
           emptyText="No state found"
+          loading={loadingStates}
           className="bg-[#e7eff9] border-[#e7eff9]"
           contentClassName="bg-[#e7eff9] border-[#e7eff9]"
         />
@@ -118,6 +122,7 @@ export default function BranchForm({
           options={districtOptions}
           placeholder="Select District"
           emptyText="No district found"
+          loading={loadingDistricts}
           onBlockedOpen={blockDistrict}
           invalid={!!errors.district}
           className="bg-[#e7eff9] border-[#e7eff9]"
@@ -137,6 +142,7 @@ export default function BranchForm({
           options={locationOptions}
           placeholder="Select Location"
           emptyText="No location found"
+          loading={loadingLocations}
           onBlockedOpen={blockLocation}
           invalid={!!errors.location}
           className="bg-[#e7eff9] border-[#e7eff9]"

@@ -6,6 +6,15 @@ import { CheckIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Command, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 
+function LoadingCircle() {
+  return (
+    <span
+      className="size-4 shrink-0 rounded-full border-2 border-current border-t-transparent animate-spin"
+      aria-hidden="true"
+    />
+  );
+}
+
 function SearchableSelect({
   value,
   onValueChange,
@@ -16,6 +25,7 @@ function SearchableSelect({
   onBlockedOpen,
   invalid = false,
   disabled = false,
+  loading = false,
   className,
   contentClassName,
 }) {
@@ -85,6 +95,7 @@ function SearchableSelect({
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-invalid={invalid || undefined}
+        aria-busy={loading || undefined}
         disabled={disabled}
         data-state={open ? "open" : "closed"}
         data-placeholder={selected ? undefined : ""}
@@ -123,7 +134,12 @@ function SearchableSelect({
               className="text-[12px] 3xl:text-[16px]"
             />
             <CommandList>
-              {filteredOptions.length === 0 ? (
+              {loading ? (
+                <div className="py-4 flex items-center justify-center gap-2 text-[12px] 3xl:text-[16px]">
+                  <LoadingCircle />
+                  <span>Loading...</span>
+                </div>
+              ) : filteredOptions.length === 0 ? (
                 <div className="py-4 text-center text-[12px] 3xl:text-[16px]">{emptyText}</div>
               ) : (
                 filteredOptions.map((option) => (

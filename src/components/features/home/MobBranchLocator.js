@@ -14,8 +14,12 @@ export default function MobBranchLocator({ pageContent }) {
   const [selectedLocation, setSelectedLocation] = useState("");
   const [selectedDistance, setSelectedDistance] = useState("");
   const [userLocation, setUserLocation] = useState(null);
+  const [loadingStates, setLoadingStates] = useState(true); // fetchStates runs on mount
+  const [loadingDistricts, setLoadingDistricts] = useState(false);
+  const [loadingLocations, setLoadingLocations] = useState(false);
 
   const fetchStates = async () => {
+    setLoadingStates(true);
     try {
       const { data } = await api.get("/career/jobs/dropdowns");
       if (data.success) {
@@ -25,6 +29,8 @@ export default function MobBranchLocator({ pageContent }) {
       }
     } catch (error) {
       console.error("Error fetching states:", error);
+    } finally {
+      setLoadingStates(false);
     }
   };
 
@@ -33,6 +39,7 @@ export default function MobBranchLocator({ pageContent }) {
       setDistricts([]);
       return;
     }
+    setLoadingDistricts(true);
     try {
       const { data } = await api.get(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/career/districts/by_state/${state_id}`,
@@ -44,6 +51,8 @@ export default function MobBranchLocator({ pageContent }) {
       }
     } catch (error) {
       console.error("Error fetching districts:", error);
+    } finally {
+      setLoadingDistricts(false);
     }
   };
 
@@ -52,6 +61,7 @@ export default function MobBranchLocator({ pageContent }) {
       setLocations([]);
       return;
     }
+    setLoadingLocations(true);
     try {
       const { data } = await api.get(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/career/locations/by_district_state`,
@@ -64,6 +74,8 @@ export default function MobBranchLocator({ pageContent }) {
       }
     } catch (error) {
       console.error("Error fetching locations:", error);
+    } finally {
+      setLoadingLocations(false);
     }
   };
 
@@ -131,6 +143,9 @@ export default function MobBranchLocator({ pageContent }) {
           onValueChange={handleBranchFormChange}
           onOpenChange={handleDistanceOpen}
           isMobile={true}
+          loadingStates={loadingStates}
+          loadingDistricts={loadingDistricts}
+          loadingLocations={loadingLocations}
         />
       </div>
     </section>
