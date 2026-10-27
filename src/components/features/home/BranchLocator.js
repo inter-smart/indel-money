@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import BranchForm from "@/components/common/BranchForm";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
@@ -92,13 +92,21 @@ export default function BranchLocator({ variant = "default", pageContent, useQue
     }
   }, [selectedBranch]);
 
+  const selectedBranchRef = useRef(selectedBranch);
+  useEffect(() => {
+    selectedBranchRef.current = selectedBranch;
+  }, [selectedBranch]);
+
+  // Created once so the debounce timer isn't discarded on every selectedBranch
+  // change - recreating it per-render (previously deps: [selectedBranch])
+  // defeated debouncing, since each recreation dropped any pending call.
   const debouncedFetchNearbyBranchLocations = useCallback(
     debounce(async (queryParams) => {
       try {
         const { data } = await api.get("/branch/branches/filtered_branches", { params: queryParams });
         if (data?.success) {
           setNearbyBranchLocations(data?.data || []);
-          if (!selectedBranch && data?.data?.length > 0) {
+          if (!selectedBranchRef.current && data?.data?.length > 0) {
             setSelectedBranch(data?.data?.[0]);
           }
         } else {
@@ -108,8 +116,12 @@ export default function BranchLocator({ variant = "default", pageContent, useQue
         console.error("Error fetching nearby branch locations:", error);
       }
     }, 300),
-    [selectedBranch],
+    [],
   );
+
+  useEffect(() => {
+    return () => debouncedFetchNearbyBranchLocations.cancel();
+  }, [debouncedFetchNearbyBranchLocations]);
 
   const updateQueryParams = useCallback(
     (newParams) => {
