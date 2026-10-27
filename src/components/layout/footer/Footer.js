@@ -45,6 +45,7 @@ const navigations = [
       { linkname: "Blog", href: "/blog" },
       { linkname: "Image Gallery", href: "/gallery" },
       { linkname: "Video Gallery", href: "/gallery?type=video&page=1" },
+      { linkname: "Celebrations", href: "/celebrations" },
     ],
   },
   {
