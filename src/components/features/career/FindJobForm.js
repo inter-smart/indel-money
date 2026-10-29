@@ -38,6 +38,8 @@ export default function FindJobForm({
   const [locations, setLocations] = useState([]);
   const [roles, setRoles] = useState([]);
   const [isDropdownsLoaded, setIsDropdownsLoaded] = useState(false);
+  const [loadingDistricts, setLoadingDistricts] = useState(false);
+  const [loadingLocations, setLoadingLocations] = useState(false);
 
   // Fetch all states and roles initially
   const fetchStatesAndRoles = useCallback(async () => {
@@ -59,6 +61,7 @@ export default function FindJobForm({
       setLocations([]);
       return Promise.resolve();
     }
+    setLoadingDistricts(true);
     try {
       const { data } = await api.get(`/career/districts/by_state/${state_id}`);
       setDistricts(data.data || []);
@@ -68,6 +71,8 @@ export default function FindJobForm({
       setDistricts([]);
       setLocations([]);
       return Promise.resolve();
+    } finally {
+      setLoadingDistricts(false);
     }
   }, []);
 
@@ -77,6 +82,7 @@ export default function FindJobForm({
       setLocations([]);
       return Promise.resolve();
     }
+    setLoadingLocations(true);
     try {
       const { data } = await api.get(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/career/locations/by_district_state`,
@@ -89,6 +95,8 @@ export default function FindJobForm({
     } catch (error) {
       setLocations([]);
       return Promise.resolve();
+    } finally {
+      setLoadingLocations(false);
     }
   }, []);
 
@@ -217,6 +225,7 @@ export default function FindJobForm({
                   options={states.map((state) => ({ value: String(state?.value), label: toSentenceCase(state?.label) || "-" }))}
                   placeholder="-- Select state --"
                   emptyText="No state found"
+                  loading={!isDropdownsLoaded}
                   className="w-full max-w-full max-sm:h-[40px] bg-white border-white rounded-[12px] lg:rounded-[12px] 2xl:rounded-[16px]"
                   contentClassName="bg-white border-white"
                 />
@@ -239,6 +248,7 @@ export default function FindJobForm({
                   options={(districts || []).map((district) => ({ value: String(district?.id), label: toSentenceCase(district?.district_name) || "-" }))}
                   placeholder="-- Select district --"
                   emptyText="No district found"
+                  loading={loadingDistricts}
                   className="w-full max-w-full max-sm:h-[40px] bg-white border-white rounded-[12px] lg:rounded-[12px] 2xl:rounded-[16px]"
                   contentClassName="bg-white border-white"
                 />
@@ -261,6 +271,7 @@ export default function FindJobForm({
                   options={locations.map((location) => ({ value: String(location?.id), label: toSentenceCase(location?.location_name) || "-" }))}
                   placeholder="-- Select location --"
                   emptyText="No location found"
+                  loading={loadingLocations}
                   className="text-ellipsis w-full max-w-full sm:h-full max-sm:h-[40px] bg-white border-white rounded-[11px]"
                   contentClassName="bg-white border-white"
                 />
@@ -282,6 +293,7 @@ export default function FindJobForm({
                   options={(roles || []).map((role) => ({ value: String(role?.value), label: role?.label || "-" }))}
                   placeholder="-- Select dept. --"
                   emptyText="No department found"
+                  loading={!isDropdownsLoaded}
                   className="w-full max-w-full max-sm:h-[40px] bg-white border-white rounded-[12px] lg:rounded-[12px] 2xl:rounded-[16px]"
                   contentClassName="bg-white border-white"
                 />

@@ -60,7 +60,7 @@ export default function AwardHighlightBox({
   items = slides,
 }) {
   return (
-    <div className="relative z-0 w-full h-full block rounded-[35px] sm:bg-[#B7D0FF] bg-[#fff] sm:shadow-none  shadow-[0_0_15px_0_rgba(0,0,0,0.10)] p-[15px_20px] sm:p-[30px_30px] lg:p-[30px] 2xl:p-[40px_30px_40px_40px] 3xl:p-[80px_50px_50px_70px]">
+    <div className="relative z-0 w-full h-full block rounded-[35px] sm:bg-[#B7D0FF] bg-[#fff] sm:shadow-none  shadow-[0_0_15px_0_rgba(0,0,0,0.10)] p-[15px_20px] sm:p-[30px] lg:p-[30px] 2xl:p-[40px] 3xl:p-[80px_50px_50px_70px]">
       <Swiper
         modules={[Autoplay, Pagination]}
         slidesPerView={1}
@@ -77,7 +77,7 @@ export default function AwardHighlightBox({
             <SwiperSlide key={index}>
               <div className="w-full flex flex-col-reverse sm:flex-row sm:items-start">
                 {/* Text – 50% */}
-                <div className="w-full sm:w-1/2 sm:pr-[20px] md:pr-[20px] xl:pr-[40px] 2xl:pr-[60px]">
+                <div className="w-full sm:w-1/2 sm:pr-[20px] md:pr-[20px] xl:pr-[40px] 2xl:pr-[60px] sm:my-auto">
                   {variant === "employeeTestimonials" && (
                     <div className="text-title1 font-bold leading-none mb-[5px] lg:mb-[10px] text-[#f30000]">
                       Awards
@@ -92,9 +92,9 @@ export default function AwardHighlightBox({
                   </div>
                 </div>
 
-                {/* Image – 50% */}
+                {/* Image – 50%, fixed aspect ratio so every slide is the same size */}
                 <div className="w-full sm:w-1/2 shrink-0 mb-[15px] sm:mb-0">
-                  <div className="group relative w-full h-[220px] sm:h-[240px] lg:h-[280px] xl:h-[300px] 2xl:h-[380px] rounded-[24px] overflow-hidden">
+                  <div className="relative w-full max-w-[320px] mx-auto sm:max-w-none aspect-[8/9] overflow-hidden rounded-[24px]">
                     <Image
                       src={
                         item.image
@@ -104,7 +104,7 @@ export default function AwardHighlightBox({
                       alt={item.image_alt ? item.image_alt : item?.alt}
                       fill
                       sizes="(min-width: 640px) 50vw, 100vw"
-                      className="object-cover transition-transform duration-600 group-hover:scale-[1.05]"
+                      className="object-cover"
                     />
                   </div>
                 </div>
