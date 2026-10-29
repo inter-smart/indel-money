@@ -47,11 +47,18 @@
 
 .lifeSlide .swiper-pagination {
   text-align: start !important;
-  padding-left: 15px;
-  padding-right: 15px;
   left: 0;
   right: 0;
   margin: auto;
+  width: fit-content;
+  bottom: 20px;
+}
+
+@media (min-width: 640px) {
+  .lifeSlide .swiper-pagination {
+    width: 100%;
+    bottom: 0;
+  }
 }
 
 .lifeSlide .swiper-slide {

@@ -2,9 +2,13 @@
 import dynamic from "next/dynamic";
 import { useMediaQuery } from "@react-hook/media-query";
 import LazySection from "../components/common/LazySection";
+import AwardHighlightBox from "@/components/features/award/AwardHighlightBox";
+import MobAwardHighlight from "@/components/features/career/MobAwardHighlight";
 
 const sectionLoading = (heightClass) => () => (
-  <div className={`w-full ${heightClass} animate-pulse rounded-[15px] bg-gray-200`} />
+  <div
+    className={`w-full ${heightClass} animate-pulse rounded-[15px] bg-gray-200`}
+  />
 );
 
 const SECTION_HEIGHT = {
@@ -13,7 +17,8 @@ const SECTION_HEIGHT = {
   calculator: "min-h-[480px] lg:min-h-[560px]",
   branchLocator: "min-h-[560px] lg:min-h-[640px]",
   joinTeam: "min-h-[420px] lg:min-h-[480px]",
-  latestUpdates: "min-h-[420px] lg:min-h-[530px] xl:min-h-[586px] 2xl:min-h-[700px]",
+  latestUpdates:
+    "min-h-[420px] lg:min-h-[530px] xl:min-h-[586px] 2xl:min-h-[700px]",
   innovations: "min-h-[220px] lg:min-h-[320px]",
   faq: "min-h-[480px] lg:min-h-[600px]",
   appDownload: "min-h-[140px] lg:min-h-[140px]",
@@ -125,7 +130,11 @@ export default function Home({
       {/* welcome contents*/}
 
       {isMobile ? (
-        <MobWelcomeModal banner={banner} serviceBanner={serviceBanner} key={1} />
+        <MobWelcomeModal
+          banner={banner}
+          serviceBanner={serviceBanner}
+          key={1}
+        />
       ) : (
         <WelcomeModal banner={banner} serviceBanner={serviceBanner} key={2} />
       )}
@@ -215,6 +224,23 @@ export default function Home({
         )}
       </LazySection>
 
+      <section className="w-full pb-[20px] md:pb-[70px] sm:pb-[30px] lg:pb-[60px] overflow-hidden">
+        <div className="container">
+          <div className="sm:block hidden">
+            <AwardHighlightBox
+              variant={"employeeTestimonials"}
+              items={initialData?.lifeAtIndel}
+            />
+          </div>
+          <div className="sm:hidden block">
+            <MobAwardHighlight
+              items={initialData?.lifeAtIndel}
+              title={initialData?.pageContent?.awards_title}
+            />
+          </div>
+        </div>
+      </section>
+
       <LazySection placeholderClassName={SECTION_HEIGHT.latestUpdates}>
         {isMobile ? (
           <MobLatestUpdates
@@ -243,7 +269,11 @@ export default function Home({
 
       {!isMobile && (
         <LazySection placeholderClassName={SECTION_HEIGHT.faq}>
-          <FAQ faqs={initialData?.faqs} pageContents={initialData?.pageContent} type="home" />
+          <FAQ
+            faqs={initialData?.faqs}
+            pageContents={initialData?.pageContent}
+            type="home"
+          />
         </LazySection>
       )}
 

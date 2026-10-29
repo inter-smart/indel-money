@@ -94,7 +94,7 @@ export default function AwardHighlightBox({
 
                 {/* Image – 60%, fixed height, cropped to fill */}
                 <div className="w-full sm:w-3/5 shrink-0 mb-[15px] sm:mb-0">
-                  <div className="relative w-full h-[260px] sm:h-[300px] lg:h-[360px] xl:h-[420px] 2xl:h-[500px] overflow-hidden rounded-[24px]">
+                  <div className="relative w-full h-[220px] sm:h-[260px] lg:h-[300px] xl:h-[360px] 2xl:h-[420px] overflow-hidden rounded-[24px]">
                     <Image
                       src={
                         item.image
