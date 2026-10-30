@@ -76,8 +76,8 @@ export default function AwardHighlightBox({
           return (
             <SwiperSlide key={index}>
               <div className="w-full flex flex-col-reverse sm:flex-row sm:items-start">
-                {/* Text – 50% */}
-                <div className="w-full sm:w-1/2 sm:pr-[20px] md:pr-[20px] xl:pr-[40px] 2xl:pr-[60px] sm:my-auto">
+                {/* Text – 40% */}
+                <div className="w-full sm:w-2/5 sm:pr-[20px] md:pr-[20px] xl:pr-[40px] 2xl:pr-[60px]">
                   {variant === "employeeTestimonials" && (
                     <div className="text-title1 font-bold leading-none mb-[5px] lg:mb-[10px] text-[#f30000]">
                       Awards
@@ -87,14 +87,14 @@ export default function AwardHighlightBox({
                     {item.title ? renderHtml(item.title) : ""}
                   </h5>
 
-                  <div className="w-full mb-[20px] lg:mb-[40px] 2xl:mb-[60px] text-[12px] lg:text-[13px] xl:text-[14px] 2xl:text-[16px] 3xl:text-[18px] line-clamp-8">
+                  <div className="w-full mb-[20px] lg:mb-[40px] 2xl:mb-[60px] text-[12px] lg:text-[13px] xl:text-[14px] 2xl:text-[16px] 3xl:text-[18px] line-clamp-14">
                     {item.description}
                   </div>
                 </div>
 
-                {/* Image – 50%, fixed aspect ratio so every slide is the same size */}
-                <div className="w-full sm:w-1/2 shrink-0 mb-[15px] sm:mb-0">
-                  <div className="relative w-full max-w-[320px] mx-auto sm:max-w-none aspect-[8/9] overflow-hidden rounded-[24px]">
+                {/* Image – 60%, fixed height, cropped to fill */}
+                <div className="w-full sm:w-3/5 shrink-0 mb-[15px] sm:mb-0">
+                  <div className="relative w-full h-[220px] sm:h-[260px] lg:h-[300px] xl:h-[360px] 2xl:h-[420px] overflow-hidden rounded-[24px]">
                     <Image
                       src={
                         item.image
@@ -103,7 +103,7 @@ export default function AwardHighlightBox({
                       }
                       alt={item.image_alt ? item.image_alt : item?.alt}
                       fill
-                      sizes="(min-width: 640px) 50vw, 100vw"
+                      sizes="(min-width: 640px) 60vw, 100vw"
                       className="object-cover"
                     />
                   </div>

@@ -155,13 +155,13 @@ export default function MobHeader({ socialLinks, links, logo, title, modes, loca
                       <Image src="/images/mob-icon-saving.svg" alt="saving" width={18} height={18} />
                     </Link>
                   </div> */}
-                  <a
+                  {/* <a
                     href={"https://asba.indelmoney.com/asbaform"}
                     target="_blank"
                     className="btn btn-base2 max-w-[150px] "
                   >
                     Apply for NCD
-                  </a>
+                  </a> */}
                   <div className="block flex-shrink-0">
                     <TranslatorDropdown ssrLocale={locale} />
                   </div>
