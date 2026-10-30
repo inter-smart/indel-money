@@ -171,7 +171,11 @@ export default function BranchLocator({ variant = "default", pageContent, useQue
   }, [selectedState, selectedDistrict, selectedLocation]);
 
   const fetchNearbyBranchesWithLocation = useCallback(
-    (distance, filters = { state: selectedState, district: selectedDistrict, location: selectedLocation }) => {
+    (
+      distance,
+      filters = { state: selectedState, district: selectedDistrict, location: selectedLocation },
+      { syncUrl = true } = {},
+    ) => {
       const activeFilters = !!filters.state || !!filters.district || !!filters.location;
       const queryParams = {
         state: filters.state || undefined,
@@ -190,7 +194,7 @@ export default function BranchLocator({ variant = "default", pageContent, useQue
               lat: latitude,
               long: longitude,
             });
-            updateQueryParams({ distance: distance || selectedDistance || "20" });
+            if (syncUrl) updateQueryParams({ distance: distance || selectedDistance || "20" });
           },
           (error) => {
             debouncedFetchNearbyBranchLocations(queryParams);
@@ -198,10 +202,12 @@ export default function BranchLocator({ variant = "default", pageContent, useQue
         );
       } else {
         debouncedFetchNearbyBranchLocations(queryParams);
-        if (!activeFilters) {
-          updateQueryParams({ distance: distance || selectedDistance || "20" });
-        } else {
-          updateQueryParams({ state: filters.state, district: filters.district, location: filters.location });
+        if (syncUrl) {
+          if (!activeFilters) {
+            updateQueryParams({ distance: distance || selectedDistance || "20" });
+          } else {
+            updateQueryParams({ state: filters.state, district: filters.district, location: filters.location });
+          }
         }
       }
     },
@@ -294,11 +300,12 @@ export default function BranchLocator({ variant = "default", pageContent, useQue
         setSelectedDistance("20");
         setDistricts([]);
         setLocations([]);
-        newParams.state = "";
-        newParams.district = "";
-        newParams.location = "";
-        newParams.distance = "20";
-        fetchNearbyBranchesWithLocation("20", { state: "", district: "", location: "" }); // Reset to default 20km
+        setSelectedBranch(null);
+        selectedBranchRef.current = null;
+        // Reset to default 20km without touching the URL, then drop every query param at once
+        fetchNearbyBranchesWithLocation("20", { state: "", district: "", location: "" }, { syncUrl: false });
+        if (useQueryParams) router.push(pathname, { scroll: false });
+        return;
       }
 
       // Update URL parameters only if useQueryParams is true
@@ -325,6 +332,9 @@ export default function BranchLocator({ variant = "default", pageContent, useQue
       fetchNearbyBranchesWithLocation,
       updateQueryParams,
       hasActiveFilters,
+      useQueryParams,
+      router,
+      pathname,
     ],
   );
 

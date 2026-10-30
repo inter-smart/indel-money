@@ -2,7 +2,7 @@
 import * as React from "react";
 import { SearchableSelect } from "../ui/searchable-select";
 import { Button } from "../ui/button";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { toSentenceCase } from "@/lib/utils/toSentenceCase";
 
 export default function BranchForm({
@@ -22,7 +22,6 @@ export default function BranchForm({
   loadingLocations = false,
 }) {
   const router = useRouter();
-  const pathname = usePathname();
   const [errors, setErrors] = React.useState({});
 
   const stateOptions = (states || []).map((state) => ({
@@ -86,14 +85,9 @@ export default function BranchForm({
   const handleClearFilter = (e) => {
     e.preventDefault();
     setErrors({});
+    // The parent owns URL reset (drops all query params).
     onValueChange("clear", true);
-
-    // Only navigate with query params if useQueryParams is true
-    if (isMobile && useQueryParams) {
-      router.push(pathname);
-    }
   };
-
 
   return (
     <form
