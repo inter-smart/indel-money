@@ -38,9 +38,13 @@ export default function BranchLocator({ variant = "default", pageContent, useQue
   const fetchStates = useCallback(async () => {
     setLoadingStates(true);
     try {
-      const { data } = await api.get(`/career/jobs/dropdowns`);
+      const { data } = await api.get(`/career/states`);
       if (data.success) {
-        setStates(data.data.states);
+        setStates(
+          (data.data || [])
+            .filter((state) => state.is_active)
+            .map((state) => ({ value: state.id, label: state.state_name })),
+        );
       } else {
         console.error("Failed to fetch states:", data.message);
       }
@@ -119,9 +123,10 @@ export default function BranchLocator({ variant = "default", pageContent, useQue
         const { data } = await api.get("/branch/branches/filtered_branches", { params: queryParams });
         if (data?.success) {
           setNearbyBranchLocations(data?.data || []);
-          if (!selectedBranchRef.current && data?.data?.length > 0) {
-            setSelectedBranch(data?.data?.[0]);
-          }
+          // Follow the latest filtered/nearby results on the map, not just
+          // the first time a branch gets selected - every new result set
+          // (filter change, distance change, clear) should take over.
+          setSelectedBranch(data?.data?.[0] || null);
         } else {
           console.error("Failed to fetch nearby branch locations:", data?.message);
         }

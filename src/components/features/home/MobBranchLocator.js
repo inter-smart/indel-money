@@ -21,9 +21,13 @@ export default function MobBranchLocator({ pageContent }) {
   const fetchStates = async () => {
     setLoadingStates(true);
     try {
-      const { data } = await api.get("/career/jobs/dropdowns");
+      const { data } = await api.get("/career/states");
       if (data.success) {
-        setStates(data.data.states || []);
+        setStates(
+          (data.data || [])
+            .filter((state) => state.is_active)
+            .map((state) => ({ value: state.id, label: state.state_name })),
+        );
       } else {
         console.error("Failed to fetch states:", data.message);
       }

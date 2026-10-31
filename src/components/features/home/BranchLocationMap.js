@@ -130,6 +130,7 @@ const MapController = memo(
     const map = useMap();
     const markerRefs = useRef({});
     const markerCallbacksRef = useRef({});
+    const popupMoveCleanupRef = useRef(null);
     const [isMounted, setIsMounted] = useState(false);
 
     const selectedBranchRef = useRef(selectedBranch);
@@ -196,42 +197,50 @@ const MapController = memo(
 
       // Add a small delay to ensure marker is rendered
       const timer = setTimeout(() => {
-        const marker = markerRefs.current[selectedBranch.id];
-        if (marker) {
-          // Close all open popups first
-          map.closePopup();
-          // Open the selected marker's popup
-          marker.openPopup();
-          // Center the map on the selected branch
-          map.setView([selectedBranch.latitude, selectedBranch.longitude], 13);
-        } else {
-          // If marker ref is not available, try to find and open popup by coordinates
-          const foundMarker = Object.values(markerRefs.current).find(
-            (marker) => {
-              if (marker && marker.getLatLng) {
-                const markerLatLng = marker.getLatLng();
-                return (
-                  Math.abs(markerLatLng.lat - selectedBranch.latitude) <
-                    0.0001 &&
-                  Math.abs(markerLatLng.lng - selectedBranch.longitude) < 0.0001
-                );
-              }
-              return false;
+        const findMarker = () =>
+          markerRefs.current[selectedBranch.id] ||
+          Object.values(markerRefs.current).find((marker) => {
+            if (marker && marker.getLatLng) {
+              const markerLatLng = marker.getLatLng();
+              return (
+                Math.abs(markerLatLng.lat - selectedBranch.latitude) < 0.0001 &&
+                Math.abs(markerLatLng.lng - selectedBranch.longitude) < 0.0001
+              );
             }
-          );
+            return false;
+          });
 
-          if (foundMarker) {
-            map.closePopup();
-            foundMarker.openPopup();
-            map.setView(
-              [selectedBranch.latitude, selectedBranch.longitude],
-              13
-            );
-          }
-        }
+        // Pan/zoom to the branch FIRST, then open its popup once the move
+        // settles. MarkerClusterGroup merges nearby markers into a cluster
+        // bubble and only shows one individually once the map is close
+        // enough to it - opening the popup before panning can silently do
+        // nothing if the marker is still clustered/out of view at that point.
+        map.closePopup();
+        map.setView([selectedBranch.latitude, selectedBranch.longitude], 13);
+
+        let opened = false;
+        const openPopup = () => {
+          if (opened) return;
+          opened = true;
+          const marker = findMarker();
+          if (marker) marker.openPopup();
+        };
+
+        map.once("moveend", openPopup);
+        // Fallback in case the map was already centered there (moveend won't fire)
+        const fallback = setTimeout(openPopup, 350);
+
+        popupMoveCleanupRef.current = () => {
+          map.off("moveend", openPopup);
+          clearTimeout(fallback);
+        };
       }, 150); // Increased delay to allow for marker cluster re-rendering
 
-      return () => clearTimeout(timer);
+      return () => {
+        clearTimeout(timer);
+        popupMoveCleanupRef.current?.();
+        popupMoveCleanupRef.current = null;
+      };
     }, [selectedBranch, map, isMounted, allBranchLocations]);
 
     useEffect(() => {

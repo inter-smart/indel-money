@@ -187,61 +187,61 @@ function CareerFormInner({ jobId, isGeneral }) {
     },
   });
 
+  // Fetch states + roles individually instead of the heavy /career/jobs/dropdowns
+  // payload (locations aren't needed here - see fetchLocationsByStatesAndDistricts).
+  const fetchGeneralStatesAndRoles = async () => {
+    const [statesRes, rolesRes] = await Promise.all([api.get("/career/states"), api.get("/career/roles")]);
+    const states = (statesRes.data.data || [])
+      .filter((state) => state.is_active)
+      .map((state) => ({ value: state.id, label: state.state_name }));
+    const roles = (rolesRes.data.data || [])
+      .filter((role) => role.is_active)
+      .map((role) => ({ value: role.id, label: role.role_name }));
+    return { states, roles };
+  };
+
   // Fetch dropdowns
   const fetchDropdowns = async () => {
     try {
-      let endpoint = "/career/jobs/dropdowns";
-
-      // If jobId is provided, fetch job-specific states and locations
       if (jobId && !isGeneral) {
-        endpoint = `/career/jobs/${jobId}/dropdowns`;
+        // Job-specific flow: this endpoint is already scoped to the job's
+        // own states/locations/role, not the heavy bulk dropdowns payload.
+        const { data } = await api.get(`/career/jobs/${jobId}/dropdowns`);
+
+        if (!data.success) throw new Error(data.message || "Failed to fetch dropdowns");
+
+        const dropdownData = data.data || { locations: [], roles: [], states: [] };
+        let states = dropdownData.job_states || dropdownData.states || [];
+        const locations = dropdownData.job_locations || dropdownData.locations || [];
+        const roles = dropdownData.roles || [];
+
+        // Ensure states have the correct format (value and label)
+        if (states.length > 0 && states[0].id && !states[0].value) {
+          states = states.map((state) => ({
+            value: state.id,
+            label: state.state_name || state.name || state.label,
+          }));
+        }
+
+        setDropdowns({ states, locations, roles, districts: [] });
+      } else {
+        // General flow: locations stay empty here - they're always
+        // re-fetched via fetchLocationsByStatesAndDistricts once a
+        // state+district are picked, same as before.
+        const { states, roles } = await fetchGeneralStatesAndRoles();
+        setDropdowns({ states, locations: [], roles, districts: [] });
       }
-
-      const { data } = await api.get(endpoint);
-
-      if (!data.success) throw new Error(data.message || "Failed to fetch dropdowns");
-
-      // If job-specific data is available, use it; otherwise fallback to all data
-      const dropdownData = data.data || { locations: [], roles: [], states: [] };
-
-      // If job-specific states are available, use them; otherwise use all states
-      let states = dropdownData.job_states || dropdownData.states || [];
-      let locations = dropdownData.job_locations || dropdownData.locations || [];
-      const roles = dropdownData.roles || [];
-
-      // Ensure states have the correct format (value and label)
-      if (states.length > 0 && states[0].id && !states[0].value) {
-        states = states.map((state) => ({
-          value: state.id,
-          label: state.state_name || state.name || state.label,
-        }));
-      }
-
-      // Ensure locations have the correct format (id and location_name)
-      if (locations.length > 0 && locations[0].id) {
-        // Locations are already in the correct format
-        locations = locations;
-      }
-
-      setDropdowns({
-        states: states,
-        locations: locations,
-        roles: roles,
-        districts: [],
-      });
       setDropdownsLoaded(true);
     } catch (error) {
       console.error("Error fetching dropdowns:", error);
 
-      // Fallback to general dropdowns if job-specific fails
+      // Fallback to general states/roles if the job-specific fetch fails
       if (jobId && !isGeneral) {
         try {
-          const { data } = await api.get("/career/jobs/dropdowns");
-          if (data.success) {
-            setDropdowns(data.data || { locations: [], roles: [], states: [], districts: [] });
-            setDropdownsLoaded(true);
-            return;
-          }
+          const { states, roles } = await fetchGeneralStatesAndRoles();
+          setDropdowns({ states, locations: [], roles, districts: [] });
+          setDropdownsLoaded(true);
+          return;
         } catch (fallbackError) {
           console.error("Error fetching fallback dropdowns:", fallbackError);
         }

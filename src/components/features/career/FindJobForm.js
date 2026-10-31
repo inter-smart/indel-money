@@ -44,9 +44,17 @@ export default function FindJobForm({
   // Fetch all states and roles initially
   const fetchStatesAndRoles = useCallback(async () => {
     try {
-      const { data } = await api.get("/career/jobs/dropdowns");
-      setStates(data.data.states || []);
-      setRoles(data.data.roles || []);
+      const [statesRes, rolesRes] = await Promise.all([api.get("/career/states"), api.get("/career/roles")]);
+      setStates(
+        (statesRes.data.data || [])
+          .filter((state) => state.is_active)
+          .map((state) => ({ value: state.id, label: state.state_name })),
+      );
+      setRoles(
+        (rolesRes.data.data || [])
+          .filter((role) => role.is_active)
+          .map((role) => ({ value: role.id, label: role.role_name })),
+      );
       setIsDropdownsLoaded(true);
     } catch (error) {
       console.error("Error fetching states/roles:", error);
