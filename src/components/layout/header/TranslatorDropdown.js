@@ -18,22 +18,22 @@ import {
 // locale code — every code tried for them either errors or is silently
 // echoed back untranslated.
 const TRANSLATION_LANGUAGES = [
-  { code: "en", label: "English" },
-  { code: "as", label: "অসমীয়া" },
-  { code: "bn", label: "বাংলা" },
-  { code: "gu", label: "ગુજરાતી" },
-  { code: "hi", label: "हिन्दी" },
-  { code: "kn", label: "ಕನ್ನಡ" },
-  { code: "kok", label: "कोंकणी" },
-  { code: "mai", label: "मैथिली" },
-  { code: "ml", label: "മലയാളം" },
-  { code: "mr", label: "मराठी" },
-  { code: "or", label: "ଓଡ଼ିଆ" },
-  { code: "pa", label: "ਪੰਜਾਬੀ" },
-  { code: "sat", label: "ᱥᱟᱱᱛᱟᱲᱤ" },
-  { code: "ta", label: "தமிழ்" },
-  { code: "te", label: "తెలుగు" },
-  { code: "ur", label: "اردو" },
+  { code: "en", label: "English", short: "EN" },
+  { code: "as", label: "অসমীয়া", short: "অস" },
+  { code: "bn", label: "বাংলা", short: "বাং" },
+  { code: "gu", label: "ગુજરાતી", short: "ગુજ" },
+  { code: "hi", label: "हिन्दी", short: "हिं" },
+  { code: "kn", label: "ಕನ್ನಡ", short: "ಕನ್ನ" },
+  { code: "kok", label: "कोंकणी", short: "कों" },
+  { code: "mai", label: "मैथिली", short: "मै" },
+  { code: "ml", label: "മലയാളം", short: "മല" },
+  { code: "mr", label: "मराठी", short: "मर" },
+  { code: "or", label: "ଓଡ଼ିଆ", short: "ଓଡ଼ି" },
+  { code: "pa", label: "ਪੰਜਾਬੀ", short: "ਪੰ" },
+  { code: "sat", label: "ᱥᱟᱱᱛᱟᱲᱤ", short: "ᱥᱟᱱ" },
+  { code: "ta", label: "தமிழ்", short: "தமி" },
+  { code: "te", label: "తెలుగు", short: "తె" },
+  { code: "ur", label: "اردو", short: "اردو" },
   // { code: "ne", label: "नेपाली" },
   // { code: "sd", label: "سنڌي" },
   // { code: "doi", label: "डोगरी" },
@@ -554,7 +554,7 @@ export default function TranslatorDropdown({ ssrLocale = "en" }) {
         className="notranslate flex items-center gap-1.5 rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold capitalize text-slate-800 shadow-sm outline-none transition whitespace-nowrap disabled:cursor-not-allowed disabled:opacity-70"
       >
         <Languages className="size-4 shrink-0" aria-hidden="true" />
-        {currentLanguage.label}
+        {currentLanguage.short}
         <svg
           width="11"
           height="6"
