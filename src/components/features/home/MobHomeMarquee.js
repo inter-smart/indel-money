@@ -5,7 +5,11 @@ export default function MobHomeMarquee({ announcementText, goldRateLabel, goldRa
   return (
     <div className="w-full absolute z-1 bottom-0 left-0 right-0">
       <div className="container">
-        <h2 className="w-full text-sm1 leading-none text-white flex items-center gap-[6px] mb-[10px]">
+        <h2 className="relative inline-flex items-center gap-[6px] text-sm1 leading-none text-white mb-[10px]">
+          <div
+            aria-hidden="true"
+            className="absolute -inset-x-3 -inset-y-[6px] -z-1 rounded-full bg-black/45 backdrop-blur-[2px] pointer-events-none"
+          />
           <Image
             src={"/images/mob-marquee-1.svg"}
             alt={"coin"}
