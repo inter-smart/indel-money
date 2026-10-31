@@ -98,16 +98,13 @@ export default function BranchLocator({ variant = "default", pageContent, useQue
       const { data } = await api.get("/branch/branches/active");
       if (data?.success) {
         setAllBranchLocations(data?.data || []);
-        if (!selectedBranch) {
-          setSelectedBranch(data?.data?.[0] || null);
-        }
       } else {
         console.error("Failed to fetch all branch locations:", data?.message);
       }
     } catch (error) {
       console.error("Error fetching all branch locations:", error);
     }
-  }, [selectedBranch]);
+  }, []);
 
   const selectedBranchRef = useRef(selectedBranch);
   useEffect(() => {
