@@ -1,9 +1,18 @@
 "use client";
+import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { useMediaQuery } from "@react-hook/media-query";
 import LazySection from "../components/common/LazySection";
-import AwardHighlightBox from "@/components/features/award/AwardHighlightBox";
-import MobAwardHighlight from "@/components/features/career/MobAwardHighlight";
+
+// Below-the-fold Swiper sections: loaded on scroll via LazySection, not in the first-paint bundle.
+const AwardHighlightBox = dynamic(
+  () => import("@/components/features/award/AwardHighlightBox"),
+  { ssr: false },
+);
+const MobAwardHighlight = dynamic(
+  () => import("@/components/features/career/MobAwardHighlight"),
+  { ssr: false },
+);
 
 const sectionLoading = (heightClass) => () => (
   <div
@@ -124,20 +133,35 @@ export default function Home({
   // Combine server-side and client-side detection (client takes precedence after hydration)
   const isMobile =
     typeof window !== "undefined" ? isMobileViewport : initialIsMobile;
+  // Matches the `sm:` breakpoint the award section's wrappers used to toggle on.
+  const isSmUp = useMediaQuery("only screen and (min-width: 640px)");
+
+  // Mount the welcome modal after the page is idle so it doesn't compete with the hero/LCP.
+  const [showWelcome, setShowWelcome] = useState(false);
+  useEffect(() => {
+    const show = () => setShowWelcome(true);
+    if (typeof window.requestIdleCallback === "function") {
+      const id = window.requestIdleCallback(show, { timeout: 3000 });
+      return () => window.cancelIdleCallback(id);
+    }
+    const id = setTimeout(show, 2000);
+    return () => clearTimeout(id);
+  }, []);
 
   return (
     <>
       {/* welcome contents*/}
 
-      {isMobile ? (
-        <MobWelcomeModal
-          banner={banner}
-          serviceBanner={serviceBanner}
-          key={1}
-        />
-      ) : (
-        <WelcomeModal banner={banner} serviceBanner={serviceBanner} key={2} />
-      )}
+      {showWelcome &&
+        (isMobile ? (
+          <MobWelcomeModal
+            banner={banner}
+            serviceBanner={serviceBanner}
+            key={1}
+          />
+        ) : (
+          <WelcomeModal banner={banner} serviceBanner={serviceBanner} key={2} />
+        ))}
 
       {isMobile ? (
         <MobHeroBanner
@@ -226,18 +250,19 @@ export default function Home({
 
       <section className="w-full pb-[20px] md:pb-[70px] sm:pb-[30px] lg:pb-[60px] overflow-hidden">
         <div className="container">
-          <div className="sm:block hidden">
-            <AwardHighlightBox
-              variant={"employeeTestimonials"}
-              items={initialData?.lifeAtIndel}
-            />
-          </div>
-          <div className="sm:hidden block">
-            <MobAwardHighlight
-              items={initialData?.lifeAtIndel}
-              title={initialData?.pageContent?.awards_title}
-            />
-          </div>
+          <LazySection placeholderClassName="min-h-[300px]">
+            {isSmUp ? (
+              <AwardHighlightBox
+                variant={"employeeTestimonials"}
+                items={initialData?.lifeAtIndel}
+              />
+            ) : (
+              <MobAwardHighlight
+                items={initialData?.lifeAtIndel}
+                title={initialData?.pageContent?.awards_title}
+              />
+            )}
+          </LazySection>
         </div>
       </section>
 

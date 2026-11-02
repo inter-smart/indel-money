@@ -15,6 +15,7 @@ export default function MobHomeMarquee({ announcementText, goldRateLabel, goldRa
             alt={"coin"}
             width={19}
             height={16}
+            unoptimized
             className="w-[18px] @sm:w-[15px] object-contain"
           />
           {/* Gold rate */}

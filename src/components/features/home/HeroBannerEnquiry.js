@@ -56,9 +56,10 @@ const postEnquiryData = async (enquiryData) => {
     }
   };
 
+  // Fetch only when the panel is first opened, not on every page load.
   useEffect(() => {
-    fetchServiceTypes();
-  }, []);
+    if (open && serviceTypes.length === 0) fetchServiceTypes();
+  }, [open]);
 
   const formattedServiceTypes = useMemo(() => {
     if (serviceTypes?.length > 0) {
