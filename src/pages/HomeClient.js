@@ -2,8 +2,14 @@
 import dynamic from "next/dynamic";
 import { useMediaQuery } from "@react-hook/media-query";
 import LazySection from "../components/common/LazySection";
-import AwardHighlightBox from "@/components/features/award/AwardHighlightBox";
-import MobAwardHighlight from "@/components/features/career/MobAwardHighlight";
+const AwardHighlightBox = dynamic(
+  () => import("@/components/features/award/AwardHighlightBox"),
+  { ssr: false },
+);
+const MobAwardHighlight = dynamic(
+  () => import("@/components/features/career/MobAwardHighlight"),
+  { ssr: false },
+);
 
 const sectionLoading = (heightClass) => () => (
   <div
@@ -17,6 +23,7 @@ const SECTION_HEIGHT = {
   calculator: "min-h-[480px] lg:min-h-[560px]",
   branchLocator: "min-h-[560px] lg:min-h-[640px]",
   joinTeam: "min-h-[420px] lg:min-h-[480px]",
+  awards: "min-h-[300px] lg:min-h-[400px]",
   latestUpdates:
     "min-h-[420px] lg:min-h-[530px] xl:min-h-[586px] 2xl:min-h-[700px]",
   innovations: "min-h-[220px] lg:min-h-[320px]",
@@ -224,22 +231,24 @@ export default function Home({
         )}
       </LazySection>
 
-      <section className="w-full pb-[20px] md:pb-[70px] sm:pb-[30px] lg:pb-[60px] overflow-hidden">
-        <div className="container">
-          <div className="sm:block hidden">
-            <AwardHighlightBox
-              variant={"employeeTestimonials"}
-              items={initialData?.lifeAtIndel}
-            />
+      <LazySection placeholderClassName={SECTION_HEIGHT.awards}>
+        <section className="w-full pb-[20px] md:pb-[70px] sm:pb-[30px] lg:pb-[60px] overflow-hidden">
+          <div className="container">
+            <div className="sm:block hidden">
+              <AwardHighlightBox
+                variant={"employeeTestimonials"}
+                items={initialData?.lifeAtIndel}
+              />
+            </div>
+            <div className="sm:hidden block">
+              <MobAwardHighlight
+                items={initialData?.lifeAtIndel}
+                title={initialData?.pageContent?.awards_title}
+              />
+            </div>
           </div>
-          <div className="sm:hidden block">
-            <MobAwardHighlight
-              items={initialData?.lifeAtIndel}
-              title={initialData?.pageContent?.awards_title}
-            />
-          </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
 
       <LazySection placeholderClassName={SECTION_HEIGHT.latestUpdates}>
         {isMobile ? (
