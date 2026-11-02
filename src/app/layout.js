@@ -4,8 +4,7 @@ import Header from "../components/layout/header/Header";
 import Footer from "../components/layout/footer/Footer";
 // import FloatingButton from "../components/common/FloatingButton";
 import { Toaster } from "react-hot-toast";
-import { GoogleTagManager } from "@next/third-parties/google";
-import { GoogleAnalytics } from "@next/third-parties/google";
+import DeferredAnalytics from "@/components/common/DeferredAnalytics";
 import { getServerLocale } from "../lib/locale/getServerLocale";
 import { buildLocalizedUrl } from "../lib/locale/localizedUrl";
 import TopNavigation from "@/components/layout/floatButtons/topNavigation";
@@ -58,7 +57,11 @@ export default async function RootLayout({ children }) {
 
   return (
     <html lang={locale}>
-      <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID} />
+      <head>
+        {/* Analytics loads late (DeferredAnalytics); warm DNS so it starts fast once triggered. */}
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+      </head>
       <body
         className={`${montserrat.variable} ${notoSansTamil.variable} font-montserrat min-h-screen flex flex-col antialiased`}
       >
@@ -76,8 +79,8 @@ export default async function RootLayout({ children }) {
             style={{ display: "none", visibility: "hidden" }}
           />
         </noscript>
+        <DeferredAnalytics gtmId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID} gaId={process.env.GA_TRACKING_ID} />
       </body>
-      {process.env.GA_TRACKING_ID && <GoogleAnalytics gaId={process.env.GA_TRACKING_ID} />}
     </html>
   );
 }
