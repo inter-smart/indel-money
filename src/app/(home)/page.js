@@ -134,7 +134,7 @@ async function getMetaData(locale) {
         canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/home`,
       },
 
-      error: error?.message || "No metadata found",
+      error: result.message || "No metadata found",
     };
   }
 }

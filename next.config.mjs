@@ -121,14 +121,6 @@ const nextConfig = {
         ],
       },
       {
-        source: "/fonts/:path*",
-        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
-      },
-      {
-        source: "/icons/:path*",
-        headers: [{ key: "Cache-Control", value: "public, max-age=2592000" }],
-      },
-      {
         source: "/_next/static/:path*",
         headers: [
           {
