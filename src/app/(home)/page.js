@@ -15,6 +15,7 @@ async function fetchHomeData(locale) {
     const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/home`, locale), {
       cache: "force-cache",
       next: { revalidate: 600 },
+      signal: AbortSignal.timeout(3000), // don't let a slow backend stall the page
       credentials: "include", // Ensures session cookie is sent
       headers: {
         "Content-Type": "application/json",
@@ -62,8 +63,8 @@ async function fetchGoldRate(locale) {
 async function getMetaData(locale) {
   try {
     const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=home`, locale), {
-      // cache: "force-cache",
-      // next: { revalidate: 600 },
+      next: { revalidate: 600 },
+      signal: AbortSignal.timeout(3000),
     });
     const result = await response.json();
     const meta = result.data;
