@@ -1,10 +1,10 @@
 //export const dynamic = "force-dynamic";
 import { headers } from "next/headers";
 import Script from "next/script";
-import HomeClient from "../pages/HomeClient";
+import HomeClient from "@/pages/HomeClient";
 import { defaultMeta } from "@/constants/constants";
-import { getServerLocale } from "../lib/locale/getServerLocale";
-import { buildLocalizedUrl } from "../lib/locale/localizedUrl";
+import { getServerLocale } from "@/lib/locale/getServerLocale";
+import { buildLocalizedUrl } from "@/lib/locale/localizedUrl";
 
 function isMobileDevice(userAgent) {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
