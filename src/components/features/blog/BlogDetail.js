@@ -55,7 +55,7 @@ const BlogDetail = ({ data }) => {
             className="w-full h-full object-cover transition-transform duration-600 group-hover:scale-[1.05]"
           />
           <div className="sm:block hidden">
-            <h1>{data?.title}</h1>
+            <p className={styles.visualHeading}>{data?.title}</p>
             <PostDateDisplay date={data?.createdAt} authorImage={data?.author_image} authorName={data?.author_name} />
           </div>
           {data?.image_description ? renderHtml(data?.image_description) : ""}

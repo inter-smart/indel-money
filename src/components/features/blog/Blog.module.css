@@ -10,14 +10,16 @@
 .ckCntWrap h3,
 .ckCntWrap h4,
 .ckCntWrap h5,
-.ckCntWrap h6 {
+.ckCntWrap h6,
+.ckCntWrap .visualHeading {
     font-weight: 600;
     line-height: 1.1;
     color: black;
     margin-bottom: 10px;
 }
 
-.ckCntWrap h1 {
+.ckCntWrap h1,
+.ckCntWrap .visualHeading {
     font-size: 20px;
     font-weight: 500;
 }
@@ -103,13 +105,15 @@
     .ckCntWrap h4,
     .ckCntWrap h5,
     .ckCntWrap h6,
-    .ckCntWrap p {
+    .ckCntWrap p,
+    .ckCntWrap .visualHeading {
         margin-bottom: 15px;
     }
 }
 
 @media (min-width: 640px) {
-    .ckCntWrap h1 {
+    .ckCntWrap h1,
+    .ckCntWrap .visualHeading {
         font-size: 24px;
     }
 
@@ -154,11 +158,13 @@
     .ckCntWrap h4,
     .ckCntWrap h5,
     .ckCntWrap h6,
-    .ckCntWrap p {
+    .ckCntWrap p,
+    .ckCntWrap .visualHeading {
         margin-bottom: 20px;
     }
 
-    .ckCntWrap h1 {
+    .ckCntWrap h1,
+    .ckCntWrap .visualHeading {
         font-size: 34px;
     }
 
@@ -188,7 +194,8 @@
 }
 
 @media (min-width: 1536px) {
-    .ckCntWrap h1 {
+    .ckCntWrap h1,
+    .ckCntWrap .visualHeading {
         font-size: 48px;
     }
 
@@ -222,7 +229,8 @@
     .ckCntWrap h4,
     .ckCntWrap h5,
     .ckCntWrap h6,
-    .ckCntWrap p {
+    .ckCntWrap p,
+    .ckCntWrap .visualHeading {
         margin-bottom: 30px;
     }
 }
