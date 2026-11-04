@@ -201,6 +201,11 @@
     border-color: #ee3824;
   }
 
+  .btn-base1.btn-mobile-search:hover {
+    background-color: #17479e;
+    border-color: #17479e;
+  }
+
   .btn-base2 {
     background-color: #ee3824;
   }
