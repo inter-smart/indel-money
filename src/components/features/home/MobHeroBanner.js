@@ -3,7 +3,7 @@ import HeroBannerEnquiry from "./HeroBannerEnquiry";
 import { useCallback, useRef } from "react";
 import Image from "next/image";
 import MobHomeMarquee from "../../features/home/MobHomeMarquee";
-import { renderHtml } from "@/lib/utils/htmlParser";
+import { renderHtml, hasVisibleText } from "@/lib/utils/htmlParser";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectFade, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
@@ -147,9 +147,11 @@ export default function MobHeroBanner({ heroBanner, initialData, announcement, g
             )}
             <div className="container">
               <div className="max-w-full">
-                <h2 className="text-[28px] leading-[1.2] capitalize font-medium text-white mb-[10px] 4xs:mb-[15px] [&>span]:text-base2 [&>span]:font-bold">
-                  {item?.title ? renderHtml(item.title) : ""}
-                </h2>
+                {hasVisibleText(item?.title) && (
+                  <h2 className="text-[28px] leading-[1.2] capitalize font-medium text-white mb-[10px] 4xs:mb-[15px] [&>span]:text-base2 [&>span]:font-bold">
+                    {renderHtml(item.title)}
+                  </h2>
+                )}
                 {/* <Link href={item?.button_link} className="btn btn-base2 max-w-[130px]">
                   {item?.button_text}
                 </Link> */}
