@@ -15,6 +15,7 @@ export default function BranchForm({
   selectedDistance,
   onValueChange,
   onOpenChange,
+  onSearchClick,
   isMobile,
   useQueryParams = true,
   loadingStates = false,
@@ -165,6 +166,15 @@ export default function BranchForm({
           <Button
             type="submit"
             className="btn btn-base2 max-w-[140px] lg:max-w-[160px] xl:max-w-[180px] 3xl:max-w-[220px]"
+          >
+            SEARCH
+          </Button>
+        )}
+        {onSearchClick && (
+          <Button
+            type="button"
+            onClick={onSearchClick}
+            className="btn btn-base1 md:hidden max-w-[140px] lg:max-w-[160px] xl:max-w-[180px] 3xl:max-w-[220px]"
           >
             SEARCH
           </Button>

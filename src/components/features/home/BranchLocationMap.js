@@ -412,6 +412,7 @@ export default function BranchLocationMap({
   selectedDistance,
   hasActiveFilters,
   loadingBranches = false,
+  resultsRef,
 }) {
   const [mapCenter, setMapCenter] = useState([13.0827, 80.2707]); // Default: Chennai
   const [isMounted, setIsMounted] = useState(false);
@@ -462,7 +463,11 @@ export default function BranchLocationMap({
           />
         </MapContainer>
       </div>
-      <div className="w-full sm:w-[220px] lg:w-[260px] xl:w-[320px] 2xl:w-[420px] sm:h-full bg-base1 relative z-0 max-sm:shadow-[0_0_25px_0_rgba(238,56,36,0.20)] before:absolute before:inset-0 before:top-auto before:z-2 before:block before:bg-gradient-to-t before:to-transparent before:from-base1 before:w-full before:h-[20px] lg:before:h-[30px] before:pointer-events-none">
+      <div
+        ref={resultsRef}
+        style={{ scrollMarginTop: "var(--header-y)" }}
+        className="w-full sm:w-[220px] lg:w-[260px] xl:w-[320px] 2xl:w-[420px] sm:h-full bg-base1 relative z-0 max-sm:shadow-[0_0_25px_0_rgba(238,56,36,0.20)] before:absolute before:inset-0 before:top-auto before:z-2 before:block before:bg-gradient-to-t before:to-transparent before:from-base1 before:w-full before:h-[20px] lg:before:h-[30px] before:pointer-events-none"
+      >
         <h3 className="text-[16px] lg:text-[18px] 2xl:text-[22px] text-white font-bold p-[20px] sm:p-[5px_10px] lg:p-[10px_15px] 2xl:p-[15px_30px] border-b-[1px] border-solid border-white/80">
           {loadingBranches ? (
             "Loading..."

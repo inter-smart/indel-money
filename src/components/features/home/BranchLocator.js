@@ -106,6 +106,17 @@ export default function BranchLocator({ variant = "default", pageContent, useQue
     }
   }, []);
 
+  const resultsRef = useRef(null);
+  const [isMobileViewport, setIsMobileViewport] = useState(false);
+
+  useEffect(() => {
+    const mql = window.matchMedia("(max-width: 767px)");
+    const update = () => setIsMobileViewport(mql.matches);
+    update();
+    mql.addEventListener("change", update);
+    return () => mql.removeEventListener("change", update);
+  }, []);
+
   const selectedBranchRef = useRef(selectedBranch);
   useEffect(() => {
     selectedBranchRef.current = selectedBranch;
@@ -216,7 +227,20 @@ export default function BranchLocator({ variant = "default", pageContent, useQue
     [selectedState, selectedDistrict, selectedLocation, selectedDistance, debouncedFetchNearbyBranchLocations, updateQueryParams],
   );
 
+  const handleMobileSearch = useCallback(() => {
+    fetchNearbyBranchesWithLocation(selectedDistance);
+    requestAnimationFrame(() => {
+      const node = resultsRef.current || document.querySelector(".bg-base1.relative.z-0");
+      if (!node) return;
+      const headerOffset =
+        parseInt(getComputedStyle(document.documentElement).getPropertyValue("--header-y")) || 80;
+      const top = node.getBoundingClientRect().top + window.scrollY - headerOffset - 12;
+      window.scrollTo({ top, behavior: "smooth" });
+    });
+  }, [fetchNearbyBranchesWithLocation, selectedDistance]);
+
   const handleDistanceOpen = useCallback(() => {
+    if (isMobileViewport) return;
     if (hasActiveFilters()) {
       // If filters are active, use existing filters without distance
       debouncedFetchNearbyBranchLocations({
@@ -257,6 +281,7 @@ export default function BranchLocator({ variant = "default", pageContent, useQue
     debouncedFetchNearbyBranchLocations,
     updateQueryParams,
     hasActiveFilters,
+    isMobileViewport,
   ]);
 
   const handleBranchFormChange = useCallback(
@@ -283,6 +308,10 @@ export default function BranchLocator({ variant = "default", pageContent, useQue
       } else if (field === "distance") {
         setSelectedDistance(value);
         newParams.distance = value;
+        if (isMobileViewport) {
+          updateQueryParams(newParams);
+          return; // defer the actual search until SEARCH is tapped
+        }
         // Only fetch with distance if no other filters are active
         if (!hasActiveFilters()) {
           fetchNearbyBranchesWithLocation(value);
@@ -314,7 +343,7 @@ export default function BranchLocator({ variant = "default", pageContent, useQue
       updateQueryParams(newParams);
 
       // Trigger filtered fetch for nearby branches
-      if (field !== "clear") {
+      if (field !== "clear" && !isMobileViewport) {
         debouncedFetchNearbyBranchLocations({
           state: field === "state" ? value : selectedState || undefined,
           district: field === "district" ? value : selectedDistrict || undefined,
@@ -337,6 +366,7 @@ export default function BranchLocator({ variant = "default", pageContent, useQue
       useQueryParams,
       router,
       pathname,
+      isMobileViewport,
     ],
   );
 
@@ -415,6 +445,7 @@ export default function BranchLocator({ variant = "default", pageContent, useQue
               selectedDistance={selectedDistance}
               onValueChange={handleBranchFormChange}
               onOpenChange={handleDistanceOpen}
+              onSearchClick={handleMobileSearch}
               isMobile={false}
               useQueryParams={useQueryParams}
               loadingStates={loadingStates}
@@ -441,6 +472,7 @@ export default function BranchLocator({ variant = "default", pageContent, useQue
             selectedDistance={selectedDistance}
             hasActiveFilters={hasActiveFilters()}
             loadingBranches={loadingNearby}
+            resultsRef={resultsRef}
           />
         </div>
       </div>
