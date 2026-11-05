@@ -1,9 +1,0 @@
-# *
-User-agent: *
-Allow: /
-
-# Host
-Host: https://indelmoney.com
-
-# Sitemaps
-Sitemap: https://indelmoney.com/sitemap.xml
