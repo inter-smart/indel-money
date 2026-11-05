@@ -54,7 +54,7 @@ async function getMetaData(locale) {
           description: meta?.og_description || meta?.meta_description || defaultMeta.description,
           images: meta?.og_image ? [{ url: meta.og_image, width: 1200, height: 630 }] : [],
           type: "website",
-          url: `${process.env.NEXT_PUBLIC_SITE_URL}/management-team`,
+          url: `${process.env.NEXT_PUBLIC_SITE_URL}/loan-against-property`,
         },
         twitter: {
           card: "summary_large_image",
