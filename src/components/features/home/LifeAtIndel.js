@@ -4,20 +4,6 @@ import Link from "next/link";
 import LifeIndelSlider from "../../features/home/LifeIndelSlider";
 import { motion } from "framer-motion";
 
-const images = [
-  {
-    src: "/images/life-1.jpg",
-    alt: "1",
-  },
-  {
-    src: "/images/life-2.jpg",
-    alt: "2",
-  },
-  {
-    src: "/images/life-3.jpg",
-    alt: "3",
-  },
-];
 
 function ImageBox({ item, className }) {
   return (
@@ -79,7 +65,7 @@ export default function LifeAtIndel({ pageContent, lifeAtIndel, image1, image2, 
               {pageContent?.life_section_description}
             </div>
             <div className="mb-[10px] lg:mb-[15px] 2xl:mb-[20px]">
-              <LifeIndelSlider lifeAtIndel={lifeAtIndel} />
+              {/* <LifeIndelSlider lifeAtIndel={lifeAtIndel} /> */}
             </div>
             <div className="flex flex-wrap gap-[10px] lg:gap-[15px] 3xl:gap-[20px]">
               <div>

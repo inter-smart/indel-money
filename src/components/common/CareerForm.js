@@ -24,6 +24,17 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/custom-alert-dialog";
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ALLOWED_FILE_TYPES = {
+  pdf: { label: "PDF", mimes: ["application/pdf"] },
+  doc: { label: "DOC", mimes: ["application/msword"] },
+  docx: { label: "DOCX", mimes: ["application/vnd.openxmlformats-officedocument.wordprocessingml.document"] },
+};
+const FILE_ACCEPT = [".pdf", ".doc", ".docx", ...Object.values(ALLOWED_FILE_TYPES).flatMap((type) => type.mimes)].join(",");
+const FILE_HINT = "PDF/DOC/DOCX, max 5MB";
+
+const getFileExtension = (name) => (name?.includes(".") ? name.split(".").pop().toLowerCase() : "");
+
 const noticePeriod = ["Less than 15 days", "15 to 30 days", "30 days", "60 to 90 days", "More than 90 days"];
 
 // Schema Validation
@@ -109,32 +120,10 @@ function CareerFormInner({ jobId, isGeneral }) {
   const [verifiedEmail, setVerifiedEmail] = useState(""); // Store the verified email
   const [currentEmailInForm, setCurrentEmailInForm] = useState(""); // Track current email in form
 
-  const truncateFilename = (filename, maxLength = 8) => {
-    if (!filename || filename.length <= maxLength) return filename;
-    return filename.substring(0, maxLength) + "....";
-  };
-
   // File type display helper
   const getFileTypeDisplay = (file, fileName) => {
-    if (file) {
-      const typeMap = {
-        "application/pdf": "PDF",
-        "image/jpeg": "JPEG",
-        "image/png": "PNG",
-      };
-      return typeMap[file.type] || file.type.split("/")[1]?.toUpperCase() || "";
-    }
-    if (fileName) {
-      const extension = fileName.split(".").pop()?.toLowerCase();
-      const extensionMap = {
-        pdf: "PDF",
-        jpg: "JPEG",
-        jpeg: "JPEG",
-        png: "PNG",
-      };
-      return extensionMap[extension] || extension?.toUpperCase() || "";
-    }
-    return "";
+    const extension = getFileExtension(file ? file.name : fileName);
+    return ALLOWED_FILE_TYPES[extension]?.label || extension.toUpperCase();
   };
 
   const formSchema = useMemo(() => {
@@ -198,61 +187,61 @@ function CareerFormInner({ jobId, isGeneral }) {
     },
   });
 
+  // Fetch states + roles individually instead of the heavy /career/jobs/dropdowns
+  // payload (locations aren't needed here - see fetchLocationsByStatesAndDistricts).
+  const fetchGeneralStatesAndRoles = async () => {
+    const [statesRes, rolesRes] = await Promise.all([api.get("/career/states"), api.get("/career/roles")]);
+    const states = (statesRes.data.data || [])
+      .filter((state) => state.is_active)
+      .map((state) => ({ value: state.id, label: state.state_name }));
+    const roles = (rolesRes.data.data || [])
+      .filter((role) => role.is_active)
+      .map((role) => ({ value: role.id, label: role.role_name }));
+    return { states, roles };
+  };
+
   // Fetch dropdowns
   const fetchDropdowns = async () => {
     try {
-      let endpoint = "/career/jobs/dropdowns";
-
-      // If jobId is provided, fetch job-specific states and locations
       if (jobId && !isGeneral) {
-        endpoint = `/career/jobs/${jobId}/dropdowns`;
+        // Job-specific flow: this endpoint is already scoped to the job's
+        // own states/locations/role, not the heavy bulk dropdowns payload.
+        const { data } = await api.get(`/career/jobs/${jobId}/dropdowns`);
+
+        if (!data.success) throw new Error(data.message || "Failed to fetch dropdowns");
+
+        const dropdownData = data.data || { locations: [], roles: [], states: [] };
+        let states = dropdownData.job_states || dropdownData.states || [];
+        const locations = dropdownData.job_locations || dropdownData.locations || [];
+        const roles = dropdownData.roles || [];
+
+        // Ensure states have the correct format (value and label)
+        if (states.length > 0 && states[0].id && !states[0].value) {
+          states = states.map((state) => ({
+            value: state.id,
+            label: state.state_name || state.name || state.label,
+          }));
+        }
+
+        setDropdowns({ states, locations, roles, districts: [] });
+      } else {
+        // General flow: locations stay empty here - they're always
+        // re-fetched via fetchLocationsByStatesAndDistricts once a
+        // state+district are picked, same as before.
+        const { states, roles } = await fetchGeneralStatesAndRoles();
+        setDropdowns({ states, locations: [], roles, districts: [] });
       }
-
-      const { data } = await api.get(endpoint);
-
-      if (!data.success) throw new Error(data.message || "Failed to fetch dropdowns");
-
-      // If job-specific data is available, use it; otherwise fallback to all data
-      const dropdownData = data.data || { locations: [], roles: [], states: [] };
-
-      // If job-specific states are available, use them; otherwise use all states
-      let states = dropdownData.job_states || dropdownData.states || [];
-      let locations = dropdownData.job_locations || dropdownData.locations || [];
-      const roles = dropdownData.roles || [];
-
-      // Ensure states have the correct format (value and label)
-      if (states.length > 0 && states[0].id && !states[0].value) {
-        states = states.map((state) => ({
-          value: state.id,
-          label: state.state_name || state.name || state.label,
-        }));
-      }
-
-      // Ensure locations have the correct format (id and location_name)
-      if (locations.length > 0 && locations[0].id) {
-        // Locations are already in the correct format
-        locations = locations;
-      }
-
-      setDropdowns({
-        states: states,
-        locations: locations,
-        roles: roles,
-        districts: [],
-      });
       setDropdownsLoaded(true);
     } catch (error) {
       console.error("Error fetching dropdowns:", error);
 
-      // Fallback to general dropdowns if job-specific fails
+      // Fallback to general states/roles if the job-specific fetch fails
       if (jobId && !isGeneral) {
         try {
-          const { data } = await api.get("/career/jobs/dropdowns");
-          if (data.success) {
-            setDropdowns(data.data || { locations: [], roles: [], states: [], districts: [] });
-            setDropdownsLoaded(true);
-            return;
-          }
+          const { states, roles } = await fetchGeneralStatesAndRoles();
+          setDropdowns({ states, locations: [], roles, districts: [] });
+          setDropdownsLoaded(true);
+          return;
         } catch (fallbackError) {
           console.error("Error fetching fallback dropdowns:", fallbackError);
         }
@@ -588,7 +577,6 @@ function CareerFormInner({ jobId, isGeneral }) {
 
     if (!recaptchaToken) {
       toast.error("Failed to get reCAPTCHA token. Please try again.");
-      setIsSubmitting(false);
       return;
     }
 
@@ -672,21 +660,41 @@ function CareerFormInner({ jobId, isGeneral }) {
       toast.success(response.data.message);
     } catch (err) {
       console.error("Error submitting form:", err);
-      toast.error(err.response.data.error.message || "Failed to submit application.");
+      const status = err?.response?.status;
+      const data = err?.response?.data;
+      const message =
+        data?.error?.message ||
+        data?.message ||
+        (status === 413
+          ? "The uploaded file is too large."
+          : err?.request && !err?.response
+            ? "Network error. Please check your connection and try again."
+            : err?.message) ||
+        "Failed to submit application.";
+      toast.error(message);
     } finally {
       setLoading(false);
     }
   };
 
+  const rejectFile = (message) => {
+    toast.error(message);
+    form.setError("file", { type: "manual", message });
+    return false;
+  };
+
   const validateAndSetFile = (file) => {
     if (file) {
-      if (file.size > 1 * 1024 * 1024) {
-        toast.error("File size should be less than 1MB");
-        return false;
+      const allowedType = ALLOWED_FILE_TYPES[getFileExtension(file.name)];
+      // Some browsers/OSes send an empty or generic type for Word files, so the extension is the primary check
+      if (!allowedType || (file.type && file.type !== "application/octet-stream" && !allowedType.mimes.includes(file.type))) {
+        return rejectFile("Please upload a PDF, DOC or DOCX file");
       }
-      if (!["application/pdf"].includes(file.type)) {
-        toast.error("Please upload a PDF file");
-        return false;
+      if (file.size === 0) {
+        return rejectFile("The selected file is empty");
+      }
+      if (file.size > MAX_FILE_SIZE) {
+        return rejectFile("File size should be less than 5MB");
       }
       setSelectedFile(file);
       setSelectedFileName(file.name);
@@ -700,6 +708,8 @@ function CareerFormInner({ jobId, isGeneral }) {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     validateAndSetFile(file);
+    // Allow re-selecting the same file after a rejection
+    event.target.value = "";
   };
 
   const handleDrop = (event, isDesktop) => {
@@ -776,7 +786,7 @@ function CareerFormInner({ jobId, isGeneral }) {
                   <Form {...otpForm} key="otp-form">
                     <form onSubmit={otpForm.handleSubmit(handleOtpSubmit)} className="space-y-4">
                       <div className="text-sm text-gray-600 mb-4">
-                        We've sent a 6-digit verification code to <strong>{email}</strong>
+                        We\'ve sent a 6-digit verification code to <strong>{email}</strong>
                       </div>
                       <FormField
                         control={otpForm.control}
@@ -857,7 +867,7 @@ function CareerFormInner({ jobId, isGeneral }) {
                       onDragLeave={(e) => handleDragLeave(e, false)}
                       onDrop={(e) => handleDrop(e, false)}
                     >
-                      <div className="w-20 lg:w-28">
+                      <div className="w-20 lg:w-28 shrink-0">
                         <label className="text-xs lg:text-sm leading-none font-normal w-20 lg:w-28 h-10 flex items-center p-2.5 lg:p-3.5 bg-base1 rounded-2.5 cursor-pointer hover:bg-[#c8e1ff] transition-colors duration-300">
                           <Image
                             src="/images/icon-upload.svg"
@@ -870,19 +880,19 @@ function CareerFormInner({ jobId, isGeneral }) {
                           <input
                             type="file"
                             name="file"
-                            accept=".pdf"
+                            accept={FILE_ACCEPT}
                             className="hidden"
                             onChange={handleFileChange}
                             // disabled={!isOtpVerified}
                           />
                         </label>
                       </div>
-                      <div className="text-xs leading-normal font-normal pl-[10px] lg:pl-[14px] text-gray-700 truncate">
+                      <div className="text-xs leading-normal font-normal pl-[10px] lg:pl-[14px] text-gray-700 break-all min-w-0 flex-1">
                         {selectedFile
                           ? `${selectedFile.name} (${getFileTypeDisplay(selectedFile, null)})`
                           : selectedFileName
                             ? `${selectedFileName.replace("uploads/job-applications/", "")} (${getFileTypeDisplay(null, selectedFileName)})`
-                            : "No file chosen"}
+                            : `(${FILE_HINT})`}
                       </div>
                     </div>
                   </FormControl>
@@ -1506,7 +1516,7 @@ function CareerFormInner({ jobId, isGeneral }) {
             </div>
 
             <div
-              className={`max-sm:hidden w-full md:w-[calc(100%-100px)] lg:w-[calc(100%-120px)] xl:w-[calc(100%-140px)] 2xl:w-[calc(100%-180px)] 3xl:w-[calc(100%-200px)] px-[4px] lg:px-[6px] 2xl:px-[10px] mb-[10px] lg:mb-0 ${
+              className={`max-sm:hidden w-full px-[4px] lg:px-[6px] 2xl:px-[10px] mb-[10px] lg:mb-0 ${
                 isDraggingDesktop ? "border-2 border-blue-500 rounded-lg" : ""
               }`}
               onDragOver={(e) => handleDragOver(e, true)}
@@ -1520,26 +1530,23 @@ function CareerFormInner({ jobId, isGeneral }) {
                   <FormItem className="mb-2 xl:mb-3 2xl:mb-4">
                     <FormControl>
                       <div className="flex items-center">
-                        <label className="text-[12px] lg:text-[12px] 2xl:text-[16px] 3xl:text-[18px] leading-none font-normal text-[#373737] w-[100px] lg:w-[110px] 2xl:w-[120px] 3xl:w-[145px] h-[30px] lg:h-[35px] xl:h-[40px] 2xl:h-[45px] 3xl:h-[50px] flex items-center p-[4px_10px] lg:p-[10px_15px] 3xl:p-[10px_25px] bg-[#b3d5ff] rounded-full cursor-pointer hover:bg-[#c8e1ff] transition-background duration-300">
+                        <label className="shrink-0 text-[12px] lg:text-[12px] 2xl:text-[16px] 3xl:text-[18px] leading-none font-normal text-[#373737] w-[100px] lg:w-[110px] 2xl:w-[120px] 3xl:w-[145px] h-[30px] lg:h-[35px] xl:h-[40px] 2xl:h-[45px] 3xl:h-[50px] flex items-center p-[4px_10px] lg:p-[10px_15px] 3xl:p-[10px_25px] bg-[#b3d5ff] rounded-full cursor-pointer hover:bg-[#c8e1ff] transition-background duration-300">
                           <Image src="/images/icon-upload.svg" alt="icon-upload" width={26} height={21} />
                           <span className="font-medium ml-1 lg:ml-1.5">Upload Resume*</span>
                           <input
                             type="file"
-                            accept=".pdf"
+                            accept={FILE_ACCEPT}
                             className="hidden"
                             onChange={handleFileChange}
                             // disabled={!isOtpVerified}
                           />
                         </label>
-                        <span className="text-xs lg:text-xs 2xl:text-base leading-none font-normal text-gray-700 whitespace-nowrap overflow-hidden text-ellipsis flex-1 ml-1 lg:ml-1.5">
+                        <span className="text-xs lg:text-xs 2xl:text-base leading-snug font-normal text-gray-700 break-all min-w-0 flex-1 ml-1 lg:ml-1.5">
                           {selectedFile
-                            ? `${truncateFilename(selectedFile.name)} (${getFileTypeDisplay(selectedFile, null)})`
+                            ? `${selectedFile.name} (${getFileTypeDisplay(selectedFile, null)})`
                             : selectedFileName
-                              ? `${truncateFilename(selectedFileName.replace("uploads/job-applications/", ""))} (${getFileTypeDisplay(
-                                  null,
-                                  selectedFileName,
-                                )})`
-                              : "No file chosen"}
+                              ? `${selectedFileName.replace("uploads/job-applications/", "")} (${getFileTypeDisplay(null, selectedFileName)})`
+                              : `(${FILE_HINT})`}
                         </span>
                       </div>
                     </FormControl>
@@ -1549,7 +1556,7 @@ function CareerFormInner({ jobId, isGeneral }) {
               />
             </div>
 
-            <div className="w-full md:w-[100px] lg:w-[120px] xl:w-[140px] 2xl:w-[180px] 3xl:w-[200px] px-[4px] lg:px-[6px] 2xl:px-[10px]">
+            <div className="w-full flex justify-end px-[4px] lg:px-[6px] 2xl:px-[10px]">
               <Button
                 className="text-[12px] lg:text-[12px] xl:text-[14px] 2xl:text-[16px] 3xl:text-[18px] leading-[1] font-bold text-white w-full max-w-[140px] lg:max-w-[160px] 2xl:max-w-[180px] 3xl:max-w-[200px] h-[30px] lg:h-[35px] xl:h-[40px] 2xl:h-[50px] 3xl:h-[55px] flex items-center justify-between bg-base2 rounded-[20px] lg:rounded-[30px] 2xl:rounded-[40px] 3xl:rounded-[60px] p-[4px] lg:p-[6px] 2xl:p-[8px] transition-color duration-300 hover:bg-base2/80 hover:[&>*-translate-x-[5px]]"
                 type="submit"

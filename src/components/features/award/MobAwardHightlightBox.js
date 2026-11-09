@@ -78,14 +78,15 @@ export default function MobAwardHighlightBox({ variant = "default", title, items
                     {item.title ? renderHtml(item.title) : ""}
                   </h5>
                 </div>
-                <div className="w-[150px] m-auto">
-                  <div className="group w-full h-full rounded-[24px] overflow-hidden">
+                <div className="w-full m-auto">
+                  <div className="flex items-center justify-center w-full h-[240px]">
                     <Image
                       src={item.image ? `${process.env.NEXT_PUBLIC_BACKEND_URL}${item.image}` : "/images/awards-img-1.jpg"}
                       alt={item.image_alt ? item.image_alt : item?.alt}
-                      width={370}
-                      height={465}
-                      className="w-full h-full object-cover transition-transform duration-600 group-hover:scale-[1.05]"
+                      width={900}
+                      height={700}
+                      sizes="100vw"
+                      className="w-auto h-auto max-w-full max-h-full rounded-[24px]"
                     />
                   </div>
                 </div>

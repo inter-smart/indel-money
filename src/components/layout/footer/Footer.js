@@ -45,6 +45,7 @@ const navigations = [
       { linkname: "Blog", href: "/blog" },
       { linkname: "Image Gallery", href: "/gallery" },
       { linkname: "Video Gallery", href: "/gallery?type=video&page=1" },
+      { linkname: "Celebrations", href: "/celebrations" },
     ],
   },
   {
@@ -57,6 +58,7 @@ const navigations = [
       { linkname: "Terms & Conditions", href: "/gold-loan-terms-and-conditions" },
       { linkname: "KYC Policy", href: "/kyc-policy" },
       { linkname: "Methodology and Valuation of Gold Collateral", href: "/methodology-and-valuation-of-gold-collateral" },
+      { linkname: "Contest T&C", href: "/contest" },
     ],
   },
   {

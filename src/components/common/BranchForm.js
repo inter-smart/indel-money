@@ -1,14 +1,8 @@
 "use client";
 import * as React from "react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../../components/ui/select";
+import { SearchableSelect } from "../ui/searchable-select";
 import { Button } from "../ui/button";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { toSentenceCase } from "@/lib/utils/toSentenceCase";
 
 export default function BranchForm({
@@ -21,11 +15,60 @@ export default function BranchForm({
   selectedDistance,
   onValueChange,
   onOpenChange,
+  onSearchClick,
   isMobile,
   useQueryParams = true,
+  loadingStates = false,
+  loadingDistricts = false,
+  loadingLocations = false,
 }) {
   const router = useRouter();
-  const pathname = usePathname();
+  const [errors, setErrors] = React.useState({});
+
+  const stateOptions = (states || []).map((state) => ({
+    value: state?.value?.toString(),
+    label: toSentenceCase(state?.label),
+  }));
+  const districtOptions = (districts || []).map((district) => ({
+    value: district?.id?.toString(),
+    label: toSentenceCase(district?.district_name),
+  }));
+  const locationOptions = (locations || []).map((location) => ({
+    value: location?.id?.toString(),
+    label: toSentenceCase(location?.location_name),
+  }));
+  const distanceOptions = ["20", "40", "60", "80", "100"].map((km) => ({
+    value: km,
+    label: `${km}km`,
+  }));
+
+  // Block opening a dropdown until the previous one is selected
+  const blockDistrict = () => {
+    if (selectedState) return false;
+    setErrors((prev) => ({ ...prev, district: "Please select a state first" }));
+    return true;
+  };
+
+  const blockLocation = () => {
+    const message = !selectedState
+      ? "Please select a state first"
+      : !selectedDistrict
+        ? "Please select a district first"
+        : "";
+    if (!message) return false;
+    setErrors((prev) => ({ ...prev, location: message }));
+    return true;
+  };
+
+  const handleStateChange = (value) => {
+    setErrors({});
+    onValueChange("state", value);
+  };
+
+  const handleDistrictChange = (value) => {
+    setErrors((prev) => ({ ...prev, district: undefined, location: undefined }));
+    onValueChange("district", value);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -42,14 +85,10 @@ export default function BranchForm({
 
   const handleClearFilter = (e) => {
     e.preventDefault();
+    setErrors({});
+    // The parent owns URL reset (drops all query params).
     onValueChange("clear", true);
-
-    // Only navigate with query params if useQueryParams is true
-    if (isMobile && useQueryParams) {
-      router.push(pathname);
-    }
   };
-
 
   return (
     <form
@@ -58,87 +97,67 @@ export default function BranchForm({
     >
       {/* State */}
       <div className="w-1/2 md:w-1/5 p-[6px_10px] sm:p-[10px] 2xl:p-[15px]">
-        <Select
+        <SearchableSelect
           value={selectedState}
-          onValueChange={(value) => onValueChange("state", value)}
-        >
-          <SelectTrigger className="w-full bg-[#e7eff9] border-[#e7eff9]">
-            <SelectValue placeholder="Select State" />
-          </SelectTrigger>
-          <SelectContent className="bg-[#e7eff9] border-[#e7eff9]">
-            {states?.map((state) => (
-              <SelectItem
-                key={state?.value?.toString()}
-                value={state?.value?.toString()}
-              >
-                {toSentenceCase(state?.label)}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+          onValueChange={handleStateChange}
+          options={stateOptions}
+          placeholder="Select State"
+          emptyText="No state found"
+          loading={loadingStates}
+          className="bg-[#e7eff9] border-[#e7eff9]"
+          contentClassName="bg-[#e7eff9] border-[#e7eff9]"
+        />
       </div>
 
       {/* District */}
       <div className="w-1/2 md:w-1/5 p-[6px_10px] sm:p-[10px] 2xl:p-[15px]">
-        <Select
+        <SearchableSelect
           value={selectedDistrict}
-          onValueChange={(value) => onValueChange("district", value)}
-        >
-          <SelectTrigger className="w-full bg-[#e7eff9] border-[#e7eff9]">
-            <SelectValue placeholder="Select District" />
-          </SelectTrigger>
-          <SelectContent className="bg-[#e7eff9] border-[#e7eff9]">
-            {districts?.map((district) => (
-              <SelectItem
-                key={district?.id?.toString()}
-                value={district?.id?.toString()}
-              >
-                {toSentenceCase(district?.district_name)}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+          onValueChange={handleDistrictChange}
+          options={districtOptions}
+          placeholder="Select District"
+          emptyText="No district found"
+          loading={loadingDistricts}
+          onBlockedOpen={blockDistrict}
+          invalid={!!errors.district}
+          className="bg-[#e7eff9] border-[#e7eff9]"
+          contentClassName="bg-[#e7eff9] border-[#e7eff9]"
+        />
+        {errors.district && <p className="mt-1 text-[11px] text-red-600">{errors.district}</p>}
       </div>
 
       {/* Location */}
       <div className="w-1/2 md:w-1/5 p-[6px_10px] sm:p-[10px] 2xl:p-[15px]">
-        <Select
+        <SearchableSelect
           value={selectedLocation}
-          onValueChange={(value) => onValueChange("location", value)}
-        >
-          <SelectTrigger className="w-full bg-[#e7eff9] border-[#e7eff9]">
-            <SelectValue placeholder="Select Location" />
-          </SelectTrigger>
-          <SelectContent className="bg-[#e7eff9] border-[#e7eff9]">
-            {locations?.map((location) => (
-              <SelectItem
-                key={location?.id?.toString()}
-                value={location?.id?.toString()}
-              >
-                {toSentenceCase(location?.location_name)}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+          onValueChange={(value) => {
+            setErrors((prev) => ({ ...prev, location: undefined }));
+            onValueChange("location", value);
+          }}
+          options={locationOptions}
+          placeholder="Select Location"
+          emptyText="No location found"
+          loading={loadingLocations}
+          onBlockedOpen={blockLocation}
+          invalid={!!errors.location}
+          className="bg-[#e7eff9] border-[#e7eff9]"
+          contentClassName="bg-[#e7eff9] border-[#e7eff9]"
+        />
+        {errors.location && <p className="mt-1 text-[11px] text-red-600">{errors.location}</p>}
       </div>
 
       {/* Distance */}
       <div className="w-1/2 md:w-1/5 p-[6px_10px] sm:p-[10px] 2xl:p-[15px]">
-        <Select
+        <SearchableSelect
+          value={selectedDistance}
           onOpenChange={onOpenChange}
           onValueChange={(value) => onValueChange("distance", value)}
-        >
-          <SelectTrigger className="w-full bg-[#e7eff9] border-[#e7eff9]">
-            <SelectValue placeholder="Select Distance" />
-          </SelectTrigger>
-          <SelectContent className="bg-[#e7eff9] border-[#e7eff9]">
-            <SelectItem value="20">20km</SelectItem>
-            <SelectItem value="40">40km</SelectItem>
-            <SelectItem value="60">60km</SelectItem>
-            <SelectItem value="80">80km</SelectItem>
-            <SelectItem value="100">100km</SelectItem>
-          </SelectContent>
-        </Select>
+          options={distanceOptions}
+          placeholder="Select Distance"
+          emptyText="No distance found"
+          className="bg-[#e7eff9] border-[#e7eff9]"
+          contentClassName="bg-[#e7eff9] border-[#e7eff9]"
+        />
       </div>
 
       {/* Buttons */}
@@ -147,6 +166,15 @@ export default function BranchForm({
           <Button
             type="submit"
             className="btn btn-base2 max-w-[140px] lg:max-w-[160px] xl:max-w-[180px] 3xl:max-w-[220px]"
+          >
+            SEARCH
+          </Button>
+        )}
+        {onSearchClick && (
+          <Button
+            type="button"
+            onClick={onSearchClick}
+            className="btn btn-base1 btn-mobile-search md:hidden max-w-[140px] lg:max-w-[160px] xl:max-w-[180px] 3xl:max-w-[220px]"
           >
             SEARCH
           </Button>

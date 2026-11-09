@@ -25,7 +25,7 @@ export default function NcdInfo({ content }) {
               alt={content?.banner_image_alt}
               width={640}
               height={300}
-              className="w-full max-h-[150px] object-cover"
+              className="w-full max-h-auto object-cover"
             />
           </div>
 
@@ -49,7 +49,7 @@ export default function NcdInfo({ content }) {
               alt={content?.second_banner_image_alt}
               width={640}
               height={300}
-              className="w-full max-h-[150px] object-cover"
+              className="w-full max-h-auto object-cover"
             />
           </div>
         </div>
@@ -59,7 +59,7 @@ export default function NcdInfo({ content }) {
           {/* Left Side - 3 Sections */}
           <div className="flex-1 flex lg:w-[60%] flex-col">
             {/* Section 1 - Top Banner */}
-            <div className="flex-1 max-h-[300px] bg-gradient-to-br">
+            <div className="flex-1 h-full bg-gradient-to-br">
               <Image
                 src={
                   content?.banner_image
@@ -69,7 +69,7 @@ export default function NcdInfo({ content }) {
                 alt={content?.banner_image_alt}
                 width={640}
                 height={300}
-                className="w-full max-h-[300px] object-cover"
+                className="w-full h-auto object-cover"
               />
             </div>
 
@@ -83,7 +83,7 @@ export default function NcdInfo({ content }) {
             </div>
 
             {/* Section 3 - Bottom Banner */}
-            <div className="flex-1 min-h-[300px] lg:max-h-[300px] bg-black bg-opacity-90 relative overflow-hidden">
+            <div className="flex-1 h-auto bg-black bg-opacity-90 relative overflow-hidden">
               <Image
                 src={
                   content?.second_banner_image
@@ -93,7 +93,7 @@ export default function NcdInfo({ content }) {
                 alt={content?.second_banner_image_alt}
                 width={640}
                 height={300}
-                className="w-full max-h-[300px] object-cover"
+                className="w-full h-auto object-cover"
               />
             </div>
           </div>

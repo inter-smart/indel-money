@@ -13,8 +13,8 @@ function isMobileDevice(userAgent) {
 async function fetchHomeData(locale) {
   try {
     const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/home`, locale), {
-      // cache: "force-cache",
-      // next: { revalidate: 600 },
+      cache: "force-cache",
+      next: { revalidate: 600 },
       credentials: "include", // Ensures session cookie is sent
       headers: {
         "Content-Type": "application/json",
@@ -37,10 +37,15 @@ async function fetchGoldRate(locale) {
     const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/gold-rate`, locale), {
       cache: "force-cache",
       next: { revalidate: 600 },
+      signal: AbortSignal.timeout(3000), // upstream rate feed can hang; don't block SSR on it
       headers: {
         "Content-Type": "application/json",
       },
     });
+
+    if (!response.ok) {
+      return { data: null, error: `Gold rate API responded with ${response.status}` };
+    }
 
     const result = await response.json();
 
@@ -148,8 +153,10 @@ export async function generateMetadata() {
 
 export default async function HomePage() {
   const locale = await getServerLocale();
-  const { data, error } = await fetchHomeData(locale);
-  const { data: goldRateData, error: goldRateError } = await fetchGoldRate(locale);
+  const [{ data, error }, { data: goldRateData, error: goldRateError }] = await Promise.all([
+    fetchHomeData(locale),
+    fetchGoldRate(locale),
+  ]);
 
   const headersList = await headers(); // ✅ await here
   const userAgent = headersList.get("user-agent") || "";
@@ -162,8 +169,8 @@ export default async function HomePage() {
         "@type": "FinancialService",
         "name": "Indel Money Limited",
         "url": "https://indelmoney.com/",
-        "logo": "https://indelmoney.com/_next/image?url=https%3A%2F%2Fbackend.indelmoney.com%2Fuploads%2Fbanner%2F1763029961331-201441951.jpg&w=1920&q=75",
-        "description": "Indel Money offers gold loans and MSME loans in India.",
+        "logo": "https://indelmoney.com/_next/image?url=https%3A%2F%2Fbackend.indelmoney.com%2Fuploads%2Fheader-contents%2F1751028562747.svg&w=256&q=75",
+        "description": "Indel Money is a leading NBFC with 400+ branches across India, offering instant, hassle-free gold loans with flexible repayment. Apply now!",
         "telephone": "1800 4253 990",
         "email": "care@indelmoney.com",
         "address": {

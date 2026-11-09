@@ -13,7 +13,7 @@ const VARIANT_STYLES = {
 };
 
 const BASE_STYLES =
-  "group w-full h-full block overflow-hidden rounded-[20px] sm:rounded-[30px] 3xl:rounded-[36px] p-[12px] sm:p-[15px] xl:p-[20px] 3xl:p-[30px] sm:pb-[40px] pb-[25px] transition-all duration-300 sm:hover:shadow-[0_0_15px_0_rgba(0,0,0,0.15)]";
+  "group w-full h-full min-w-0 flex flex-col overflow-hidden rounded-[20px] sm:rounded-[30px] 3xl:rounded-[36px] p-[12px] sm:p-[15px] xl:p-[20px] 3xl:p-[30px] sm:pb-[40px] pb-[25px] transition-all duration-300 sm:hover:shadow-[0_0_15px_0_rgba(0,0,0,0.15)]";
 
 export default function LoanCardBx({ item = {}, variant = "default" }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -38,6 +38,7 @@ export default function LoanCardBx({ item = {}, variant = "default" }) {
   // Use useCallback to prevent unnecessary re-renders
   const handleToggleExpand = useCallback((e) => {
     e.preventDefault();
+    e.stopPropagation();
     setIsExpanded((prev) => !prev);
   }, []);
 
@@ -48,9 +49,9 @@ export default function LoanCardBx({ item = {}, variant = "default" }) {
 
   return (
     <Link href={item.href || "#"} className={containerClassName}>
-      <div className="w-full flex flex-wrap sm:flex-row">
+      <div className="w-full flex flex-col flex-1">
         {/* Image Section */}
-        <div className="w-full h-auto xl:h-full rounded-[15px] sm:rounded-[24px] overflow-hidden mb-[15px] xl:mb-[25px] 3xl:mb-[30px] aspect-300/190 sm:aspect-465/295">
+        <div className="w-full h-auto shrink-0 rounded-[15px] sm:rounded-[24px] overflow-hidden mb-[15px] xl:mb-[25px] 3xl:mb-[30px] aspect-300/190 sm:aspect-465/295">
           <Image
             src={imageUrl}
             alt={imageAlt}
@@ -63,7 +64,7 @@ export default function LoanCardBx({ item = {}, variant = "default" }) {
         </div>
 
         {/* Content Section */}
-        <div className="w-full sm:pt-0">
+        <div className="w-full sm:pt-0 flex flex-col flex-1">
           <TitleComponent className="text-[16px] sm:text-[18px] xl:text-[20px] 2xl:text-[22px] 3xl:text-[30px] text-base1 font-bold mb-[10px] sm:mb-[2px] line-clamp-1">
             {item.title || "Default Title"}
           </TitleComponent>
@@ -75,21 +76,23 @@ export default function LoanCardBx({ item = {}, variant = "default" }) {
             </div>
           )}
 
-          {/* Description with Read More/Less */}
+          {/* Description */}
           {item.description && (
-            <div className="w-full sm:mb-[5px] 3xl:mb-[10px] text-sm1">
-              {isExpanded ? item.description : truncatedDescription}
-              {shouldTruncate && (
-                <button
-                  type="button"
-                  onClick={handleToggleExpand}
-                  className="ml-2 text-blue-600 font-semibold hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 rounded"
-                  aria-expanded={isExpanded}
-                  aria-label={isExpanded ? "Show less description" : "Show more description"}
-                >
-                  {isExpanded ? "Read Less" : "Read More"}
-                </button>
-              )}
+            <div className="w-full sm:mb-[5px] 3xl:mb-[10px] text-sm1">{isExpanded ? item.description : truncatedDescription}</div>
+          )}
+
+          {/* Read More/Less — sits directly below the description */}
+          {item.description && shouldTruncate && (
+            <div className="w-full pt-2">
+              <button
+                type="button"
+                onClick={handleToggleExpand}
+                className="text-[12px] sm:text-[13px] 2xl:text-[14px] 3xl:text-[16px] text-blue-600 font-semibold hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 rounded"
+                aria-expanded={isExpanded}
+                aria-label={isExpanded ? "Show less description" : "Show more description"}
+              >
+                {isExpanded ? "Read Less" : "Read More"}
+              </button>
             </div>
           )}
         </div>

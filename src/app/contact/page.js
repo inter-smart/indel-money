@@ -142,8 +142,8 @@ export default async function Contact() {
         "@type": "FinancialService",
         "name": "Indel Money Limited",
         "url": "https://indelmoney.com/contact",
-        "logo": "https://indelmoney.com/_next/image?url=https%3A%2F%2Fbackend.indelmoney.com%2Fuploads%2Fbanner%2F1763029961331-201441951.jpg&w=1920&q=75",
-        "description": "Contact Indel Money for inquiries related to gold loans, MSME loans, and other financial services. Get customer support through phone, email, or by visiting our corporate office.",
+        "logo": "https://indelmoney.com/_next/image?url=https%3A%2F%2Fbackend.indelmoney.com%2Fuploads%2Fheader-contents%2F1751028562747.svg&w=256&q=75",
+        "description": "Contact us at Indel Money by calling @1800 4103 990 or by dropping an email at info@indelmoney.com for complete assistance.",
         "telephone": "1800 4253 990",
         "email": "care@indelmoney.com",
         "address": {
@@ -216,7 +216,7 @@ export default async function Contact() {
         "@type": "WebPage",
         "name": "Contact Us - Indel Money",
         "url": "https://indelmoney.com/contact",
-        "description": "Get in touch with Indel Money. Reach our customer care team for assistance regarding loans, services, and branch information."
+        "description": "Contact us at Indel Money by calling @1800 4103 990 or by dropping an email at info@indelmoney.com for complete assistance."
       },
       {
         "@type": "BreadcrumbList",

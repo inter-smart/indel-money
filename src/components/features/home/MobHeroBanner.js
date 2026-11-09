@@ -3,7 +3,7 @@ import HeroBannerEnquiry from "./HeroBannerEnquiry";
 import { useCallback, useRef } from "react";
 import Image from "next/image";
 import MobHomeMarquee from "../../features/home/MobHomeMarquee";
-import { renderHtml } from "@/lib/utils/htmlParser";
+import { renderHtml, hasVisibleText } from "@/lib/utils/htmlParser";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectFade, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
@@ -52,7 +52,11 @@ export default function MobHeroBanner({ heroBanner, initialData, announcement, g
 
         // Restart video from beginning
         videoElement.currentTime = 0;
-        videoElement.play();
+        videoElement.play()?.catch(() => {});
+      } else if (videoElement) {
+        // Non-first videos don't autoplay (to keep ~10 MB off the initial load), so
+        // metadata may not be there yet; start playback and let onLoadedMetadata set the delay.
+        videoElement.play()?.catch(() => {});
       }
     } else {
       // Set autoplay delay to default image delay
@@ -115,9 +119,10 @@ export default function MobHeroBanner({ heroBanner, initialData, announcement, g
               >
                 <video
                   ref={(el) => (videoRefs.current[index] = el)}
-                  autoPlay
+                  autoPlay={index === 0}
                   muted
                   playsInline
+                  poster={item?.thumbnail ? `${process.env.NEXT_PUBLIC_BACKEND_URL}${item.thumbnail}` : undefined}
                   preload={index === 0 ? "auto" : "metadata"}
                   onLoadedMetadata={() => handleVideoLoadedMetadata(index, swiperRef.current)}
                   className="absolute inset-0 w-full h-full -z-2 object-cover"
@@ -142,9 +147,11 @@ export default function MobHeroBanner({ heroBanner, initialData, announcement, g
             )}
             <div className="container">
               <div className="max-w-full">
-                <h2 className="text-[28px] leading-[1.2] capitalize font-medium text-white mb-[10px] 4xs:mb-[15px] [&>span]:text-base2 [&>span]:font-bold">
-                  {item?.title ? renderHtml(item.title) : ""}
-                </h2>
+                {hasVisibleText(item?.title) && (
+                  <h2 className="text-[28px] leading-[1.2] capitalize font-medium text-white mb-[10px] 4xs:mb-[15px] [&>span]:text-base2 [&>span]:font-bold">
+                    {renderHtml(item.title)}
+                  </h2>
+                )}
                 {/* <Link href={item?.button_link} className="btn btn-base2 max-w-[130px]">
                   {item?.button_text}
                 </Link> */}

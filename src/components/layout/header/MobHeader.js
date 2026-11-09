@@ -2,7 +2,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import MobNavMenu from "./MobNavMenu";
 import TranslatorDropdown from "./TranslatorDropdown";
 import { serverMediaPath } from "@/constants/constants";
@@ -60,21 +60,21 @@ const quickactions = [
 
 export default function MobHeader({ socialLinks, links, logo, title, modes, locale }) {
   const [isVisible, setIsVisible] = useState(true);
-  const [prevScrollPos, setPrevScrollPos] = useState(0);
+  const prevScrollPos = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollPos = window.scrollY;
-      const isScrollingDown = currentScrollPos > prevScrollPos;
+      const isScrollingDown = currentScrollPos > prevScrollPos.current;
+      prevScrollPos.current = currentScrollPos;
 
       // Show header at the top of the page or when scrolling up
       setIsVisible(currentScrollPos < 10 || !isScrollingDown);
-      setPrevScrollPos(currentScrollPos);
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [prevScrollPos]);
+  }, []);
 
   return (
     <AnimatePresence>

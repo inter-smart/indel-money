@@ -62,8 +62,8 @@ export default async function Blog({ searchParams }) {
         "@type": "FinancialService",
         "name": "Indel Money Limited",
         "url": "https://indelmoney.com/blog",
-        "logo": "https://indelmoney.com/_next/image?url=https%3A%2F%2Fbackend.indelmoney.com%2Fuploads%2Fbanner%2F1763029961331-201441951.jpg&w=1920&q=75",
-        "description": "Explore the latest financial articles, insights, guides, and updates on gold loans, MSME loans, personal finance, and more from Indel Money.",
+        "logo": "https://indelmoney.com/_next/image?url=https%3A%2F%2Fbackend.indelmoney.com%2Fuploads%2Fheader-contents%2F1751028562747.svg&w=256&q=75",
+        "description": "Get practical gold loan tips, MSME financing advice and personal finance insights from Indel Money. Read our latest blogs today!",
         "telephone": "1800 4253 990",
         "email": "care@indelmoney.com",
         "address": {
@@ -136,7 +136,7 @@ export default async function Blog({ searchParams }) {
         "@type": "WebPage",
         "name": "Indel Money Blog",
         "url": "https://indelmoney.com/blog",
-        "description": "Read informative blogs from Indel Money covering gold loans, MSME loans, business finance, investment tips, and personal financial planning."
+        "description": "Get practical gold loan tips, MSME financing advice and personal finance insights from Indel Money. Read our latest blogs today!"
       },
       {
         "@type": "BreadcrumbList",

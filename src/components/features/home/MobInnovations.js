@@ -11,10 +11,10 @@ function DownloadBx({ src, href, alt }) {
 }
 
 export default function MobInnovations({ pageContent }) {
-  
+
   return (
     <section className="w-full py-[50px_80px] overflow-hidden relative z-0 ">
-      <div className="absolute -z-1 top-[68px] left-[40%] rotate-[-30deg]">
+      <div className="absolute -z-1 top-[54px] left-[40%] rotate-[-30deg]">
         <Image
           src={
             pageContent?.mobile_app_image_url
@@ -24,7 +24,7 @@ export default function MobInnovations({ pageContent }) {
           alt="innovations"
           width={200}
           height={409}
-          className="aspect-209/427"
+          className="aspect-200/315"
         />
       </div>
       <div className="container">

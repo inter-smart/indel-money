@@ -83,7 +83,7 @@ export default function CareerBanner({ banners }) {
                     : null}
                 </div> */}
                 <div
-                  className="max-sm:mb-[90px] max-sm:text-[28px] text-title2 font-bold text-white w-full lg:max-w-[420px] xl:max-w-[476px] 2xl:max-w-[576px] 3xl:max-w-[740px] mb-[4px] lg:mb-[6px] 2xl:mb-[10px] [&>span]:text-base2"
+                  className="max-sm:mb-[90px] max-sm:text-[28px] text-title2 font-bold text-white w-full lg:max-w-[410px] xl:max-w-[476px] 2xl:max-w-[576px] 3xl:max-w-[740px] mb-[4px] lg:mb-[6px] 2xl:mb-[10px] [&>span]:text-base2"
                   dangerouslySetInnerHTML={{ __html: item?.title ? item?.title : "Be Part of Our Transformative Team" }}
                 />
 

@@ -71,11 +71,13 @@ export default function DeskHeader({ headerData, locale }) {
               </Link>
             </div>
             <nav className="w-[calc(100%-60px)] xl:w-[calc(100%-90px)] 2xl:w-[calc(100%-120px)] 3xl:w-[calc(100%-140px)] flex justify-end">
-              <div className="flex items-center gap-[6px] xl:gap-[10px] 2xl:gap-[14px] 3xl:gap-[14px] w-full min-w-0">
+              <div className="flex items-center justify-end gap-[6px] xl:gap-[10px] 2xl:gap-[14px] 3xl:gap-[14px] w-full min-w-0">
                 {/* NavMenu is the one item whose content width genuinely varies a
                     lot with the selected language - let it scroll internally
-                    instead of squeezing (and cropping) the action buttons below. */}
-                <div className="flex flex-1 flex-nowrap items-center overflow-x-auto min-w-0">
+                    instead of squeezing (and cropping) the action buttons below.
+                    It no longer grows to fill the row so it stays grouped with
+                    the action cluster on the right, away from the logo. */}
+                <div className="flex shrink flex-nowrap items-center overflow-x-auto min-w-0">
                   <div className="flex-shrink-0">
                     <NavMenu />
                   </div>
@@ -156,7 +158,7 @@ export default function DeskHeader({ headerData, locale }) {
                   </div>
                   <div className="flex-shrink-0">
                     <DropdownMenu onOpenChange={setIsQuickPayOpen}>
-                      <DropdownMenuTrigger className="btn btn-base1 min-w-[80px] lg:min-w-[85px] xl:min-w-[95px] 2xl:min-w-[115px] 3xl:min-w-[140px] cursor-pointer whitespace-nowrap">
+                      <DropdownMenuTrigger className="text-[10px] btn btn-base1 min-w-[80px] lg:min-w-[85px] xl:min-w-[95px] 2xl:min-w-[115px] 3xl:min-w-[140px] cursor-pointer whitespace-nowrap">
                         {header?.button_1_text ? header?.button_1_text : "Quick Pay"}
                         <Image
                           src="/images/icon-dropdown.svg"
@@ -199,20 +201,20 @@ export default function DeskHeader({ headerData, locale }) {
                   <div className="flex-shrink-0">
                     <Link
                       href={header?.button_2_link || "#"}
-                      className="btn btn-base2 min-w-[80px] lg:min-w-[85px] xl:min-w-[95px] 2xl:min-w-[115px] 3xl:min-w-[140px] whitespace-nowrap"
+                      className="btn text-[10px] btn-base2 min-w-[80px] lg:min-w-[85px] xl:min-w-[95px] 2xl:min-w-[115px] 3xl:min-w-[140px] whitespace-nowrap"
                     >
                       {header?.button_2_text ? header?.button_2_text : "Contact Us"}
                     </Link>
                   </div>
 
-                  {/* <div>
-                    <Link
+                  <div>
+                    {/* <Link
                       href={"https://asba.indelmoney.com/asbaform"}
                       className="btn btn-base2 min-w-[80px] lg:min-w-[85px] xl:min-w-[95px] 2xl:min-w-[115px] 3xl:min-w-[140px] px-2"
                       >
                       {"Apply for NCD"}
-                    </Link>
-                  </div> */}
+                    </Link> */}
+                  </div>
 
                   {/* Language switcher goes last, matching the common
                       end-of-header placement for language switching UI. */}

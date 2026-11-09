@@ -125,13 +125,20 @@ export default function MobWelcomeModal({ banner, serviceBanner }) {
     localStorage.setItem("hasSeenWelcomeModal", "true");
   };
 
+  // Esc / overlay dismissal must also mark the modal as seen, otherwise the timer re-opens it.
+  const handleOpenChange = (open) => {
+    if (!open) localStorage.setItem("hasSeenWelcomeModal", "true");
+    setIsOpen(open);
+  };
+
   return (
-    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-      <AlertDialogContent>
-        <div className="w-full min-w-[380px] mx-auto bg-white rounded-[15px] p-[25px_20px]">
+    <AlertDialog open={isOpen} onOpenChange={handleOpenChange}>
+      <AlertDialogContent className="w-[calc(100vw-24px)] max-w-[380px]">
+        <div className="w-full max-h-[85vh] overflow-y-auto mx-auto bg-white rounded-[15px] p-[25px_20px]">
           <AlertDialogCancel
             onClick={handleClose}
-            className="focus:outline-0 flex gap-[4px] absolute z-0 top-[30px] right-[20px] transition-color cursor-pointer items-center"
+            aria-label="Close"
+            className="focus:outline-0 flex gap-[4px] absolute z-0 top-[22px] right-[12px] p-[8px] transition-color cursor-pointer items-center"
           >
             <Image src="/images/icon-close.svg" alt="icon-close" width={10} height={10} />
           </AlertDialogCancel>

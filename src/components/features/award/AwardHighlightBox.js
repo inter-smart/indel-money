@@ -55,10 +55,12 @@ const slides = [
   },
 ];
 
-export default function AwardHighlightBox({ variant = "default", items = slides }) {
-  
+export default function AwardHighlightBox({
+  variant = "default",
+  items = slides,
+}) {
   return (
-    <div className="relative z-0 w-full h-full block rounded-[35px] sm:bg-[#B7D0FF] bg-[#fff] sm:shadow-none  shadow-[0_0_15px_0_rgba(0,0,0,0.10)] p-[15px_20px] sm:p-[30px_30px] lg:p-[30px] 2xl:p-[40px_30px_40px_40px] 3xl:p-[80px_50px_50px_70px]">
+    <div className="relative z-0 w-full h-full block rounded-[35px] sm:bg-[#B7D0FF] bg-[#fff] sm:shadow-none  shadow-[0_0_15px_0_rgba(0,0,0,0.10)] p-[15px_20px] sm:p-[30px] lg:p-[30px] 2xl:p-[40px] 3xl:p-[80px_50px_50px_70px]">
       <Swiper
         modules={[Autoplay, Pagination]}
         slidesPerView={1}
@@ -73,27 +75,36 @@ export default function AwardHighlightBox({ variant = "default", items = slides 
         {items?.map((item, index) => {
           return (
             <SwiperSlide key={index}>
-              <div className="w-full flex flex-wrap sm:flex-row flex-col-reverse">
-                <div className="w-full sm:w-[calc(100%-150px)] lg:w-[calc(100%-180px)] xl:w-[calc(100%-220px)] 2xl:w-[calc(100%-276px)] 3xl:w-[calc(100%-376px)] 2xl:pr-[90px] xl:pr-[40px] md:pr-[20px] sm:pr-[20px]">
+              <div className="w-full flex flex-col-reverse sm:flex-row sm:items-start">
+                {/* Text – 40% */}
+                <div className="w-full sm:w-2/5 sm:pr-[20px] md:pr-[20px] xl:pr-[40px] 2xl:pr-[60px]">
                   {variant === "employeeTestimonials" && (
-                    <div className="text-title1 font-bold leading-none mb-[5px] lg:mb-[10px] text-[#f30000]">Awards</div>
+                    <div className="text-title1 font-bold leading-none mb-[5px] lg:mb-[10px] text-[#f30000]">
+                      Awards
+                    </div>
                   )}
-                  <h5 className="sm:text-[16px] md:text-[18px] lg:text-[20px] xl:text-[24px] 2xl:text-[32px] 3xl:text-[40px] text-black font-normal mb-[10px] lg:mb-[15px] 2xl:mb-[20px] 3xl:mb-[30px]  [&>span]:text-[#EB0208] [&>span]:uppercase [&>span]:font-bold ">
+                  <h5 className="sm:text-[16px] md:text-[18px] lg:text-[20px] xl:text-[24px] 2xl:text-[32px] 3xl:text-[40px] text-black font-normal mb-[10px] lg:mb-[15px] 2xl:mb-[20px] 3xl:mb-[30px] [&>span]:text-[#EB0208] [&>span]:uppercase [&>span]:font-bold">
                     {item.title ? renderHtml(item.title) : ""}
                   </h5>
 
-                  <div className="w-full mb-[20px] lg:mb-[40px] 2xl:mb-[60px] text-[12px] lg:text-[13px] xl:text-[14px] 2xl:text-[16px] 3xl:text-[18px] line-clamp-8">
+                  <div className="w-full mb-[20px] lg:mb-[40px] 2xl:mb-[60px] text-[12px] lg:text-[13px] xl:text-[14px] 2xl:text-[16px] 3xl:text-[18px] line-clamp-14">
                     {item.description}
                   </div>
                 </div>
-                <div className="w-[150px] lg:w-[180px] xl:w-[220px] 2xl:w-[276px] 3xl:w-[376px]">
-                  <div className="group w-full h-full rounded-[24px] overflow-hidden">
+
+                {/* Image – 60%, fixed height, cropped to fill */}
+                <div className="w-full sm:w-3/5 shrink-0 mb-[15px] sm:mb-0">
+                  <div className="relative w-full h-[220px] sm:h-[260px] lg:h-[300px] xl:h-[360px] 2xl:h-[420px] overflow-hidden rounded-[24px]">
                     <Image
-                      src={item.image ? `${process.env.NEXT_PUBLIC_BACKEND_URL}${item.image}` : "/images/blog/1.jpg"}
+                      src={
+                        item.image
+                          ? `${process.env.NEXT_PUBLIC_BACKEND_URL}${item.image}`
+                          : "/images/blog/1.jpg"
+                      }
                       alt={item.image_alt ? item.image_alt : item?.alt}
-                      width={370}
-                      height={465}
-                      className="w-full h-full object-cover transition-transform duration-600 group-hover:scale-[1.05]"
+                      fill
+                      sizes="(min-width: 640px) 60vw, 100vw"
+                      className="object-cover"
                     />
                   </div>
                 </div>

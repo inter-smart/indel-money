@@ -38,7 +38,7 @@ export default function MobWhoDoServe({ audience, who_do_serve_title }) {
         <div className="w-full -mx-[6px] flex flex-wrap">
           {audience?.map((item, index) => {
             return (
-              <div key={index} className="p-[6px] w-full sm:w-1/2 lg:w-1/3">
+              <div key={index} className="p-[6px] w-full sm:w-1/2 lg:w-1/3 flex">
                 <LoanCardBx variant={"whoDoServeMob"} item={item} />
               </div>
             );

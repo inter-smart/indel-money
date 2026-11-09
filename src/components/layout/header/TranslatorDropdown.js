@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Languages } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,22 +18,22 @@ import {
 // locale code — every code tried for them either errors or is silently
 // echoed back untranslated.
 const TRANSLATION_LANGUAGES = [
-  { code: "en", label: "English" },
-  { code: "as", label: "অসমীয়া" },
-  { code: "bn", label: "বাংলা" },
-  { code: "gu", label: "ગુજરાતી" },
-  { code: "hi", label: "हिन्दी" },
-  { code: "kn", label: "ಕನ್ನಡ" },
-  { code: "kok", label: "कोंकणी" },
-  { code: "mai", label: "मैथिली" },
-  { code: "ml", label: "മലയാളം" },
-  { code: "mr", label: "मराठी" },
-  { code: "or", label: "ଓଡ଼ିଆ" },
-  { code: "pa", label: "ਪੰਜਾਬੀ" },
-  { code: "sat", label: "ᱥᱟᱱᱛᱟᱲᱤ" },
-  { code: "ta", label: "தமிழ்" },
-  { code: "te", label: "తెలుగు" },
-  { code: "ur", label: "اردو" },
+  { code: "en", label: "English", short: "EN" },
+  { code: "as", label: "অসমীয়া", short: "অস" },
+  { code: "bn", label: "বাংলা", short: "বাং" },
+  { code: "gu", label: "ગુજરાતી", short: "ગુજ" },
+  { code: "hi", label: "हिन्दी", short: "हिं" },
+  { code: "kn", label: "ಕನ್ನಡ", short: "ಕನ್ನ" },
+  { code: "kok", label: "कोंकणी", short: "कों" },
+  { code: "mai", label: "मैथिली", short: "मै" },
+  { code: "ml", label: "മലയാളം", short: "മല" },
+  { code: "mr", label: "मराठी", short: "मर" },
+  { code: "or", label: "ଓଡ଼ିଆ", short: "ଓଡ଼ି" },
+  { code: "pa", label: "ਪੰਜਾਬੀ", short: "ਪੰ" },
+  { code: "sat", label: "ᱥᱟᱱᱛᱟᱲᱤ", short: "ᱥᱟᱱ" },
+  { code: "ta", label: "தமிழ்", short: "தமி" },
+  { code: "te", label: "తెలుగు", short: "తె" },
+  { code: "ur", label: "اردو", short: "اردو" },
   // { code: "ne", label: "नेपाली" },
   // { code: "sd", label: "سنڌي" },
   // { code: "doi", label: "डोगरी" },
@@ -40,24 +41,13 @@ const TRANSLATION_LANGUAGES = [
   // { code: "mni-Mtei", label: "ꯃꯤꯇꯩꯂꯣꯟ" },
 ];
 
-// Defense in depth against this list and the server's stateLanguageMap.js
-// drifting out of sync — a locale the client doesn't recognize is treated as
-// "nothing returned" rather than applied blindly.
+// Guards against a malformed/tampered siteLanguage cookie value - an
+// unrecognized code is treated as "nothing set" rather than applied blindly.
 function isSupportedLanguageCode(code) {
   return TRANSLATION_LANGUAGES.some((language) => language.code === code);
 }
 
 const BG_TRANSLATE_ENDPOINT = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/translate`;
-
-// One-shot, best-effort IP-geolocation lookup used only to pick a *default*
-// language for visitors who haven't chosen (or previously been assigned) one
-// yet. Separate concern from BG_TRANSLATE_ENDPOINT, which does per-string translation.
-const LOCALE_DETECT_ENDPOINT = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/locale-detect`;
-
-// Generous enough a healthy round trip never comes close; short enough a
-// slow/hanging geolocation call can't leave a visitor noticeably longer in
-// English than today's plain default — past this we just abort.
-const LOCALE_DETECT_TIMEOUT_MS = 2500;
 
 // Text nodes directly inside these are never prose: a <textarea>'s text child is
 // the user's own typed value, and the rest are code/markup containers.
@@ -109,7 +99,6 @@ const translationCache = new Map();
 // other is mid-fetch re-translating it - a race on the shared document.body.
 let sharedLanguage = "en";
 let hasHydratedLanguage = false;
-let hasStartedLocaleDetection = false;
 const languageListeners = new Set();
 
 function getSharedLanguageSnapshot() {
@@ -133,92 +122,41 @@ function setSharedLanguage(next) {
   if (next === sharedLanguage) return;
   sharedLanguage = next;
   if (typeof window !== "undefined") {
-    window.localStorage.setItem("siteLanguage", next);
+    window.sessionStorage.setItem("siteLanguage", next);
     // Mirrored into a cookie (same name) so getServerLocale.js
     // (client/src/lib/locale/getServerLocale.js) can pick the same locale for
-    // server-rendered CMS content - localStorage alone is invisible to the
+    // server-rendered CMS content - sessionStorage alone is invisible to the
     // server on the next request/refresh.
     document.cookie = `siteLanguage=${next}; path=/; max-age=31536000; SameSite=Lax`;
   }
   languageListeners.forEach((listener) => listener());
 }
 
-// Fire-and-forget geolocation default, only ever called from
-// hydrateSharedLanguageOnce below for a genuinely fresh visitor (nothing in
-// storage yet). Local guard kept in addition to that caller's own guard so
-// this stays provably single-shot even if something else calls it later.
-function detectAndApplyGeoLanguage() {
-  if (hasStartedLocaleDetection) return;
-  hasStartedLocaleDetection = true;
-
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), LOCALE_DETECT_TIMEOUT_MS);
-
-  fetch(LOCALE_DETECT_ENDPOINT, { signal: controller.signal, cache: "no-store" })
-    .then((response) => (response.ok ? response.json() : null))
-    .then((result) => {
-      const locale = result?.data?.locale;
-      if (typeof locale !== "string" || !isSupportedLanguageCode(locale)) return;
-
-      // Re-check storage now, not at fetch-start time: the visitor may have
-      // picked a language by hand while this request was in flight, and an
-      // explicit pick always outranks a guessed default.
-      if (window.localStorage.getItem("siteLanguage")) return;
-
-      // Persist directly (not solely via setSharedLanguage): when the
-      // detected locale is "en" (most visitors, since most states/IPs aren't
-      // mapped), setSharedLanguage's own no-op-on-same-value guard would skip
-      // its localStorage write, leaving storage empty forever and re-running
-      // this fetch on every future fresh page load instead of once ever.
-      window.localStorage.setItem("siteLanguage", locale);
-      if (locale !== sharedLanguage) setSharedLanguage(locale);
-    })
-    .catch(() => {
-      // Timeout/abort, network failure, non-OK status, bad JSON - every
-      // failure mode lands here and is swallowed on purpose: nothing a
-      // visitor can act on, and the result matches today's plain "en" default.
-    })
-    .finally(() => {
-      clearTimeout(timeoutId);
-    });
-}
-
 // Runs from every mounted instance's mount effect, but the module-level
 // guard means only the first one to fire actually reads storage - order
-// independent, which is what removes the old two-instance mount race. The
-// guard is set synchronously as the first statement, before
-// detectAndApplyGeoLanguage (which only *starts* a fetch, never awaits it) -
-// so the second instance's call in the same synchronous tick always sees
-// hasHydratedLanguage already flipped and returns at the top.
+// independent, which is what removes the old two-instance mount race.
 function hydrateSharedLanguageOnce(ssrLocale) {
   if (hasHydratedLanguage) return;
   hasHydratedLanguage = true;
   if (typeof window === "undefined") return;
 
-  const stored = window.localStorage.getItem("siteLanguage");
+  const stored = window.sessionStorage.getItem("siteLanguage");
   if (stored) {
     if (stored !== sharedLanguage) setSharedLanguage(stored);
-    return; // Already resolved (explicit pick or a previous visit's
-    // geolocation default) - sticky either way, geolocation is never
-    // re-consulted once anything is stored.
+    return; // Already resolved via an explicit pick - sticky, no
+    // auto-detection is ever consulted once anything is stored.
   }
 
-  // The server already resolved a real (non-English) locale for this request
-  // via the same IP-geolocation lookup detectAndApplyGeoLanguage would run -
-  // trust it directly instead of re-fetching, which is what caused the old
-  // English-then-translated flash. An "en" ssrLocale is ambiguous (could be a
-  // genuinely English-mapped visitor, or a failed/timed-out server lookup),
-  // so that case still falls through to the client-side detection below.
+  // The server already resolved an explicit pick for this request via the
+  // siteLanguage cookie (see getServerLocale.js) - trust it directly instead
+  // of leaving storage empty, which is what caused the old
+  // English-then-translated flash. There is no IP-based auto-detection: a
+  // fresh visitor with nothing stored and no cookie simply stays on the
+  // module's "en" default.
   if (ssrLocale && ssrLocale !== "en" && isSupportedLanguageCode(ssrLocale)) {
-    window.localStorage.setItem("siteLanguage", ssrLocale);
+    window.sessionStorage.setItem("siteLanguage", ssrLocale);
     if (ssrLocale !== sharedLanguage) setSharedLanguage(ssrLocale);
-    return;
   }
-
-  // Genuinely fresh visitor (or ambiguous "en") - kick off geolocation-based
-  // detection in the background. Never blocks this synchronous mount effect
-  // (or SSR, which never runs this path) from returning immediately.
-  detectAndApplyGeoLanguage();
 }
 
 // Distinguishes prose from identifiers. Attribute values especially are often
@@ -609,13 +547,14 @@ export default function TranslatorDropdown({ ssrLocale = "en" }) {
       <DropdownMenuTrigger
         disabled={isTranslating}
         aria-label="Select language"
-        // The trigger only ever shows the language code (EN, HI, TA, ...),
-        // so its width - and this subtree's own eligibility for the
-        // translator's DOM pass - never changes with the selection.
+        // The trigger only ever shows the selected language's own name
+        // (English, हिन्दी, தமிழ், ...), which must never be run through the
+        // translator's DOM pass - hence translate="no".
         translate="no"
-        className="notranslate flex items-center gap-1 rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold uppercase text-slate-800 shadow-sm outline-none transition whitespace-nowrap disabled:cursor-not-allowed disabled:opacity-70"
+        className="notranslate flex items-center gap-1.5 rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold capitalize text-slate-800 shadow-sm outline-none transition whitespace-nowrap disabled:cursor-not-allowed disabled:opacity-70"
       >
-        {currentLanguage.code}
+        <Languages className="size-4 shrink-0" aria-hidden="true" />
+        {currentLanguage.short}
         <svg
           width="11"
           height="6"
@@ -633,7 +572,7 @@ export default function TranslatorDropdown({ ssrLocale = "en" }) {
           wrapper around just the trigger would not protect it. */}
       <DropdownMenuContent translate="no" className="notranslate bg-white border-[#e4e4e4] max-h-[320px] overflow-y-auto">
         <DropdownMenuLabel>
-          <div className="text-header1">Language</div>
+          <div>Language</div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator className="bg-black/10" />
         {TRANSLATION_LANGUAGES.map((language) => (

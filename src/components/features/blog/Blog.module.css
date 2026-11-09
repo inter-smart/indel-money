@@ -10,14 +10,16 @@
 .ckCntWrap h3,
 .ckCntWrap h4,
 .ckCntWrap h5,
-.ckCntWrap h6 {
+.ckCntWrap h6,
+.ckCntWrap .visualHeading {
     font-weight: 600;
     line-height: 1.1;
     color: black;
     margin-bottom: 10px;
 }
 
-.ckCntWrap h1 {
+.ckCntWrap h1,
+.ckCntWrap .visualHeading {
     font-size: 20px;
     font-weight: 500;
 }
@@ -74,17 +76,25 @@
     display: table;
     width: 100%;
     border-collapse: collapse;
-    background: linear-gradient(0deg, #111 0%, #404040 100%);
+    margin: 15px 0;
 }
 
 .ckCntWrap table th,
 .ckCntWrap table td {
     padding: 8px 15px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid #d9e6f8;
+    text-align: left;
+    vertical-align: top;
+    color: #323232;
+}
+
+.ckCntWrap table th {
+    background-color: #ecf4ff;
+    font-weight: 600;
 }
 
 .ckCntWrap table tbody tr:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: #f5f9ff;
 }
 
 @media (min-width: 576px) {
@@ -95,13 +105,15 @@
     .ckCntWrap h4,
     .ckCntWrap h5,
     .ckCntWrap h6,
-    .ckCntWrap p {
+    .ckCntWrap p,
+    .ckCntWrap .visualHeading {
         margin-bottom: 15px;
     }
 }
 
 @media (min-width: 640px) {
-    .ckCntWrap h1 {
+    .ckCntWrap h1,
+    .ckCntWrap .visualHeading {
         font-size: 24px;
     }
 
@@ -146,11 +158,13 @@
     .ckCntWrap h4,
     .ckCntWrap h5,
     .ckCntWrap h6,
-    .ckCntWrap p {
+    .ckCntWrap p,
+    .ckCntWrap .visualHeading {
         margin-bottom: 20px;
     }
 
-    .ckCntWrap h1 {
+    .ckCntWrap h1,
+    .ckCntWrap .visualHeading {
         font-size: 34px;
     }
 
@@ -180,7 +194,8 @@
 }
 
 @media (min-width: 1536px) {
-    .ckCntWrap h1 {
+    .ckCntWrap h1,
+    .ckCntWrap .visualHeading {
         font-size: 48px;
     }
 
@@ -214,7 +229,8 @@
     .ckCntWrap h4,
     .ckCntWrap h5,
     .ckCntWrap h6,
-    .ckCntWrap p {
+    .ckCntWrap p,
+    .ckCntWrap .visualHeading {
         margin-bottom: 30px;
     }
 }

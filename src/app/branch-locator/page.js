@@ -32,9 +32,35 @@ async function fetchData(locale) {
   }
 }
 
+function getFallbackMeta(error) {
+  return {
+    title: defaultMeta.title,
+    description: defaultMeta.description,
+    keywords: defaultMeta.keywords,
+    openGraph: {
+      title: defaultMeta.title,
+      description: defaultMeta.description,
+      type: "website",
+      url: `${process.env.NEXT_PUBLIC_SITE_URL}/branch-locator`,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: defaultMeta.title,
+      description: defaultMeta.description,
+    },
+    alternates: {
+      canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/branch-locator`,
+    },
+    error,
+  };
+}
+
 async function getMetaData(locale) {
   try {
-    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=branchlocator`, locale));
+    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=branchlocator`, locale), {
+      cache: "force-cache",
+      next: { revalidate: 600 },
+    });
     const result = await response.json();
     const meta = result.data;
 
@@ -63,48 +89,9 @@ async function getMetaData(locale) {
         error: null,
       };
     }
-    return {
-      title: defaultMeta.title,
-      description: defaultMeta.description,
-      keywords: defaultMeta.keywords,
-      openGraph: {
-        title: defaultMeta.title,
-        description: defaultMeta.description,
-        type: "website",
-        url: `${process.env.NEXT_PUBLIC_SITE_URL}/branch-locator`,
-      },
-      twitter: {
-        card: "summary_large_image",
-        title: defaultMeta.title,
-        description: defaultMeta.description,
-      },
-      alternates: {
-        canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/branch-locator`,
-      },
-      error: result.message || "No metadata found",
-    };
+    return getFallbackMeta(result.message || "No metadata found");
   } catch (error) {
-    return {
-      title: defaultMeta.title,
-      description: defaultMeta.description,
-      keywords: defaultMeta.keywords,
-      openGraph: {
-        title: defaultMeta.title,
-        description: defaultMeta.description,
-        type: "website",
-        url: `${process.env.NEXT_PUBLIC_SITE_URL}/branch-locator`,
-      },
-      twitter: {
-        card: "summary_large_image",
-        title: defaultMeta.title,
-        description: defaultMeta.description,
-      },
-      alternates: {
-        canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/branch-locator`,
-      },
-
-      error: result.message || "No metadata found",
-    };
+    return getFallbackMeta("No metadata found");
   }
 }
 

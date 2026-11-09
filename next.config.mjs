@@ -63,23 +63,9 @@ const nextConfig = {
       "@": path.resolve(__dirname, "src"),
     };
 
-    // Performance optimizations
-    if (!dev && !isServer) {
-      // Split chunks optimization
-      config.optimization.splitChunks = {
-        ...config.optimization.splitChunks,
-        chunks: "all",
-        cacheGroups: {
-          ...config.optimization.splitChunks.cacheGroups,
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name: "vendors",
-            priority: 10,
-            reuseExistingChunk: true,
-          },
-        },
-      };
-    }
+    // NOTE: a custom `vendors` splitChunks group used to live here. It pooled every remaining
+    // node_modules package (leaflet, swiper, framer-motion, ...) into one ~636 kB chunk that
+    // loaded on every route, so Next's default per-library splitting is used instead.
 
     return config;
   },
