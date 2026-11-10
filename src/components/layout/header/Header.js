@@ -6,9 +6,15 @@ import { buildLocalizedUrl } from "../../../lib/locale/localizedUrl";
 
 async function fetchData(locale) {
   try {
-    const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/header`, locale), {
-      next: { revalidate: 600 },
-    });
+    const response = await fetch(
+      buildLocalizedUrl(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/header`,
+        locale,
+      ),
+      {
+        next: { revalidate: 600 },
+      },
+    );
     const result = await response.json();
 
     if (result.status === "success") {
@@ -19,15 +25,30 @@ async function fetchData(locale) {
         error: null,
       };
     }
-    return { contents: null, socialLinks: null, links: null, error: result.message };
+    return {
+      contents: null,
+      socialLinks: null,
+      links: null,
+      error: result.message,
+    };
   } catch (error) {
-    return { contents: null, socialLinks: null, links: null, error: "Failed to fetch header data" };
+    return {
+      contents: null,
+      socialLinks: null,
+      links: null,
+      error: "Failed to fetch header data",
+    };
   }
 }
 
 export default async function Header() {
   const locale = await getServerLocale();
-  const { contents: headerData, socialLinks, links, error } = await fetchData(locale);
+  const {
+    contents: headerData,
+    socialLinks,
+    links,
+    error,
+  } = await fetchData(locale);
 
   if (error) {
     return <div>{error}</div>;

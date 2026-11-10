@@ -1,6 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Languages } from "lucide-react";
 import {
@@ -81,7 +87,8 @@ const NO_TRANSLATE_SELECTOR = '[translate="no"], .notranslate';
 // <head> metadata. Only the <title> is user-visible (browser tab); the meta tags
 // are translated for completeness but carry no SEO weight, since crawlers read
 // the server-rendered HTML and never run this pass.
-const METADATA_SELECTOR = 'meta[name="description"], meta[property="og:title"], meta[property="og:description"]';
+const METADATA_SELECTOR =
+  'meta[name="description"], meta[property="og:title"], meta[property="og:description"]';
 
 const TEXT_SLOT = "#text";
 
@@ -170,7 +177,8 @@ function isTranslatableValue(value) {
   const trimmed = value.trim();
   if (!trimmed) return false;
   if (!/[a-zA-Z]/.test(trimmed)) return false;
-  if (/^(https?:|\/|\.{1,2}\/|data:|mailto:|tel:|#)/i.test(trimmed)) return false;
+  if (/^(https?:|\/|\.{1,2}\/|data:|mailto:|tel:|#)/i.test(trimmed))
+    return false;
   if (/^\S+@\S+\.\S+$/.test(trimmed)) return false;
   return true;
 }
@@ -201,7 +209,10 @@ function attrTarget(element, attr) {
 function isSkippedElement(element) {
   if (!element) return true;
   if (element.isContentEditable) return true;
-  return typeof element.closest === "function" && !!element.closest(NO_TRANSLATE_SELECTOR);
+  return (
+    typeof element.closest === "function" &&
+    !!element.closest(NO_TRANSLATE_SELECTOR)
+  );
 }
 
 function isEligibleTextNode(node) {
@@ -214,7 +225,8 @@ function isEligibleTextNode(node) {
 }
 
 function isEligibleAttr(element, attr) {
-  if (typeof element.hasAttribute !== "function" || !element.hasAttribute(attr)) return false;
+  if (typeof element.hasAttribute !== "function" || !element.hasAttribute(attr))
+    return false;
   const value = element.getAttribute(attr);
   if (!value || !value.trim()) return false;
   return !isSkippedElement(element);
@@ -230,7 +242,10 @@ function collectAttrTargets(element, targets) {
   // text in "content", not one of TRANSLATABLE_ATTRS - scoped to
   // METADATA_SELECTOR so this doesn't turn into a blanket check of every
   // element's "content" attribute.
-  if (element.matches?.(METADATA_SELECTOR) && isEligibleAttr(element, "content")) {
+  if (
+    element.matches?.(METADATA_SELECTOR) &&
+    isEligibleAttr(element, "content")
+  ) {
     targets.push(attrTarget(element, "content"));
   }
 }
@@ -247,7 +262,12 @@ function collectTargets(root) {
   // A TreeWalker never reports its own root, so cover it before descending.
   collectAttrTargets(root, targets);
 
-  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT, null, false);
+  const walker = document.createTreeWalker(
+    root,
+    NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT,
+    null,
+    false,
+  );
   while (walker.nextNode()) {
     const node = walker.currentNode;
     if (node.nodeType === Node.TEXT_NODE) {
@@ -264,7 +284,8 @@ function collectMetadataTargets() {
   const titleNode = document.querySelector("head > title")?.firstChild;
   if (titleNode?.nodeValue?.trim()) targets.push(textTarget(titleNode));
   document.head.querySelectorAll(METADATA_SELECTOR).forEach((element) => {
-    if (element.getAttribute("content")?.trim()) targets.push(attrTarget(element, "content"));
+    if (element.getAttribute("content")?.trim())
+      targets.push(attrTarget(element, "content"));
   });
   return targets;
 }
@@ -295,7 +316,9 @@ function normalizeTextNodeValue(text) {
 
 async function translateTexts(targetLocale, texts) {
   const uniqueTexts = [...new Set(texts)];
-  const toFetch = uniqueTexts.filter((text) => !translationCache.has(`${targetLocale}::${text}`));
+  const toFetch = uniqueTexts.filter(
+    (text) => !translationCache.has(`${targetLocale}::${text}`),
+  );
 
   if (toFetch.length > 0) {
     const response = await fetch(BG_TRANSLATE_ENDPOINT, {
@@ -327,7 +350,9 @@ async function translateTexts(targetLocale, texts) {
     });
   }
 
-  return texts.map((text) => translationCache.get(`${targetLocale}::${text}`) ?? text);
+  return texts.map(
+    (text) => translationCache.get(`${targetLocale}::${text}`) ?? text,
+  );
 }
 
 export default function TranslatorDropdown({ ssrLocale = "en" }) {
@@ -365,7 +390,8 @@ export default function TranslatorDropdown({ ssrLocale = "en" }) {
         // different DB record during a re-render). In that case the cached
         // "original" is stale — treat the live value as the fresh source text
         // instead of re-translating old data.
-        const sourceText = memo && memo.lastWritten === live ? memo.original : live;
+        const sourceText =
+          memo && memo.lastWritten === live ? memo.original : live;
         return { target, ...normalizeTextNodeValue(sourceText ?? "") };
       })
       .filter((item) => isTranslatableValue(item.trimmed));
@@ -376,7 +402,10 @@ export default function TranslatorDropdown({ ssrLocale = "en" }) {
     if (locale === "en") {
       items.forEach(({ target, original }) => {
         target.write(original);
-        writeMemo(store, target.owner, target.slot, { original, lastWritten: original });
+        writeMemo(store, target.owner, target.slot, {
+          original,
+          lastWritten: original,
+        });
       });
       return;
     }
@@ -395,7 +424,10 @@ export default function TranslatorDropdown({ ssrLocale = "en" }) {
           const { target, original, leading, trailing } = items[index];
           const written = `${leading}${translated}${trailing}`;
           target.write(written);
-          writeMemo(store, target.owner, target.slot, { original, lastWritten: written });
+          writeMemo(store, target.owner, target.slot, {
+            original,
+            lastWritten: written,
+          });
         });
       })
       .catch((error) => {
@@ -429,7 +461,10 @@ export default function TranslatorDropdown({ ssrLocale = "en" }) {
     // Re-running here on already-translated text is safe: isTranslatableValue
     // requires an ASCII letter, and none of TRANSLATION_LANGUAGES use a Latin
     // script, so real translated strings just fail that check and pass through.
-    translateTargets([...collectTargets(document.body), ...collectMetadataTargets()]);
+    translateTargets([
+      ...collectTargets(document.body),
+      ...collectMetadataTargets(),
+    ]);
   }, [selectedLanguage, routeKey, translateTargets, ssrLocale]);
 
   // Catch text that mounts after a pass has already run - dropdown/mega
@@ -477,7 +512,8 @@ export default function TranslatorDropdown({ ssrLocale = "en" }) {
           // "content" is only meaningful on meta/title elements (see
           // collectAttrTargets) - attributeFilter is document-wide and can't
           // scope itself, so do it here instead.
-          if (attr === "content" && !element.matches?.(METADATA_SELECTOR)) return;
+          if (attr === "content" && !element.matches?.(METADATA_SELECTOR))
+            return;
           if (["img", "video"].includes(element.nodeName.toLowerCase())) return;
           const memo = readMemo(originalValueMap.current, element, attr);
           // setAttribute emits a record even when the value is unchanged, so
@@ -529,7 +565,9 @@ export default function TranslatorDropdown({ ssrLocale = "en" }) {
   }, [translateTargets]);
 
   const currentLanguage =
-    TRANSLATION_LANGUAGES.find((language) => language.code === selectedLanguage) ?? TRANSLATION_LANGUAGES[0];
+    TRANSLATION_LANGUAGES.find(
+      (language) => language.code === selectedLanguage,
+    ) ?? TRANSLATION_LANGUAGES[0];
 
   const handleSelect = (code) => {
     if (code === selectedLanguage) return;
@@ -551,9 +589,12 @@ export default function TranslatorDropdown({ ssrLocale = "en" }) {
         // (English, हिन्दी, தமிழ், ...), which must never be run through the
         // translator's DOM pass - hence translate="no".
         translate="no"
-        className="notranslate flex items-center gap-1.5 rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold capitalize text-slate-800 shadow-sm outline-none transition whitespace-nowrap disabled:cursor-not-allowed disabled:opacity-70"
+        className="notranslate flex items-center gap-1.5 rounded-md sm:border sm:border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold capitalize text-slate-800 sm:shadow-sm outline-none transition whitespace-nowrap disabled:cursor-not-allowed disabled:opacity-70"
       >
-        <Languages className="size-4 shrink-0" aria-hidden="true" />
+        <Languages
+          className="size-4 shrink-0 max-sm:hidden"
+          aria-hidden="true"
+        />
         {currentLanguage.short}
         <svg
           width="11"
@@ -570,7 +611,10 @@ export default function TranslatorDropdown({ ssrLocale = "en" }) {
       {/* Radix portals this into document.body, outside the trigger's DOM
           subtree, so it needs its own translate="no"/.notranslate - a
           wrapper around just the trigger would not protect it. */}
-      <DropdownMenuContent translate="no" className="notranslate bg-white border-[#e4e4e4] max-h-[320px] overflow-y-auto">
+      <DropdownMenuContent
+        translate="no"
+        className="notranslate bg-white border-[#e4e4e4] max-h-[320px] overflow-y-auto"
+      >
         <DropdownMenuLabel>
           <div>Language</div>
         </DropdownMenuLabel>

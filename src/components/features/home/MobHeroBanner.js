@@ -34,7 +34,12 @@ import "./Home.css";
 //   },
 // ];
 
-export default function MobHeroBanner({ heroBanner, initialData, announcement, goldRate }) {
+export default function MobHeroBanner({
+  heroBanner,
+  initialData,
+  announcement,
+  goldRate,
+}) {
   const swiperRef = useRef(null);
   const videoRefs = useRef([]);
   const IMAGE_DELAY = 4000; // Default delay for images in ms
@@ -114,7 +119,10 @@ export default function MobHeroBanner({ heroBanner, initialData, announcement, g
           >
             {item?.media_type === "video" ? (
               <Link
-                href={item?.video_link || "https://www.youtube.com/watch?v=rdge4-9jtiI"}
+                href={
+                  item?.video_link ||
+                  "https://www.youtube.com/watch?v=rdge4-9jtiI"
+                }
                 aria-label={item?.image_alt_text || `Slide ${index + 1}`}
               >
                 <video
@@ -122,20 +130,40 @@ export default function MobHeroBanner({ heroBanner, initialData, announcement, g
                   autoPlay={index === 0}
                   muted
                   playsInline
-                  poster={item?.thumbnail ? `${process.env.NEXT_PUBLIC_BACKEND_URL}${item.thumbnail}` : undefined}
+                  poster={
+                    item?.thumbnail
+                      ? `${process.env.NEXT_PUBLIC_BACKEND_URL}${item.thumbnail}`
+                      : undefined
+                  }
                   preload={index === 0 ? "auto" : "metadata"}
-                  onLoadedMetadata={() => handleVideoLoadedMetadata(index, swiperRef.current)}
+                  onLoadedMetadata={() =>
+                    handleVideoLoadedMetadata(index, swiperRef.current)
+                  }
                   className="absolute inset-0 w-full h-full -z-2 object-cover"
                   aria-label={item.image_alt_text}
                 >
-                  <source src={item?.video_mobile ? `${process.env.NEXT_PUBLIC_BACKEND_URL}${item?.video_mobile}` : ""} type="video/mp4" />
+                  <source
+                    src={
+                      item?.video_mobile
+                        ? `${process.env.NEXT_PUBLIC_BACKEND_URL}${item?.video_mobile}`
+                        : ""
+                    }
+                    type="video/mp4"
+                  />
                   Your browser does not support the video tag.
                 </video>
               </Link>
             ) : (
-              <Link href={item?.button_link || "#"} aria-label={item?.image_alt_text || `Slide ${index + 1}`}>
+              <Link
+                href={item?.button_link || "#"}
+                aria-label={item?.image_alt_text || `Slide ${index + 1}`}
+              >
                 <Image
-                  src={item?.image_mobile ? `${process.env.NEXT_PUBLIC_BACKEND_URL}${item?.image_mobile}` : ""}
+                  src={
+                    item?.image_mobile
+                      ? `${process.env.NEXT_PUBLIC_BACKEND_URL}${item?.image_mobile}`
+                      : ""
+                  }
                   alt={item.image_alt_text}
                   fill
                   sizes="100vw"
@@ -166,7 +194,7 @@ export default function MobHeroBanner({ heroBanner, initialData, announcement, g
         goldRateIcon={initialData?.pageContent?.gold_rate_icon}
         goldRate={goldRate}
       />
-      <HeroBannerEnquiry />
+      <HeroBannerEnquiry defaultOpen />
     </section>
   );
 }

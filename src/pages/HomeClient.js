@@ -107,7 +107,6 @@ const MobWelcomeModal = dynamic(
   () => import("../components/common/MobWelcomeModal"),
   { ssr: false },
 );
-// import MobWelcomeModal from "../components/common/MobWelcomeModal";
 
 export default function Home({
   initialData,
@@ -117,17 +116,14 @@ export default function Home({
   goldRate,
   initialIsMobile,
 }) {
-  // const isMobile = useMediaQuery("only screen and (max-width: 768px)");
 
-  // Use media query for client-side viewport detection
   const isMobileViewport = useMediaQuery("only screen and (max-width: 768px)");
-  // Combine server-side and client-side detection (client takes precedence after hydration)
+
   const isMobile =
     typeof window !== "undefined" ? isMobileViewport : initialIsMobile;
 
   return (
     <>
-      {/* welcome contents*/}
 
       {isMobile ? (
         <MobWelcomeModal

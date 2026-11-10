@@ -135,7 +135,7 @@ function TeamBox({ item }) {
             />
           </div>
           <div className="mt-[20px]">
-            <div className="text-footer-1 mb-[10px] text-[14px] lg:text-[16px] 2xl:text-[18px] 3xl:text-[22px] leading-none sm:font-medium font-bold sm:text-left text-center">{item.name}</div>
+            <div className="text-footer-1 mb-1.25 sm:mb-[10px] text-[14px] lg:text-[16px] 2xl:text-[18px] 3xl:text-[22px] leading-none sm:font-medium font-bold sm:text-left text-center">{item.name}</div>
             <div className="text-sm-1 text-[13px] sm:text-[16px] sm:text-left text-center">{item.title}</div>
           </div>
         </div>

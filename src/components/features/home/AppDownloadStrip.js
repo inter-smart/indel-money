@@ -23,8 +23,8 @@ export default function AppDownloadStrip({ pageContent }) {
   return (
     <section className="w-full 2xl:mb-[80px] lg:mb-[50px] my-[30px]">
       <div className="container">
-        <div className="rounded-[24px] lg:rounded-[36px] bg-[#CAE5F4] flex flex-col md:flex-row items-center justify-center md:justify-between gap-[15px] lg:gap-[30px] px-[20px] lg:px-[45px] 2xl:px-[85px] py-[25px] lg:py-[30px]">
-          <div className="text-center md:text-left 2xl:text-[22px] xl:text-[18px] text-[14px] text-[#323232] font-bold">
+        <div className="rounded-[24px] lg:rounded-[36px] md:bg-[#CAE5F4] flex flex-col md:flex-row items-center justify-center md:justify-between gap-[15px] lg:gap-[30px] px-[20px] lg:px-[45px] 2xl:px-[85px] py-[25px] lg:py-[30px]">
+          <div className="text-center md:text-left 2xl:text-[22px] xl:text-[18px] text-[14px] text-[#323232] font-medium md:font-bold">
             Download our mobile application
           </div>
           <div className="flex flex-wrap justify-center gap-[10px] lg:gap-[16px]">

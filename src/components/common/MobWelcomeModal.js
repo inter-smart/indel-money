@@ -143,7 +143,7 @@ export default function MobWelcomeModal({ banner, serviceBanner }) {
             <Image src="/images/icon-close.svg" alt="icon-close" width={10} height={10} />
           </AlertDialogCancel>
 
-          <div className="flex flex-wrap gap-[30px] mb-[20px]">
+          <div className="flex sm:flex-wrap gap-[30px] mb-[20px]">
             <div className="w-full max-w-[80px] h-auto inline-block">
               <Image
                 src={

@@ -60,7 +60,7 @@ const slides = [
 
 export default function MobSmartMoneyDeals({ title, deals }) {
   return (
-    <section className="w-full py-[20px]">
+    <section className="w-full py-[20px] bg-[#FEFBF6]">
       <div className="container">
         <div className="text-title1 mb-[10px] 2xl:mb-[15px] [&>span]:text-base2 [&>span]:font-bold ">
           {title ? parse(title) : "Smart Money Deals"}

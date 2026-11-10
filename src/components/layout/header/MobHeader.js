@@ -58,7 +58,14 @@ const quickactions = [
   },
 ];
 
-export default function MobHeader({ socialLinks, links, logo, title, modes, locale }) {
+export default function MobHeader({
+  socialLinks,
+  links,
+  logo,
+  title,
+  modes,
+  locale,
+}) {
   const [isVisible, setIsVisible] = useState(true);
   const prevScrollPos = useRef(0);
 
@@ -86,7 +93,12 @@ export default function MobHeader({ socialLinks, links, logo, title, modes, loca
         style={{ height: "var(--header-y)" }}
       >
         <div className="w-full h-[30px] @sm:h-[40px] bg-gradient-to-l from-[#DB0619] to-[#4E2DAD] relative z-0 flex items-center">
-          <Image src="/images/mob-header-bg.png" alt="mob-header-bg" fill className="object-cover -z-1" />
+          <Image
+            src="/images/mob-header-bg.png"
+            alt="mob-header-bg"
+            fill
+            className="object-cover -z-1"
+          />
           <div className="container flex justify-between items-center">
             <div className="flex flex-wrap items-center gap-x-[15px] @sm:gap-x-[20px]">
               {socialLinks?.map((item, index) => (
@@ -98,7 +110,11 @@ export default function MobHeader({ socialLinks, links, logo, title, modes, loca
                     className="w-[15px] h-auto aspect-square block transition-transform duration-300 hover:scale-105"
                   >
                     <Image
-                      src={item.icon ? `${serverMediaPath}${item.icon}` : "/images/mob-icon-insta.svg"}
+                      src={
+                        item.icon
+                          ? `${serverMediaPath}${item.icon}`
+                          : "/images/mob-icon-insta.svg"
+                      }
                       alt={item?.title}
                       width={18}
                       height={36}
@@ -118,7 +134,11 @@ export default function MobHeader({ socialLinks, links, logo, title, modes, loca
                     className="w-[15px] h-auto aspect-square block transition-transform duration-300 hover:scale-105"
                   >
                     <Image
-                      src={item.icon ? `${serverMediaPath}${item.icon}` : "/images/mob-icon-call.svg"}
+                      src={
+                        item.icon
+                          ? `${serverMediaPath}${item.icon}`
+                          : "/images/mob-icon-call.svg"
+                      }
                       alt="call"
                       width={18}
                       height={36}
@@ -134,27 +154,64 @@ export default function MobHeader({ socialLinks, links, logo, title, modes, loca
           <div className="container">
             <div className="flex items-center">
               <div className="w-[60px] @sm:w-[80px]">
-                <Link href="/" className="block transition-transform duration-300 hover:scale-105">
-                  <Image src={logo ? `${serverMediaPath}${logo}` : "/icons/logo_sm.svg"} alt="Indel Logo" width={145} height={75} />
+                <Link
+                  href="/"
+                  className="block transition-transform duration-300 hover:scale-105"
+                >
+                  <Image
+                    src={
+                      logo ? `${serverMediaPath}${logo}` : "/icons/logo_sm.svg"
+                    }
+                    alt="Indel Logo"
+                    width={145}
+                    height={75}
+                  />
                 </Link>
               </div>
               <div className="w-[calc(100%-60px)] @sm:w-[calc(100%-80px)]">
                 <div className="flex flex-nowrap items-center justify-end gap-x-[15px] @sm:gap-x-[20px] overflow-x-auto">
-                  {/* <div>
-                    <Link href="/" className="block transition-transform duration-300 hover:scale-105">
-                      <Image src="/images/mob-icon-search.svg" alt="search" width={18} height={18} />
+                  <div className="block flex-shrink-0">
+                    <TranslatorDropdown ssrLocale={locale} />
+                  </div>
+                  <div>
+                    <Link
+                      href="/"
+                      className="block transition-transform duration-300 hover:scale-105"
+                    >
+                      <Image
+                        src="/images/mob-icon-search.svg"
+                        alt="search"
+                        width={18}
+                        height={18}
+                      />
                     </Link>
                   </div>
                   <div>
-                    <Link href="/" className="block transition-transform duration-300 hover:scale-105">
-                      <Image src="/images/mob-icon-money.svg" alt="money" width={18} height={18} />
+                    <Link
+                      href="/"
+                      className="block transition-transform duration-300 hover:scale-105"
+                    >
+                      <Image
+                        src="/images/mob-icon-money.svg"
+                        alt="money"
+                        width={18}
+                        height={18}
+                      />
                     </Link>
                   </div>
                   <div>
-                    <Link href="/" className="block transition-transform duration-300 hover:scale-105">
-                      <Image src="/images/mob-icon-saving.svg" alt="saving" width={18} height={18} />
+                    <Link
+                      href="/"
+                      className="block transition-transform duration-300 hover:scale-105"
+                    >
+                      <Image
+                        src="/images/mob-icon-saving.svg"
+                        alt="saving"
+                        width={18}
+                        height={18}
+                      />
                     </Link>
-                  </div> */}
+                  </div>
                   {/* <a
                     href={"https://asba.indelmoney.com/asbaform"}
                     target="_blank"
@@ -162,11 +219,13 @@ export default function MobHeader({ socialLinks, links, logo, title, modes, loca
                   >
                     Apply for NCD
                   </a> */}
-                  <div className="block flex-shrink-0">
-                    <TranslatorDropdown ssrLocale={locale} />
-                  </div>
                   <div className="flex-shrink-0">
-                    <MobNavMenu logo={logo} serverMediaPath={serverMediaPath} title={title} modes={modes} />
+                    <MobNavMenu
+                      logo={logo}
+                      serverMediaPath={serverMediaPath}
+                      title={title}
+                      modes={modes}
+                    />
                   </div>
                 </div>
               </div>
