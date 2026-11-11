@@ -105,7 +105,7 @@ export default function CelebrationAlbumView({ slug, subSlug, initialData, initi
               </div>
               {loading && (
                 <div className="absolute inset-0 flex items-start justify-center pt-[80px]">
-                  <LoadingCircleSpinner />
+                  <LoadingCircleSpinner full={false} />
                 </div>
               )}
             </div>
