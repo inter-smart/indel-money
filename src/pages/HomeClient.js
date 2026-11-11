@@ -116,7 +116,6 @@ export default function Home({
   goldRate,
   initialIsMobile,
 }) {
-
   const isMobileViewport = useMediaQuery("only screen and (max-width: 768px)");
 
   const isMobile =
@@ -124,7 +123,6 @@ export default function Home({
 
   return (
     <>
-
       {isMobile ? (
         <MobWelcomeModal
           banner={banner}
@@ -220,22 +218,24 @@ export default function Home({
         )}
       </LazySection>
 
-      <section className="w-full pb-[20px] md:pb-[70px] sm:pb-[30px] lg:pb-[60px] overflow-hidden">
-        <div className="container">
-          <div className="sm:block hidden">
-            <AwardHighlightBox
-              variant={"employeeTestimonials"}
-              items={initialData?.lifeAtIndel}
-            />
+      {!isMobile && (
+        <section className="w-full pb-[20px] md:pb-[70px] sm:pb-[30px] lg:pb-[60px] overflow-hidden">
+          <div className="container">
+            <div className="sm:block hidden">
+              <AwardHighlightBox
+                variant={"employeeTestimonials"}
+                items={initialData?.lifeAtIndel}
+              />
+            </div>
+            <div className="sm:hidden block">
+              <MobAwardHighlight
+                items={initialData?.lifeAtIndel}
+                title={initialData?.pageContent?.awards_title}
+              />
+            </div>
           </div>
-          <div className="sm:hidden block">
-            <MobAwardHighlight
-              items={initialData?.lifeAtIndel}
-              title={initialData?.pageContent?.awards_title}
-            />
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <LazySection placeholderClassName={SECTION_HEIGHT.latestUpdates}>
         {isMobile ? (
