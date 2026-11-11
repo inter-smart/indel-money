@@ -7,57 +7,6 @@ import MobNavMenu from "./MobNavMenu";
 import TranslatorDropdown from "./TranslatorDropdown";
 import { serverMediaPath } from "@/constants/constants";
 
-const socialmedias = [
-  {
-    href: "/",
-    src: "/images/mob-icon-fb.svg",
-    alt: "fb",
-  },
-  {
-    href: "/",
-    src: "/images/mob-icon-youtube.svg",
-    alt: "youtube",
-  },
-  {
-    href: "/",
-    src: "/images/mob-icon-insta.svg",
-    alt: "insta",
-  },
-  {
-    href: "/",
-    src: "/images/mob-icon-linkedin.svg",
-    alt: "linkedin",
-  },
-  {
-    href: "/",
-    src: "/images/mob-icon-x.svg",
-    alt: "x",
-  },
-];
-
-const quickactions = [
-  {
-    href: "tel:18004253990 ",
-    src: "/images/mob-icon-call.svg",
-    alt: "call",
-  },
-  {
-    href: "/",
-    src: "/images/mob-icon-location.svg",
-    alt: "location",
-  },
-  {
-    href: "/",
-    src: "/images/mob-icon-appstore.svg",
-    alt: "appstore",
-  },
-  {
-    href: "/",
-    src: "/images/mob-icon-playstore.svg",
-    alt: "playstore",
-  },
-];
-
 export default function MobHeader({
   socialLinks,
   links,

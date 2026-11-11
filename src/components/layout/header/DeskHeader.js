@@ -60,7 +60,7 @@ export default function DeskHeader({ headerData, locale }) {
       >
         <div className="container">
           <div className="flex items-center">
-            <div className="w-[60px] xl:w-[90px] 2xl:w-[120px] 3xl:w-[140px]">
+            <div className="w-[60px] xl:w-[90px] 2xl:w-[120px] 3xl:w-[140px] mr-1">
               <Link href="/" className="inline-block transition-transform duration-300 hover:scale-105">
                 <Image
                   src={header?.logo ? `${process.env.NEXT_PUBLIC_BACKEND_URL}${header?.logo}` : "/icons/logo_sm.svg"}

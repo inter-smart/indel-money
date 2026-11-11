@@ -162,7 +162,7 @@ function DropdownMenu({ items, handleClose, title, type = "" }) {
           {item.hasSubmenu ? (
             <div>
               <div
-                className="text-[14px] leading-none font-normal hover:text-base2 capitalize cursor-pointer p-[10px_15px] transition-color duration-300 flex justify-between items-center"
+                className="text-[14px] leading-none font-normal hover:text-base2 uppercase cursor-pointer p-[10px_15px] transition-color duration-300 flex justify-between items-center"
                 onClick={() => toggleSubmenu(index)}
               >
                 <span>{item.title}</span>
@@ -187,7 +187,7 @@ function DropdownMenu({ items, handleClose, title, type = "" }) {
                         <div
                           className={`${
                             pathname === subItem.link ? "text-base2" : ""
-                          } text-[13px] leading-none font-normal hover:text-base2 capitalize cursor-pointer p-[10px_15px_10px_30px] transition-color duration-300`}
+                          } text-[13px] leading-none font-normal hover:text-base2 uppercase cursor-pointer p-[10px_15px_10px_30px] transition-color duration-300`}
                         >
                           {subItem.title}
                         </div>
@@ -202,7 +202,7 @@ function DropdownMenu({ items, handleClose, title, type = "" }) {
               <div
                 className={`${
                   pathname === item.link ? "text-base2" : ""
-                } text-[14px] leading-none font-normal hover:text-base2 capitalize cursor-pointer p-[10px_15px] transition-color duration-300`}
+                } text-[14px] leading-none font-normal hover:text-base2 uppercase cursor-pointer p-[10px_15px] transition-color duration-300`}
               >
                 {item.title ? item.title : title}
               </div>
@@ -215,7 +215,7 @@ function DropdownMenu({ items, handleClose, title, type = "" }) {
 }
 
 const tabStyle =
-  "group text-header1 capitalize hover:text-base2 w-full h-auto flex gap-[5px] justify-between transition-color duration-300 p-[15px] cursor-pointer";
+  "group text-header1 uppercase hover:text-base2 w-full h-auto flex gap-[5px] justify-between transition-color duration-300 p-[15px] cursor-pointer";
 
 export default function MobNavMenu({ logo, serverMediaPath, title, modes }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -232,7 +232,7 @@ export default function MobNavMenu({ logo, serverMediaPath, title, modes }) {
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger className="outline-0">
         <div className="w-[30px] @sm:w-[38px] h-[30px] @sm:h-[38px] bg-base2 rounded-[4px] flex items-center justify-center">
-          <Image src="/images/mob-navMenuIcon.svg" alt="nav" width={16} height={12} />
+          <Image src="/images/mob-navMenuIcon.svg" alt="nav" width={20} height={15} />
         </div>
       </SheetTrigger>
       <SheetContent side="left" className="bg-white">
@@ -252,7 +252,7 @@ export default function MobNavMenu({ logo, serverMediaPath, title, modes }) {
                 className={`${tabStyle} relative z-0 before:content-[''] before:absolute before:z-0 before:bottom-0 before:left-0 before:right-0 before:w-[calc(100%-30px)] before:h-[1px] before:bg-gray-200 before:block before:mx-auto`}
               >
                 <Link href={"/gold-loan"} onClick={handleClose}>
-                  <span>Gold Loan</span>
+                  <span className="uppercase">Gold Loan</span>
                 </Link>
                 <button
                   className={`${openDropdown === "goldLoan" ? "rotate-180" : "rotate-0"} focus:outline-none transform-center`}
