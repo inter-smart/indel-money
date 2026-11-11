@@ -173,7 +173,7 @@ export default function MobHeader({
                   <div className="block flex-shrink-0">
                     <TranslatorDropdown ssrLocale={locale} />
                   </div>
-                  <div>
+                  {/* <div>
                     <Link
                       href="/"
                       className="block transition-transform duration-300 hover:scale-105"
@@ -185,7 +185,7 @@ export default function MobHeader({
                         height={18}
                       />
                     </Link>
-                  </div>
+                  </div> */}
                   <div>
                     <Link
                       href="/"
