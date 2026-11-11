@@ -4,11 +4,11 @@ import { mediaUrl } from "./celebrationConstants";
 
 // Image card used for both categories (page 1) and subcategories (page 2).
 // `badges` are small chips under the title, e.g. ["5 Albums"] or ["42 Photos", "6 Videos"].
-export default function CelebrationCard({ href, title, image, alt, badges = [], priority = false }) {
+export default function CelebrationCard({ href, title, image, alt, badges = [], priority = false, className = "aspect-[4/3] w-full" }) {
   return (
     <Link
       href={href}
-      className="group relative block aspect-[4/3] w-full overflow-hidden rounded-[20px] bg-[#e9eef7]"
+      className={`group relative block overflow-hidden rounded-[20px] bg-[#e9eef7] ${className}`}
       aria-label={title}
     >
       <Image
