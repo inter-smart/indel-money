@@ -14,7 +14,7 @@ async function fetchHomeData(locale) {
   try {
     const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/home`, locale), {
       cache: "force-cache",
-      next: { revalidate: 600 },
+      next: { revalidate: 60 },
       credentials: "include", // Ensures session cookie is sent
       headers: {
         "Content-Type": "application/json",
@@ -36,7 +36,7 @@ async function fetchGoldRate(locale) {
   try {
     const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/gold-rate`, locale), {
       cache: "force-cache",
-      next: { revalidate: 600 },
+      next: { revalidate: 60 },
       signal: AbortSignal.timeout(3000), // upstream rate feed can hang; don't block SSR on it
       headers: {
         "Content-Type": "application/json",
@@ -63,7 +63,7 @@ async function getMetaData(locale) {
   try {
     const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=home`, locale), {
       // cache: "force-cache",
-      // next: { revalidate: 600 },
+      // next: { revalidate: 60 },
     });
     const result = await response.json();
     const meta = result.data;

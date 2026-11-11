@@ -14,7 +14,7 @@ async function fetchData(locale) {
     const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/cd-loan`, locale), {
       // cache: "no-store", // Ensure fresh data
       cache: "force-cache",
-      next: { revalidate: 600 },
+      next: { revalidate: 60 },
     });
     const result = await response.json();
     const cdData = result.data;
@@ -38,7 +38,7 @@ async function getMetaData(locale) {
   try {
     const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=cdloan`, locale), {
       cache: "force-cache",
-      next: { revalidate: 600 },
+      next: { revalidate: 60 },
     });
     const result = await response.json();
     const meta = result.data;
@@ -357,7 +357,7 @@ export default async function CDLoan() {
 //     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/cd-loan`, {
 //       // cache: "no-store", // Ensure fresh data
 //       cache: "force-cache",
-//       next: { revalidate: 600 },
+//       next: { revalidate: 60 },
 //     });
 //     const result = await response.json();
 //     const cdData = result.data;
@@ -380,7 +380,7 @@ export default async function CDLoan() {
 //   try {
 //     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=cdloan`, {
 //       cache: "force-cache",
-//       next: { revalidate: 600 },
+//       next: { revalidate: 60 },
 //     });
 //     const result = await response.json();
 //     const meta = result.data;

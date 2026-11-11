@@ -11,7 +11,7 @@ async function fetchData(page = 1, type = "all", limit = 6, locale) {
     const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/event-gallery?page=${page}&limit=${limit}&type=${type}`, locale), {
       // cache: "no-store", // Ensure fresh data
       cache: "force-cache",
-      next: { revalidate: 600 },
+      next: { revalidate: 60 },
     });
 
     const result = await response.json();
@@ -49,7 +49,7 @@ async function getMetaData(locale) {
   try {
     const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=gallery`, locale), {
       cache: "force-cache",
-      next: { revalidate: 600 },
+      next: { revalidate: 60 },
     });
     const result = await response.json();
     const meta = result.data;

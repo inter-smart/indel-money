@@ -12,7 +12,7 @@ async function fetchData(locale) {
         locale,
       ),
       {
-        next: { revalidate: 600 },
+        next: { revalidate: 60 },
       },
     );
     const result = await response.json();

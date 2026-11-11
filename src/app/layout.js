@@ -45,7 +45,7 @@ export default async function RootLayout({ children }) {
     // Plain fetch (not axios) so Next's data cache honours `revalidate`.
     const res = await fetch(
       buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/footer`, locale),
-      { next: { revalidate: 600 } },
+      { next: { revalidate: 60 } },
     );
     const result = await res.json();
     if (result.status === "success") {

@@ -11,7 +11,7 @@ async function fetchReportData(locale) {
     const response = await api.get(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/investors/report`, locale), {
       // cache: "no-store", // Ensure fresh data
       cache: "force-cache",
-      next: { revalidate: 600 },
+      next: { revalidate: 60 },
     });
     const result = response.data;
     const reportData = result.data;

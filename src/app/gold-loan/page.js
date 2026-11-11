@@ -65,7 +65,7 @@ async function fetchGoldRate(locale) {
   try {
     const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/gold-rate`, locale), {
       cache: "force-cache",
-      next: { revalidate: 600 },
+      next: { revalidate: 60 },
       headers: {
         "Content-Type": "application/json",
       },

@@ -9,8 +9,8 @@ async function fetchData(locale) {
     const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/ombudsman`, locale), {
       // cache: "no-store",
       cache: "force-cache",
-      next: { revalidate: 600 },
-      //next: { revalidate: 600 },
+      next: { revalidate: 60 },
+      //next: { revalidate: 60 },
     });
     const result = await response.json();
     if (result.status === "success") {

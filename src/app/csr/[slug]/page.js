@@ -18,7 +18,7 @@ async function fetchCsrData(slug, locale) {
     const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/csr/${slug}`, locale), {
       // next: { revalidate: 60 },
       cache: "force-cache",
-      next: { revalidate: 600 },
+      next: { revalidate: 60 },
     });
 
     if (!response.ok) {

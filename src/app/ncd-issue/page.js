@@ -8,7 +8,7 @@ async function fetchNcdData(locale) {
   try {
     const res = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/ncd-forms`, locale), {
       cache: "force-cache",
-      next: { revalidate: 600 }, // revalidate cache every 10 minutes
+      next: { revalidate: 60 }, // revalidate cache every 10 minutes
     });
 
     const result = await res.json();

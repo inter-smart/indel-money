@@ -12,7 +12,7 @@ export async function fetchCelebrationsServer(path, query = {}) {
   try {
     const response = await fetch(buildLocalizedUrl(url, locale), {
       cache: "force-cache",
-      next: { revalidate: 600 },
+      next: { revalidate: 60 },
     });
 
     if (response.status === 404) return { data: null, notFound: true, error: null };

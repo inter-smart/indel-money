@@ -10,7 +10,7 @@ async function fetchData(locale) {
     const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/awards`, locale), {
       // cache: "no-store", // Ensure fresh data
       cache: "force-cache",
-      next: { revalidate: 600 },
+      next: { revalidate: 60 },
     });
     const result = await response.json();
     const awardsData = result.data;

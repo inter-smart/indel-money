@@ -9,7 +9,7 @@ async function fetchData(page = 1, limit = 3, locale) {
     const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/indel-cares?page=${page}&limit=${limit}`, locale), {
       // cache: "no-store", // Ensure fresh data
       cache: "force-cache",
-      next: { revalidate: 600 },
+      next: { revalidate: 60 },
     });
     const result = await response?.json();
     const data = result?.data;
@@ -52,7 +52,7 @@ async function getMetaData(locale) {
   try {
     const response = await fetch(buildLocalizedUrl(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/web/meta?page=indelcares`, locale), {
       cache: "force-cache",
-      next: { revalidate: 600 },
+      next: { revalidate: 60 },
     });
     const result = await response.json();
     const meta = result.data;

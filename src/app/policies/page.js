@@ -11,7 +11,7 @@ async function fetchPolicyData(page = 1, limit = 10, locale) {
       {
         // cache: "no-store", // or 'force-cache' depending on your needs
         cache: "force-cache",
-        next: { revalidate: 600 },
+        next: { revalidate: 60 },
       }
     );
     const catResult = await catResponse.json();
@@ -28,7 +28,7 @@ async function fetchPolicyData(page = 1, limit = 10, locale) {
       {
         // cache: "no-store", // or 'force-cache' depending on your needs
         cache: "force-cache",
-        next: { revalidate: 600 },
+        next: { revalidate: 60 },
       }
     );
 
