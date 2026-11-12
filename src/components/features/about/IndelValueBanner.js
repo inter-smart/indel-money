@@ -15,7 +15,7 @@ export default function IndelValueBanner({ image, alt, title }) {
               width={640}
               height={500}
               alt={alt ? alt : "value-innerBanner"}
-              loading="lazy"
+              fetchPriority="high"
               className="w-full h-full object-cover"
             />
           </picture>

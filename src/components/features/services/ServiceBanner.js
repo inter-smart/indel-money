@@ -11,7 +11,7 @@ export default function ServiceBanner({ page_super_title, page_title, image, alt
             width={640}
             height={500}
             alt={alt ? alt : "value-innerBanner"}
-            loading="lazy"
+            fetchPriority="high"
             className="w-full h-full object-cover"
           />
         </picture>

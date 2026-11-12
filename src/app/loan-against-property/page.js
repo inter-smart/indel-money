@@ -345,7 +345,7 @@ export default async function Services() {
         benfits={benfits}
         faqs={faqs}
         products={products}
-        initialIsMobile={false} // Assuming you want to handle mobile detection client-side
+        initialIsMobile={isMobile}
       />
     </>
   );

@@ -1,6 +1,4 @@
 @import "tailwindcss";
-@import url('~leaflet.markercluster/dist/MarkerCluster.css');
-@import url('~leaflet.markercluster/dist/MarkerCluster.Default.css');
 
 
 /* Font tokens must live in `@theme inline`, not `@theme`. They reference the

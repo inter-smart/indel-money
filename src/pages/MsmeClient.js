@@ -11,12 +11,9 @@ const MsmePresence = dynamic(() => import("@/components/features/msmeloan/MsmePr
 const GrownWithMsme = dynamic(() => import("@/components/features/msmeloan/GrownWithMsme"), { ssr: false });
 const MobKickStartVenture = dynamic(() => import("@/components/features/msmeloan/MobKickStartVenture"), { ssr: true });
 const MobWhoDoServe = dynamic(() => import("@/components/features/msmeloan/MobWhoDoServe"), { ssr: false });
-import { useMediaQuery } from "@react-hook/media-query";
 
 export default function MsmeLoanClient({ contents, offerings, faqs, loanTypes, industries, audience, initialIsMobile }) {
-  const isMobileViewport = useMediaQuery("only screen and (max-width: 768px)");
-  // Combine server-side and client-side detection (client takes precedence after hydration)
-  const isMobile = typeof window !== "undefined" ? isMobileViewport : initialIsMobile;
+  const isMobile = initialIsMobile;
   return (
     <>
       {isMobile ? (

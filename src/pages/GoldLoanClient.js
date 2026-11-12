@@ -1,6 +1,5 @@
 "use client";
 import dynamic from "next/dynamic";
-import { useMediaQuery } from "@react-hook/media-query";
 
 const ServiceBanner = dynamic(() => import("../components/features/goldLoan/ServiceBanner"), { ssr: true });
 const StepGoldLoan = dynamic(() => import("../components/features/home/StepGoldLoan"), { ssr: false });
@@ -32,9 +31,7 @@ export default function GoldLoanClient({
   goldRateData,
   flattenedFeatures,
 }) {
-  const isMobileViewport = useMediaQuery("only screen and (max-width: 768px)");
-  // Combine server-side and client-side detection (client takes precedence after hydration)
-  const isMobile = typeof window !== "undefined" ? isMobileViewport : initialIsMobile;
+  const isMobile = initialIsMobile;
   return (
     <>
       {isMobile ? (

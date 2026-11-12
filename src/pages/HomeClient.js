@@ -1,6 +1,5 @@
 "use client";
 import dynamic from "next/dynamic";
-import { useMediaQuery } from "@react-hook/media-query";
 import LazySection from "../components/common/LazySection";
 import AwardHighlightBox from "@/components/features/award/AwardHighlightBox";
 import MobAwardHighlight from "@/components/features/career/MobAwardHighlight";
@@ -116,10 +115,7 @@ export default function Home({
   goldRate,
   initialIsMobile,
 }) {
-  const isMobileViewport = useMediaQuery("only screen and (max-width: 768px)");
-
-  const isMobile =
-    typeof window !== "undefined" ? isMobileViewport : initialIsMobile;
+  const isMobile = initialIsMobile;
 
   return (
     <>

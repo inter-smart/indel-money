@@ -1,7 +1,6 @@
 //export const dynamic = "force-dynamic";
 "use client";
 import dynamic from "next/dynamic";
-import { useMediaQuery } from "@react-hook/media-query";
 const ConsumerDurable = dynamic(() => import("@/components/features/services/ConsumerDurable"), { ssr: true });
 const ProductCovered = dynamic(() => import("@/components/features/services/ProductCovered"), { ssr: false });
 const FeatureBenefit = dynamic(() => import("@/components/features/services/FeatureBenefit"), { ssr: false });
@@ -10,9 +9,7 @@ const MobEligibility = dynamic(() => import("@/components/features/services/MobE
 const MobGoldLoanFaq = dynamic(() => import("@/components/features/goldLoan/MobGoldLoanFaq"), { ssr: false });
 
 export default function LAPClient({ contents, benfits, products, initialIsMobile, faqs }) {
-  const isMobileViewport = useMediaQuery("only screen and (max-width: 768px)");
-  // Combine server-side and client-side detection (client takes precedence after hydration)
-  const isMobile = typeof window !== "undefined" ? isMobileViewport : initialIsMobile;
+  const isMobile = initialIsMobile;
 
   return (
     <>
