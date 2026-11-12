@@ -176,7 +176,7 @@ export default function DeskHeader({ headerData, locale }) {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent className="bg-[#d2dff6] border-none">
                         <DropdownMenuLabel>
-                          <div className="text-header1">{header?.button_1_inner_title || "Payment Modes"}</div>
+                          <div className="text-header1 uppercase">{header?.button_1_inner_title || "Payment Modes"}</div>
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator className="bg-black/20" />
                         {!modes || modes.length === 0 ? (
@@ -188,7 +188,7 @@ export default function DeskHeader({ headerData, locale }) {
                                 href={mode?.link || "/"}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-header1 hover:text-base2 px-2 py-1 block w-full"
+                                className="text-header1 hover:text-base2 uppercase px-2 py-1 block w-full"
                               >
                                 {mode?.title}
                               </Link>

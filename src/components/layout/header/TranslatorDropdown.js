@@ -616,14 +616,14 @@ export default function TranslatorDropdown({ ssrLocale = "en" }) {
         className="notranslate bg-white border-[#e4e4e4] max-h-[320px] overflow-y-auto"
       >
         <DropdownMenuLabel>
-          <div>Language</div>
+          <div className="uppercase">Language</div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator className="bg-black/10" />
         {TRANSLATION_LANGUAGES.map((language) => (
           <DropdownMenuItem
             key={language.code}
             onSelect={() => handleSelect(language.code)}
-            className="hover:bg-[#c3d5f2] rounded-md"
+            className="hover:bg-[#c3d5f2] rounded-md uppercase"
           >
             {language.label}
           </DropdownMenuItem>

@@ -174,7 +174,7 @@ function DropdownMenu({ items }) {
           {item.hasSubmenu ? (
             <>
               <MenubarItem className="w-full">
-                <div className="text-header1 hover:text-base2 capitalize cursor-pointer transition-colors duration-300 flex items-center justify-between w-full">
+                <div className="text-header1 hover:text-base2 uppercase cursor-pointer transition-colors duration-300 flex items-center justify-between w-full">
                   <span>{item.title}</span>
                   <svg
                     width="11"
@@ -197,7 +197,7 @@ function DropdownMenu({ items }) {
                           <div
                             className={`${
                               pathname === subItem.link ? "text-base2" : ""
-                            } text-header1 hover:text-base2 capitalize cursor-pointer transition-colors duration-300 w-full text-sm`}
+                            } text-header1 hover:text-base2 uppercase cursor-pointer transition-colors duration-300 w-full text-sm`}
                           >
                             {subItem.title}
                           </div>
@@ -214,7 +214,7 @@ function DropdownMenu({ items }) {
                 <div
                   className={`${
                     pathname === item.link ? "text-base2" : ""
-                  } text-header1 hover:text-base2 capitalize cursor-pointer transition-colors duration-300 w-full`}
+                  } text-header1 hover:text-base2 uppercase cursor-pointer transition-colors duration-300 w-full`}
                 >
                   {item.title}
                 </div>
@@ -243,7 +243,7 @@ function MegaMenu({ items }) {
                 <div
                   className={`${
                     pathname === item.link ? "text-base2" : ""
-                  } w-[calc(100%-40px)] 3xl:w-[calc(100%-60px)] text-header1 capitalize pl-[5px] lg:pl-[8px] 3xl:pl-[10px] group-hover:text-base2! transition-color duration-300`}
+                  } w-[calc(100%-40px)] 3xl:w-[calc(100%-60px)] text-header1 uppercase pl-[5px] lg:pl-[8px] 3xl:pl-[10px] group-hover:text-base2! transition-color duration-300`}
                 >
                   {item.title}
                 </div>
