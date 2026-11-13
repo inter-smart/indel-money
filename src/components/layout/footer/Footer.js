@@ -1,7 +1,6 @@
 import PlaceholdersAndVanishInputDemo from "../footer/SubscribeForm";
 import Image from "next/image";
 import Link from "next/link";
-import "./Footer.css";
 
 const navigations = [
   {

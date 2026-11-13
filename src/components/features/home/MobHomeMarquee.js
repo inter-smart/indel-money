@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Marquee from "react-fast-marquee";
+import CssMarquee from "../../common/CssMarquee";
 
 export default function MobHomeMarquee({ announcementText, goldRateLabel, goldRateIcon, goldRate }) {
   return (
@@ -26,15 +26,9 @@ export default function MobHomeMarquee({ announcementText, goldRateLabel, goldRa
       </div>
       <div className="w-full h-[var(--marquee-y)] bg-base1 flex items-center">
         <div className="w-full max-w-[calc(100%-((100%-var(--container-x))/2))] pr-0 mr-0 ml-auto pl-[var(--container-padding)]">
-          <Marquee speed={80} pauseOnHover={true} className="text-sm1 text-white">
-            {/* Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry&apos;s standard dummy
-            text ever since the 1500s, when an unknown printer took a galley of
-            type and scrambled it to make a type specimen book. It has survived
-            not only five centuries, but also the leap into electronic
-            typesetting, remaining essentially unchanged. */}
+          <CssMarquee speed={80} pauseOnHover={true} className="text-sm1 text-white">
             {announcementText}
-          </Marquee>
+          </CssMarquee>
         </div>
       </div>
     </div>

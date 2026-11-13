@@ -104,24 +104,13 @@ export default function WelcomeModal({ banner, serviceBanner }) {
       // Get appearance time from banner props (convert to milliseconds)
       const appearanceTime = (appear_in || 5) * 1000;
 
-      // Show modal after appearance time (initial delay)
+      // Show modal once after the appearance delay
       const initialTimer = setTimeout(() => {
         setIsOpen(true);
       }, appearanceTime);
 
-      // Set up appearance time interval to reappear
-      const intervalTimer = setInterval(() => {
-        // Check again if user has manually closed it during the interval
-        const currentStatus = localStorage.getItem("hasSeenWelcomeModal");
-        if (!currentStatus) {
-          setIsOpen(true);
-        }
-      }, appearanceTime);
-
-      // Cleanup timers on component unmount
       return () => {
         clearTimeout(initialTimer);
-        clearInterval(intervalTimer);
       };
     }
   }, [banner?.banner_popup_appearence_time, serviceBanner?.banner_popup_appearence_time]);

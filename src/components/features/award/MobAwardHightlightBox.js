@@ -5,7 +5,6 @@ import { Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import Image from "next/image";
-import "./AwardHighlightBox.css";
 import { renderHtml } from "@/lib/utils/htmlParser";
 
 const slides = [

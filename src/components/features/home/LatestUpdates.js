@@ -79,7 +79,6 @@ export default function LatestUpdates({ sliderItems, sliderTitle, type = "blog" 
                       alt={item?.image_alt}
                       fill
                       sizes="520px"
-                      priority={index === 0} // Prioritize first image
                       className="w-full h-full transition-transform duration-300 object-cover group-hover:scale-105"
                     />
                     <div className="w-full h-auto absolute inset-0 top-auto p-[15px_15px_30px] lg:p-[20px_20px_30px] xl:p-[30px_30px_40px] 3xl:p-[50px_50px_60px] bg-gradient-to-t from-black/60 to-transparent">

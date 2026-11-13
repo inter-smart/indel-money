@@ -6,12 +6,8 @@ import MobHomeMarquee from "../../features/home/MobHomeMarquee";
 import { renderHtml, hasVisibleText } from "@/lib/utils/htmlParser";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectFade, Pagination, Autoplay } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/effect-fade";
+import "@/styles/swiper.css";
 import Link from "next/link";
-
-import "./Home.css";
 
 // export const heroBanner = [
 //   {

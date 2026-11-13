@@ -6,7 +6,6 @@ import "swiper/css";
 import Image from "next/image";
 import Link from "next/link";
 
-import "./Home.css";
 import { formatPostDate } from "../../../lib/utils";
 
 const slides = [

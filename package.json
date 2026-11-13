@@ -85,5 +85,12 @@
     "eslint-plugin-unused-imports": "^4.1.4",
     "lighthouse": "^12.7.1",
     "webpack-bundle-analyzer": "^4.10.2"
-  }
+  },
+  "browserslist": [
+    "chrome >= 91",
+    "edge >= 91",
+    "firefox >= 90",
+    "safari >= 15",
+    "not dead"
+  ]
 }
