@@ -82,8 +82,20 @@ const nextConfig = {
       "leaflet",
       "leaflet.markercluster",
       "lightgallery",
-
-      // Add your heavy packages here
+      "framer-motion",
+      "embla-carousel-react",
+      "@radix-ui/react-accordion",
+      "@radix-ui/react-alert-dialog",
+      "@radix-ui/react-dialog",
+      "@radix-ui/react-dropdown-menu",
+      "@radix-ui/react-label",
+      "@radix-ui/react-menubar",
+      "@radix-ui/react-navigation-menu",
+      "@radix-ui/react-scroll-area",
+      "@radix-ui/react-select",
+      "@radix-ui/react-slider",
+      "@radix-ui/react-slot",
+      "@radix-ui/react-tabs",
     ],
   },
 

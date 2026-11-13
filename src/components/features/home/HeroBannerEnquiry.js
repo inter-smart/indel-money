@@ -72,7 +72,7 @@ const postEnquiryData = async (enquiryData) => {
 
   return (
     <motion.div
-      initial={{ x: "100%", opacity: 0 }}
+      initial={false}
       animate={{
         x: "[calc(((100vw-var(--container-x))/2)+var(--container-padding))]",
         opacity: 1,

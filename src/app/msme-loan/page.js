@@ -262,7 +262,7 @@ export default async function MsmeLoan() {
       <Script
         id="schema-msme-loan"
         type="application/ld+json"
-        strategy="beforeInteractive"
+        strategy="afterInteractive"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
       />
       <MsmeLoanClient

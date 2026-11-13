@@ -337,7 +337,7 @@ export default async function CDLoan() {
       <Script
         id="schema-consumer-durable-loans"
         type="application/ld+json"
-        strategy="beforeInteractive"
+        strategy="afterInteractive"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
       />
       <CDLoanClient contents={contents} benfits={benfits} products={products} initialIsMobile={isMobile} faqs={faqs} />

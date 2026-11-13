@@ -485,7 +485,7 @@ export default function ContactForm({ isMobile = false }) {
                                 }
                             </script>
                             <!-- Do not remove this --- Analytics Tracking code starts -->
-                            <script id = 'wf_anal' src = 'https://crm.zohopublic.in/crm/WebFormAnalyticsServeServlet?rid=f683e6d2da6b341f32bf8030739e6db6a95fa67cd8a762fe0393fd809d996eb967cc566f120010f85ba4583c4595db17gidd794aac75b1ed0e4b2ad891d6a90148a8552bfd595c2bb90999b440b10b250c3gid5ff2624d67848cca16c556194712baa96abbf55e2be7868c15ac6ee719d30027gid237e554ce00dce1871bdafcd2f9538d77ebad69b20a3198fae3827f548fd077b&tw=e4a65bff76412379233b71aa830a263299741039822827dccf904f46b1e063e4'>
+                            <script id = 'wf_anal' defer src = 'https://crm.zohopublic.in/crm/WebFormAnalyticsServeServlet?rid=f683e6d2da6b341f32bf8030739e6db6a95fa67cd8a762fe0393fd809d996eb967cc566f120010f85ba4583c4595db17gidd794aac75b1ed0e4b2ad891d6a90148a8552bfd595c2bb90999b440b10b250c3gid5ff2624d67848cca16c556194712baa96abbf55e2be7868c15ac6ee719d30027gid237e554ce00dce1871bdafcd2f9538d77ebad69b20a3198fae3827f548fd077b&tw=e4a65bff76412379233b71aa830a263299741039822827dccf904f46b1e063e4'>
                         </script>
                         <!-- Do not remove this --- Analytics Tracking code ends. -->
                     </form>

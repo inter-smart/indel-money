@@ -163,7 +163,7 @@ export default async function Blog({ searchParams }) {
       <Script
         id="schema-blog"
         type="application/ld+json"
-        strategy="beforeInteractive"
+        strategy="afterInteractive"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
       />
       <LatestBlogs />

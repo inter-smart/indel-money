@@ -16,7 +16,6 @@ export default function HomeMarquee({
           height={25}
           alt={"coin"}
           className="w-5 h-5 3xl:w-6 3xl:h-6 mr-2 3xl:mr-3 object-contain"
-          priority={true}
         />
         {goldRate ? `${goldRateLabel} - Rs ${goldRate} /-` : goldRateLabel}
       </h2>
