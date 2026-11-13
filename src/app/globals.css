@@ -44,10 +44,6 @@
 }
 
 @layer base {
-  html {
-    scrollbar-gutter: stable;
-  }
-
   :root {
     --header-y: 80px;
     --marquee-y: 35px;
