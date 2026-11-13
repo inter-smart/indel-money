@@ -1,8 +1,13 @@
+import { headers } from "next/headers";
 import MobHeader from "./MobHeader";
 import DeskHeader from "./DeskHeader";
 import "./Header.css";
 import { getServerLocale } from "../../../lib/locale/getServerLocale";
 import { buildLocalizedUrl } from "../../../lib/locale/localizedUrl";
+
+function isMobileDevice(userAgent) {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+}
 
 async function fetchData(locale) {
   try {
@@ -43,6 +48,8 @@ async function fetchData(locale) {
 
 export default async function Header() {
   const locale = await getServerLocale();
+  const headersList = await headers();
+  const isMobile = isMobileDevice(headersList.get("user-agent") || "");
   const {
     contents: headerData,
     socialLinks,
@@ -54,21 +61,22 @@ export default async function Header() {
     return <div>{error}</div>;
   }
 
+  if (isMobile) {
+    return (
+      <MobHeader
+        socialLinks={socialLinks}
+        logo={headerData?.content?.logo}
+        links={links}
+        title={headerData?.content?.button_1_text}
+        modes={headerData?.modes}
+        locale={locale}
+      />
+    );
+  }
+
   return (
-    <>
-      <div className="hidden xl:block" id="header">
-        <DeskHeader headerData={headerData} locale={locale} />
-      </div>
-      <div className="block xl:hidden">
-        <MobHeader
-          socialLinks={socialLinks}
-          logo={headerData?.content?.logo}
-          links={links}
-          title={headerData?.content?.button_1_text}
-          modes={headerData?.modes}
-          locale={locale}
-        />
-      </div>
-    </>
+    <div id="header">
+      <DeskHeader headerData={headerData} locale={locale} />
+    </div>
   );
 }
